@@ -27,7 +27,11 @@ namespace BW_VI___Team_1.Services
         {
             var newProduct = new Product
             {
-                // Aggiungere cose (es. Name = model.Name)
+                Name = model.Name,
+                Suppliers = model.Suppliers,
+                Type = model.Type,
+                Usages = model.Usages,
+                Locker = model.Type == Models.Type.Medicine ? model.Locker : null
             };
             _context.Products.Add(newProduct);
             await _context.SaveChangesAsync();
@@ -37,17 +41,21 @@ namespace BW_VI___Team_1.Services
 
         public async Task<Product> UpdateProductAsync(Product model)
         {
-            var animal = await _context.Products.FindAsync(model.Id);
-            if (animal == null)
+            var product = await _context.Products.FindAsync(model.Id);
+            if (product == null)
             {
                 return null;
             }
 
-            // Aggiungere cose (es. animal.Name = model.Name)
+            product.Name = model.Name;
+            product.Suppliers = model.Suppliers;
+            product.Type = model.Type;
+            product.Usages = model.Usages;
+            product.Locker = model.Type == Models.Type.Medicine ? model.Locker : null;
 
-            _context.Products.Update(animal);
+            _context.Products.Update(product);
             await _context.SaveChangesAsync();
-            return animal;
+            return product;
         }
 
         public async Task<bool> DeleteProductAsync(int id)
