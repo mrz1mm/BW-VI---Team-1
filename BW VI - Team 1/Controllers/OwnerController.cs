@@ -49,21 +49,18 @@ namespace BW_VI___Team_1.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        public IActionResult DeleteOwner(int id)
+        [HttpPost]
+        public async Task<IActionResult> DeleteOwner(int id)
         {
-            var owner = _ownerSvc.GetOwnerByIdAsync(id);
-            if (owner == null)
+            try
+            {
+                await _ownerSvc.DeleteOwnerAsync(id);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-
-            var model = new Owner
-            {
-                // aggiungere cose (es. Name = owner.Name)
-            };
-
-            return View();
+            return RedirectToAction(nameof(Index));
         }
 
 
@@ -114,23 +111,6 @@ namespace BW_VI___Team_1.Controllers
                 ModelState.AddModelError("", ex.Message);
                 TempData["Error"] = "Errore nella modifica dell'ownere";
                 return View(model);
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmDeleteOwner(int id)
-        {
-            try
-            {
-                await _ownerSvc.DeleteOwnerAsync(id);
-                TempData["Success"] = "Ownere eliminato con successo";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "Errore nell'eliminazione dell'ownere";
-                return RedirectToAction(nameof(Index));
             }
         }
     }
