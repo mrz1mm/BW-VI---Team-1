@@ -2,6 +2,7 @@
 using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProductType = BW_VI___Team_1.Models.Type;
 
 
@@ -21,14 +22,21 @@ namespace BW_VI___Team_1.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var products = await _productSvc.GetAllProductsAsync();
+            var products = await _context.Products
+                .Include(p => p.Suppliers)
+                .Include(p => p.Usages)
+                .ToListAsync();
+
             return View(products);
         }
 
         [HttpGet]
-        public IActionResult AddProduct()
+        public async Task<IActionResult> AddProduct()
         {
             ViewBag.ProductTypes = new List<string> { "AnimalFood", "Medicine" };
+            ViewBag.Usages = await _context.Usages.ToListAsync(); 
+            ViewBag.Suppliers = await _context.Suppliers.ToListAsync(); 
+
             return View();
         }
 
@@ -74,7 +82,7 @@ namespace BW_VI___Team_1.Controllers
         // METODI
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddProduct(ProductDTO model) // aggiungere il Binding
+        public async Task<IActionResult> AddProduct(ProductDTO model, int[] Usages, int[] Suppliers)
         {
             if (!ModelState.IsValid)
             {
@@ -84,10 +92,12 @@ namespace BW_VI___Team_1.Controllers
 
             try
             {
+                model.Usages = await _context.Usages.Where(u => Usages.Contains(u.Id)).ToListAsync();
+                model.Suppliers = await _context.Suppliers.Where(s => Suppliers.Contains(s.Id)).ToListAsync();
+
                 await _productSvc.AddProductAsync(model);
                 TempData["Success"] = "Producte aggiunto con successo";
                 return RedirectToAction(nameof(Index));
-
             }
             catch (Exception ex)
             {
@@ -96,6 +106,7 @@ namespace BW_VI___Team_1.Controllers
                 return View(model);
             }
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
