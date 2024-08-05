@@ -50,6 +50,8 @@ namespace BW_VI___Team_1.Controllers
             }
 
             ViewBag.ProductTypes = Enum.GetValues(typeof(ProductType)).Cast<ProductType>().Select(t => t.ToString()).ToList();
+            ViewBag.Suppliers = await _context.Suppliers.ToListAsync();
+            ViewBag.Usages = await _context.Usages.ToListAsync();
 
             var model = new Product
             {
@@ -63,6 +65,7 @@ namespace BW_VI___Team_1.Controllers
 
             return View(model);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> DeleteProduct(int id)
@@ -110,7 +113,7 @@ namespace BW_VI___Team_1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProduct(Product model) // aggiungere il Binding
+        public async Task<IActionResult> UpdateProduct(Product model, int[] Usages, int[] Suppliers)
         {
             if (!ModelState.IsValid)
             {
@@ -120,14 +123,20 @@ namespace BW_VI___Team_1.Controllers
 
             try
             {
+                model.Usages = await _context.Usages.Where(u => Usages.Contains(u.Id)).ToListAsync();
+                model.Suppliers = await _context.Suppliers.Where(s => Suppliers.Contains(s.Id)).ToListAsync();
+
                 await _productSvc.UpdateProductAsync(model);
                 TempData["Success"] = "Producte modificato con successo";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", ex.Message);
-                TempData["Error"] = "Errore nella modifica dell'producte";
+                TempData["Error"] = $"Errore nella modifica dell'producte: {ex.Message}";
+                if (ex.InnerException != null)
+                {
+                    TempData["Error"] += $" Inner Exception: {ex.InnerException.Message}";
+                }
                 return View(model);
             }
         }
