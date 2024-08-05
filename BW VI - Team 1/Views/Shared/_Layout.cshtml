@@ -19,12 +19,86 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+
+                        <div class="dropdown">
+                            <button class="btn btn-white dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Animali
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="Index">Animali</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="AddAnimal">Aggiungi animale</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="dropdown">
+                            <button class="btn btn-white dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Ordini
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="Index">Ordini</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="AddAnimal">Aggiungi ordine</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="dropdown">
+                            <button class="btn btn-white dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Proprietari
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="Index">Proprietari</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="AddAnimal">Aggiungi proprietario</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="dropdown">
+                            <button class="btn btn-white dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Prodotti
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="Index">Prodotti</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="AddAnimal">Aggiungi prodotto</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="dropdown">
+                            <button class="btn btn-white dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Ricoveri
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="Index">Ricoveri</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="AddAnimal">Aggiungi ricovero</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="dropdown">
+                            <button class="btn btn-white dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Fornitori
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="Index">Fornitori</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="AddAnimal">Aggiungi fornitore</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="dropdown">
+                            <button class="btn btn-white dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Usi
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="Index">Usi</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="AddAnimal">Aggiungi uso</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="dropdown">
+                            <button class="btn btn-white dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Visite
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="Index">Visite</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="AddAnimal">Aggiungi visita</a></li>
+                            </ul>
+                        </div>
                     </ul>
                 </div>
             </div>

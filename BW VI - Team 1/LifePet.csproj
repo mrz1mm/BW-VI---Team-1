@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <Folder Include="Models\MV\" />
-    <Folder Include="Views\Locker\" />
   </ItemGroup>
 
 </Project>
