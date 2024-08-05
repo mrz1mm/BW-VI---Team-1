@@ -53,17 +53,16 @@ namespace BW_VI___Team_1.Services
             return owner;
         }
 
-        public async Task<bool> DeleteOwnerAsync(int id)
+        public async Task DeleteOwnerAsync(int id)
         {
-            var animal = await _context.Owners.FindAsync(id);
-            if (animal == null)
+            var ownerToDelete = await _context.Owners.FirstOrDefaultAsync(o => o.Id == id);
+            if (ownerToDelete == null)
             {
-                return false;
+                throw new KeyNotFoundException();
             }
 
-            _context.Owners.Remove(animal);
+            _context.Owners.Remove(ownerToDelete);
             await _context.SaveChangesAsync();
-            return true;
         }
     }
 }

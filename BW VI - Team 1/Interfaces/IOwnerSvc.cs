@@ -9,7 +9,7 @@ namespace BW_VI___Team_1.Interfaces
         Task<Owner> GetOwnerByIdAsync(int id);
         Task<Owner> AddOwnerAsync(OwnerDTO owner);
         Task<Owner> UpdateOwnerAsync(Owner owner);
-        Task<bool> DeleteOwnerAsync(int id);
+        Task DeleteOwnerAsync(int id);
 
     }
 }
