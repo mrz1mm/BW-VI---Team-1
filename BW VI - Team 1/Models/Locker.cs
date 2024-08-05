@@ -9,6 +9,6 @@ namespace BW_VI___Team_1.Models
         [Required]
         public string Number { get; set; }
         [Required]
-        public string Drawer { get; set; }
+        public List<Drawer> Drawer { get; set; } = [];
     }
 }

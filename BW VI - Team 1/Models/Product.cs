@@ -32,6 +32,7 @@ namespace BW_VI___Team_1.Models
             }
         }
 
+
         private void EnsureIsMedicine()
         {
             if (Type != Type.Medicine)
