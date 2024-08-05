@@ -90,14 +90,18 @@ namespace BW_VI___Team_1.Services
 
         public async Task DeleteOrderAsync(int id)
         {
-            var OrderDelete = await _context.Orders.FirstOrDefaultAsync(o => o.Id == id);
-            if (OrderDelete == null)
+            var orderToDelete = await _context.Orders
+                .Include(o => o.Products) 
+                .FirstOrDefaultAsync(o => o.Id == id);
+
+            if (orderToDelete == null)
             {
                 throw new KeyNotFoundException();
             }
-
-            _context.Orders.Remove(OrderDelete);
+            _context.Products.RemoveRange(orderToDelete.Products);
+            _context.Orders.Remove(orderToDelete);
             await _context.SaveChangesAsync();
         }
+
     }
 }
