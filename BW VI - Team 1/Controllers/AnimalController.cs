@@ -24,6 +24,18 @@ namespace BW_VI___Team_1.Controllers
         }
 
         [HttpGet]
+        public IActionResult AnimalDetails(int id)
+        {
+            var animal = _animalSvc.GetAnimalByIdAsync(id);
+            if (animal == null)
+            {
+                return NotFound();
+            }
+
+            return View(animal);
+        }
+
+        [HttpGet]
         public IActionResult AddAnimal()
         {
             return View();

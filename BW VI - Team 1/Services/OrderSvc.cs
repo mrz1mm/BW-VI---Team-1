@@ -37,28 +37,28 @@ namespace BW_VI___Team_1.Services
 
         public async Task<Order> UpdateOrderAsync(Order model)
         {
-            var animal = await _context.Orders.FindAsync(model.Id);
-            if (animal == null)
+            var order = await _context.Orders.FindAsync(model.Id);
+            if (order == null)
             {
                 return null;
             }
 
-            // Aggiungere cose (es. animal.Name = model.Name)
+            // Aggiungere cose (es. order.Name = model.Name)
 
-            _context.Orders.Update(animal);
+            _context.Orders.Update(order);
             await _context.SaveChangesAsync();
-            return animal;
+            return order;
         }
 
         public async Task<bool> DeleteOrderAsync(int id)
         {
-            var animal = await _context.Orders.FindAsync(id);
-            if (animal == null)
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null)
             {
                 return false;
             }
 
-            _context.Orders.Remove(animal);
+            _context.Orders.Remove(order);
             await _context.SaveChangesAsync();
             return true;
         }
