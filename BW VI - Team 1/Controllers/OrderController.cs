@@ -28,24 +28,25 @@ namespace BW_VI___Team_1.Controllers
         {
             return View();
         }
-
         [HttpGet]
-        public IActionResult UpdateOrder(int id)
+        public async Task<IActionResult> UpdateOrder(int id)
         {
-            var order = _orderSvc.GetOrderByIdAsync(id);
+            var order = await _orderSvc.GetOrderByIdAsync(id);
             if (order == null)
             {
                 return NotFound();
             }
 
-            var model = new Order
+            var model = new OrderDTO
             {
-                // aggiungere cose (es. Name = order.Name)
+                Products = order.Products,
+                Owner = order.Owner,
+                MedicalPrescription = order.MedicalPrescription,
+                Date = order.Date
             };
 
             return View(model);
         }
-
         [HttpGet]
         public IActionResult DeleteOrder(int id)
         {
@@ -67,7 +68,7 @@ namespace BW_VI___Team_1.Controllers
         // METODI
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrder(OrderDTO model) // aggiungere il Binding
+        public async Task<IActionResult> AddOrder(OrderDTO model)
         {
             if (!ModelState.IsValid)
             {
@@ -92,7 +93,7 @@ namespace BW_VI___Team_1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateOrder(Order model) // aggiungere il Binding
+        public async Task<IActionResult> UpdateOrder(Order model)
         {
             if (!ModelState.IsValid)
             {

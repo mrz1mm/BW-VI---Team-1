@@ -14,19 +14,22 @@ namespace BW_VI___Team_1.Services
 
         public async Task<List<Order>> GetAllOrdersAsync()
         {
-            return await _context.Orders.ToListAsync();
+            return await _context.Orders.Include(o => o.Products).Include(o => o.Owner).ToListAsync();
         }
 
         public async Task<Order> GetOrderByIdAsync(int id)
         {
-            return await _context.Orders.FindAsync(id);
+            return await _context.Orders.Include(o => o.Products).Include(o => o.Owner).FirstOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<Order> AddOrderAsync(OrderDTO model)
         {
             var newOrder = new Order
             {
-                // Aggiungere cose (es. Name = model.Name)
+                Products = model.Products,
+                Owner = model.Owner,
+                MedicalPrescription = model.MedicalPrescription,
+                Date = model.Date
             };
             _context.Orders.Add(newOrder);
             await _context.SaveChangesAsync();
@@ -36,17 +39,20 @@ namespace BW_VI___Team_1.Services
 
         public async Task<Order> UpdateOrderAsync(Order model)
         {
-            var animal = await _context.Orders.FindAsync(model.Id);
-            if (animal == null)
+            var order = await _context.Orders.FindAsync(model.Id);
+            if (order == null)
             {
                 return null;
             }
 
-            // Aggiungere cose (es. animal.Name = model.Name)
+            order.Products = model.Products;
+            order.Owner = model.Owner;
+            order.MedicalPrescription = model.MedicalPrescription;
+            order.Date = model.Date;
 
-            _context.Orders.Update(animal);
+            _context.Orders.Update(order);
             await _context.SaveChangesAsync();
-            return animal;
+            return order;
         }
 
         public async Task<bool> DeleteOrderAsync(int id)

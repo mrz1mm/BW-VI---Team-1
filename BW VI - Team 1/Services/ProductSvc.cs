@@ -40,21 +40,21 @@ namespace BW_VI___Team_1.Services
 
         public async Task<Product> UpdateProductAsync(Product model)
         {
-            var animal = await _context.Products.FindAsync(model.Id);
-            if (animal == null)
+            var product = await _context.Products.FindAsync(model.Id);
+            if (product == null)
             {
                 return null;
             }
 
-            animal.Name = model.Name;
-            animal.Suppliers = model.Suppliers;
-            animal.Type = model.Type;
-            animal.Usages = model.Usages;
-            animal.Locker = model.Type == Models.Type.Medicine ? model.Locker : null;
+            product.Name = model.Name;
+            product.Suppliers = model.Suppliers;
+            product.Type = model.Type;
+            product.Usages = model.Usages;
+            product.Locker = model.Type == Models.Type.Medicine ? model.Locker : null;
 
-            _context.Products.Update(animal);
+            _context.Products.Update(product);
             await _context.SaveChangesAsync();
-            return animal;
+            return product;
         }
 
         public async Task<bool> DeleteProductAsync(int id)
