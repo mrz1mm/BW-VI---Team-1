@@ -71,7 +71,7 @@ namespace BW_VI___Team_1.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteOrder(int id)
         {
-           try
+            try
             {
                 await _orderSvc.DeleteOrderAsync(id);
             }
@@ -90,7 +90,7 @@ namespace BW_VI___Team_1.Controllers
         {
             try
             {
-                if (model.Owner == null || model.Owner.Id == 0)
+                if (model.Owner == null)
                 {
                     ModelState.AddModelError("", "Owner is required.");
                     return View(model);
@@ -99,7 +99,6 @@ namespace BW_VI___Team_1.Controllers
                 var selectedOwner = await _context.Owners.FindAsync(model.Owner.Id);
                 if (selectedOwner == null)
                 {
-                    ModelState.AddModelError("", "Owner not found.");
                     return View(model);
                 }
 
@@ -107,11 +106,10 @@ namespace BW_VI___Team_1.Controllers
 
                 if (selectedProductIds == null || !selectedProductIds.Any())
                 {
-                    ModelState.AddModelError("", "At least one product must be selected.");
                     return View(model);
                 }
 
-                model.SelectedProductIds = selectedProductIds; 
+                model.SelectedProductIds = selectedProductIds;
 
                 await _orderSvc.AddOrderAsync(model);
                 TempData["Success"] = "Order added successfully.";
@@ -126,53 +124,48 @@ namespace BW_VI___Team_1.Controllers
         }
 
 
-
-
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateOrder(Order model) // aggiungere il Binding
+        public async Task<IActionResult> UpdateOrder(int id, Order model, int[] selectedProductIds)
         {
-            if (!ModelState.IsValid)
-            {
-                TempData["Error"] = "Errore nella compilazione dei campi";
-                return View(model);
-            }
-
             try
             {
-                var order = await _orderSvc.GetOrderByIdAsync(model.Id);
-                if (order == null)
+                if (selectedProductIds == null)
                 {
-                    return NotFound();
+                    ModelState.AddModelError("", "At least one product must be selected.");
+                    ViewBag.Products = await _context.Products.ToListAsync();
+                    ViewBag.Owners = await _context.Owners.Select(o => new SelectListItem
+                    {
+                        Value = o.Id.ToString(),
+                        Text = $"{o.FirstName} {o.LastName}"
+                    }).ToListAsync();
+                    return View(model);
                 }
 
-                order.MedicalPrescription = model.MedicalPrescription;
-                order.Date = model.Date;
-                order.Owner = model.Owner;
-
-                if (model.Products != null && model.Products.Any())
+                var dto = new OrderDTO
                 {
-                    var productEntities = await _context.Products
-                        .Where(p => model.Products.Select(prod => prod.Id).Contains(p.Id))
-                        .ToListAsync();
+                    MedicalPrescription = model.MedicalPrescription,
+                    Date = model.Date,
+                    Owner = model.Owner,
+                    SelectedProductIds = selectedProductIds
+                };
 
-                    order.Products = productEntities;
-                }
-
-                await _orderSvc.UpdateOrderAsync(order);
-                TempData["Success"] = "Ordine modificato con successo";
+                await _orderSvc.UpdateOrderAsync(id, dto);
+                TempData["Success"] = "Order updated successfully.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                TempData["Error"] = "Errore nella modifica dell'ordine";
+                ViewBag.Products = await _context.Products.ToListAsync();
+                ViewBag.Owners = await _context.Owners.Select(o => new SelectListItem
+                {
+                    Value = o.Id.ToString(),
+                    Text = $"{o.FirstName} {o.LastName}"
+                }).ToListAsync();
                 return View(model);
             }
         }
-
 
     }
 }

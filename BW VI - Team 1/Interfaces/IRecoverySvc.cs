@@ -10,7 +10,7 @@ namespace BW_VI___Team_1.Interfaces
         Task<Recovery> GetRecoveryByAnimal(int id);
         Task<Recovery> AddRecoveryAsync(RecoveryDTO recovery);
         Task<Recovery> UpdateRecoveryAsync(Recovery recovery);
-        Task<bool> DeleteRecoveryAsync(int id);
+        Task DeleteRecoveryAsync(int id);
 
     }
 }

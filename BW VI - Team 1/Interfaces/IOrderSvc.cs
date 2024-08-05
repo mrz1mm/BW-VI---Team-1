@@ -8,7 +8,7 @@ namespace BW_VI___Team_1.Interfaces
         Task<List<Order>> GetAllOrdersAsync();
         Task<Order> GetOrderByIdAsync(int id);
         Task<Order> AddOrderAsync(OrderDTO order);
-        Task<Order> UpdateOrderAsync(Order order);
+        Task UpdateOrderAsync(int id, OrderDTO dto);
         Task DeleteOrderAsync(int id);
     }
 }

@@ -23,16 +23,19 @@ namespace BW_VI___Team_1.Services
             return await _context.Recoverys.FindAsync(id);
         }
 
-        public async Task<Recovery> AddRecoveryAsync(RecoveryDTO model)
+        public async Task<Recovery> AddRecoveryAsync(RecoveryDTO dto)
         {
             var newRecovery = new Recovery
             {
-                // Aggiungere cose (es. Name = model.Name)
+                StartDate = dto.StartDate,
+                EndDate = dto.EndDate,
+                Animal = dto.Animal,
+                IsRefound = dto.IsRefound
             };
+
             _context.Recoverys.Add(newRecovery);
             await _context.SaveChangesAsync();
             return newRecovery;
-
         }
 
         public async Task<Recovery> UpdateRecoveryAsync(Recovery model)
@@ -43,24 +46,26 @@ namespace BW_VI___Team_1.Services
                 return null;
             }
 
-            // Aggiungere cose (es. recovery.Name = model.Name)
+            recovery.StartDate = model.StartDate;
+            recovery.EndDate = model.EndDate;
+            recovery.Animal = model.Animal;
+            recovery.IsRefound = model.IsRefound;
 
             _context.Recoverys.Update(recovery);
             await _context.SaveChangesAsync();
             return recovery;
         }
 
-        public async Task<bool> DeleteRecoveryAsync(int id)
+        public async Task DeleteRecoveryAsync(int id)
         {
             var recovery = await _context.Recoverys.FindAsync(id);
             if (recovery == null)
             {
-                return false;
+                throw new KeyNotFoundException();
             }
 
             _context.Recoverys.Remove(recovery);
             await _context.SaveChangesAsync();
-            return true;
         }
 
         public async Task<List<Recovery>> GetAllRecoveriesAsync()

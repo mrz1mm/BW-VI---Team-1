@@ -5,7 +5,7 @@ using BW_VI___Team_1.Interfaces;
 
 namespace BW_VI___Team_1.Services
 {
-    public class OrderSvc   : IOrderSvc
+    public class OrderSvc : IOrderSvc
     {
         private readonly LifePetDBContext _context;
         public OrderSvc(LifePetDBContext context)
@@ -31,10 +31,6 @@ namespace BW_VI___Team_1.Services
 
         public async Task<Order> AddOrderAsync(OrderDTO model)
         {
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
 
             var selectedProducts = await _context.Products
                 .Where(p => model.SelectedProductIds.Contains(p.Id))
@@ -45,7 +41,7 @@ namespace BW_VI___Team_1.Services
                 MedicalPrescription = model.MedicalPrescription,
                 Date = model.Date,
                 Products = selectedProducts,
-                Owner = model.Owner 
+                Owner = model.Owner
             };
 
             _context.Orders.Add(newOrder);
@@ -56,39 +52,40 @@ namespace BW_VI___Team_1.Services
 
 
 
-        public async Task<Order> UpdateOrderAsync(Order model)
+        public async Task UpdateOrderAsync(int id, OrderDTO dto)
         {
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
-
             var existingOrder = await _context.Orders
                 .Include(o => o.Products)
                 .Include(o => o.Owner)
-                .FirstOrDefaultAsync(o => o.Id == model.Id);
+                .FirstOrDefaultAsync(o => o.Id == id);
 
             if (existingOrder == null)
             {
                 throw new KeyNotFoundException("Order not found.");
             }
 
-            existingOrder.MedicalPrescription = model.MedicalPrescription;
-            existingOrder.Date = model.Date;
+            existingOrder.MedicalPrescription = dto.MedicalPrescription;
+            existingOrder.Date = dto.Date;
 
-            if (model.Products != null && model.Products.Any())
+            if (dto.SelectedProductIds != null && dto.SelectedProductIds.Any())
             {
                 var productEntities = await _context.Products
-                    .Where(p => model.Products.Select(pr => pr.Id).Contains(p.Id))
+                    .Where(p => dto.SelectedProductIds.Contains(p.Id))
                     .ToListAsync();
 
                 existingOrder.Products = productEntities;
             }
+            else
+            {
+                existingOrder.Products.Clear();
+            }
 
             _context.Orders.Update(existingOrder);
             await _context.SaveChangesAsync();
-            return existingOrder;
         }
+
+
+
 
 
         public async Task DeleteOrderAsync(int id)
