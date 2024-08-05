@@ -16,30 +16,6 @@ namespace BW_VI___Team_1.Models
         [Required]
         public List<Usage> Usages { get; set; } = [];
         public Locker? Locker { get; set; }
-
-        [NotMapped]
-        public Locker LockerCondition
-        {
-            get
-            {
-                EnsureIsMedicine();
-                return Locker;
-            }
-            set
-            {
-                EnsureIsMedicine();
-                Locker = value;
-            }
-        }
-
-
-        private void EnsureIsMedicine()
-        {
-            if (Type != Type.Medicine)
-            {
-                throw new InvalidOperationException("Only medicines have a locker.");
-            }
-        }
     }
 
     public enum Type

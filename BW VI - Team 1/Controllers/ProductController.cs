@@ -2,6 +2,8 @@
 using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using ProductType = BW_VI___Team_1.Models.Type;
+
 
 namespace BW_VI___Team_1.Controllers
 {
@@ -17,50 +19,55 @@ namespace BW_VI___Team_1.Controllers
 
         // VISTE
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var products = _productSvc.GetAllProductsAsync();
+            var products = await _productSvc.GetAllProductsAsync();
             return View(products);
         }
 
         [HttpGet]
         public IActionResult AddProduct()
         {
+            ViewBag.ProductTypes = new List<string> { "AnimalFood", "Medicine" };
             return View();
         }
 
         [HttpGet]
-        public IActionResult UpdateProduct(int id)
+        public async Task<IActionResult> UpdateProduct(int id)
         {
-            var product = _productSvc.GetProductByIdAsync(id);
+            var product = await _productSvc.GetProductByIdAsync(id);
             if (product == null)
             {
                 return NotFound();
             }
 
+            ViewBag.ProductTypes = Enum.GetValues(typeof(ProductType)).Cast<ProductType>().Select(t => t.ToString()).ToList();
+
             var model = new Product
             {
-                // aggiungere cose (es. Name = product.Name)
+                Id = product.Id,
+                Name = product.Name,
+                Suppliers = product.Suppliers,
+                Type = product.Type,
+                Usages = product.Usages,
+                Locker = product.Locker
             };
 
             return View(model);
         }
 
-        [HttpGet]
-        public IActionResult DeleteProduct(int id)
+        [HttpPost]
+        public async Task<IActionResult> DeleteProduct(int id)
         {
-            var product = _productSvc.GetProductByIdAsync(id);
-            if (product == null)
+            try
+            {
+                await _productSvc.DeleteProductAsync(id);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-
-            var model = new Product
-            {
-                // aggiungere cose (es. Name = product.Name)
-            };
-
-            return View();
+            return RedirectToAction(nameof(Index));
         }
 
 
@@ -111,23 +118,6 @@ namespace BW_VI___Team_1.Controllers
                 ModelState.AddModelError("", ex.Message);
                 TempData["Error"] = "Errore nella modifica dell'producte";
                 return View(model);
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmDeleteProduct(int id)
-        {
-            try
-            {
-                await _productSvc.DeleteProductAsync(id);
-                TempData["Success"] = "Producte eliminato con successo";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "Errore nell'eliminazione dell'producte";
-                return RedirectToAction(nameof(Index));
             }
         }
     }

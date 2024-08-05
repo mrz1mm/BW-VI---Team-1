@@ -58,17 +58,16 @@ namespace BW_VI___Team_1.Services
             return product;
         }
 
-        public async Task<bool> DeleteProductAsync(int id)
+        public async Task DeleteProductAsync(int id)
         {
-            var animal = await _context.Products.FindAsync(id);
-            if (animal == null)
+            var ProductDelete = await _context.Products.FindAsync(id);
+            if (ProductDelete == null)
             {
-                return false;
+                throw new KeyNotFoundException();
             }
 
-            _context.Products.Remove(animal);
+            _context.Products.Remove(ProductDelete);
             await _context.SaveChangesAsync();
-            return true;
         }
     }
 }
