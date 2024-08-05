@@ -29,7 +29,7 @@ namespace BW_VI___Team_1.Controllers
         {
             // Popola ViewBag.Animals con l'elenco degli animali
             ViewBag.Animals = _context.Animals.ToList();
-            return View();
+            return View(new VisitDTO { Date = DateOnly.FromDateTime(DateTime.Now) });
         }
 
         [HttpPost]
@@ -80,12 +80,14 @@ namespace BW_VI___Team_1.Controllers
                 Animal = visit.Animal
             };
 
+            ViewBag.VisitId = id; // Aggiungi l'ID alla ViewBag
+
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateVisit(VisitDTO model)
+        public async Task<IActionResult> UpdateVisit(int id, VisitDTO model)
         {
             if (!ModelState.IsValid)
             {
@@ -97,7 +99,7 @@ namespace BW_VI___Team_1.Controllers
 
             try
             {
-                var visit = await _visitSvc.GetVisitByIdAsync(model.Id);
+                var visit = await _visitSvc.GetVisitByIdAsync(id);
                 if (visit == null)
                 {
                     return NotFound();
