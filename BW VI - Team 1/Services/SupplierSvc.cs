@@ -2,6 +2,7 @@
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 using BW_VI___Team_1.Interfaces;
+using System.Linq;
 
 namespace BW_VI___Team_1.Services
 {
@@ -27,7 +28,9 @@ namespace BW_VI___Team_1.Services
         {
             var newSupplier = new Supplier
             {
-                // Aggiungere cose (es. Name = model.Name)
+                Name = model.Name,
+                Address = model.Address,
+                Telephone = model.Telephone,
             };
             _context.Suppliers.Add(newSupplier);
             await _context.SaveChangesAsync();
@@ -37,30 +40,37 @@ namespace BW_VI___Team_1.Services
 
         public async Task<Supplier> UpdateSupplierAsync(Supplier model)
         {
-            var supplier = await _context.Suppliers.FindAsync(model.Id);
-            if (supplier == null)
+            var UpdatedSupplier = await _context.Suppliers.FindAsync(model.Id);
+            if (UpdatedSupplier == null)
             {
                 return null;
             }
 
-            // Aggiungere cose (es. supplier.Name = model.Name)
+            UpdatedSupplier.Name = model.Name;
+            UpdatedSupplier.Address = model.Address;
+            UpdatedSupplier.Telephone = model.Telephone;
+            var productIds = model.Products.Select(p => p.Id).ToList();
 
-            _context.Suppliers.Update(supplier);
+            UpdatedSupplier.Products = await _context.Products
+                .Where(p => productIds.Contains(p.Id))
+                .ToListAsync();
+
+            _context.Suppliers.Update(UpdatedSupplier);
             await _context.SaveChangesAsync();
-            return supplier;
+            return UpdatedSupplier;
         }
 
-        public async Task<bool> DeleteSupplierAsync(int id)
+
+        public async Task DeleteSupplierAsync(int id)
         {
-            var supplier = await _context.Suppliers.FindAsync(id);
-            if (supplier == null)
+            var SupplierDelete = await _context.Suppliers.FirstOrDefaultAsync(o => o.Id == id);
+            if (SupplierDelete == null)
             {
-                return false;
+                throw new KeyNotFoundException();
             }
 
-            _context.Suppliers.Remove(supplier);
+            _context.Suppliers.Remove(SupplierDelete);
             await _context.SaveChangesAsync();
-            return true;
         }
     }
 }

@@ -30,37 +30,34 @@ namespace BW_VI___Team_1.Controllers
         }
 
         [HttpGet]
-        public IActionResult UpdateLocker(int id)
+        public async Task<IActionResult> UpdateLocker(int id)
         {
-            var locker = _lockerSvc.GetLockerByIdAsync(id);
+            var locker = await _lockerSvc.GetLockerByIdAsync(id);
             if (locker == null)
             {
                 return NotFound();
             }
 
-            var model = new Locker
+            var model = new LockerDTO
             {
-                // aggiungere cose (es. Name = locker.Name)
+                Number = locker.Number
             };
 
             return View(model);
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult DeleteLocker(int id)
         {
-            var locker = _lockerSvc.GetLockerByIdAsync(id);
-            if (locker == null)
+            try 
+            {
+                _lockerSvc.DeleteLockerAsync(id);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-
-            var model = new Locker
-            {
-                // aggiungere cose (es. Name = locker.Name)
-            };
-
-            return View();
+            return RedirectToAction(nameof(Index));
         }
 
 
@@ -111,23 +108,6 @@ namespace BW_VI___Team_1.Controllers
                 ModelState.AddModelError("", ex.Message);
                 TempData["Error"] = "Errore nella modifica dell'lockere";
                 return View(model);
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmDeleteLocker(int id)
-        {
-            try
-            {
-                await _lockerSvc.DeleteLockerAsync(id);
-                TempData["Success"] = "Lockere eliminato con successo";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "Errore nell'eliminazione dell'lockere";
-                return RedirectToAction(nameof(Index));
             }
         }
     }
