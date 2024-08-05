@@ -15,52 +15,92 @@ namespace BW_VI___Team_1.Services
 
         public async Task<List<Order>> GetAllOrdersAsync()
         {
-            return await _context.Orders.ToListAsync();
+            return await _context.Orders
+               .Include(o => o.Products)
+               .Include(o => o.Owner)
+               .ToListAsync();
         }
 
         public async Task<Order> GetOrderByIdAsync(int id)
         {
-            return await _context.Orders.FindAsync(id);
+            return await _context.Orders
+                .Include(o => o.Products)
+                .Include(o => o.Owner)
+                .FirstOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<Order> AddOrderAsync(OrderDTO model)
         {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            var selectedProducts = await _context.Products
+                .Where(p => model.SelectedProductIds.Contains(p.Id))
+                .ToListAsync();
+
             var newOrder = new Order
             {
-                // Aggiungere cose (es. Name = model.Name)
+                MedicalPrescription = model.MedicalPrescription,
+                Date = model.Date,
+                Products = selectedProducts,
+                Owner = model.Owner 
             };
+
             _context.Orders.Add(newOrder);
             await _context.SaveChangesAsync();
             return newOrder;
-
         }
+
+
+
 
         public async Task<Order> UpdateOrderAsync(Order model)
         {
-            var order = await _context.Orders.FindAsync(model.Id);
-            if (order == null)
+            if (model == null)
             {
-                return null;
+                throw new ArgumentNullException(nameof(model));
             }
 
-            // Aggiungere cose (es. order.Name = model.Name)
+            var existingOrder = await _context.Orders
+                .Include(o => o.Products)
+                .Include(o => o.Owner)
+                .FirstOrDefaultAsync(o => o.Id == model.Id);
 
-            _context.Orders.Update(order);
+            if (existingOrder == null)
+            {
+                throw new KeyNotFoundException("Order not found.");
+            }
+
+            existingOrder.MedicalPrescription = model.MedicalPrescription;
+            existingOrder.Date = model.Date;
+
+            if (model.Products != null && model.Products.Any())
+            {
+                var productEntities = await _context.Products
+                    .Where(p => model.Products.Select(pr => pr.Id).Contains(p.Id))
+                    .ToListAsync();
+
+                existingOrder.Products = productEntities;
+            }
+
+            _context.Orders.Update(existingOrder);
             await _context.SaveChangesAsync();
-            return order;
+            return existingOrder;
         }
 
-        public async Task<bool> DeleteOrderAsync(int id)
+
+        public async Task DeleteOrderAsync(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null)
+            var OrderDelete = await _context.Orders.FirstOrDefaultAsync(o => o.Id == id);
+            if (OrderDelete == null)
             {
-                return false;
+                throw new KeyNotFoundException();
             }
 
-            _context.Orders.Remove(order);
+            _context.Orders.Remove(OrderDelete);
             await _context.SaveChangesAsync();
-            return true;
         }
     }
 }

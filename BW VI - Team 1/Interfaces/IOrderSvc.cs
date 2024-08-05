@@ -9,6 +9,6 @@ namespace BW_VI___Team_1.Interfaces
         Task<Order> GetOrderByIdAsync(int id);
         Task<Order> AddOrderAsync(OrderDTO order);
         Task<Order> UpdateOrderAsync(Order order);
-        Task<bool> DeleteOrderAsync(int id);
+        Task DeleteOrderAsync(int id);
     }
 }
