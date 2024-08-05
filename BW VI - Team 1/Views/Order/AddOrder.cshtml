@@ -16,11 +16,7 @@
                 <input asp-for="MedicalPrescription" class="form-control" />
                 <span asp-validation-for="MedicalPrescription" class="text-danger"></span>
             </div>
-
-            <!-- Campo Hidden per la Data -->
             <input asp-for="Date" type="hidden" />
-
-            <!-- Select per gli Owner -->
             <div class="form-group">
                 <label asp-for="Owner">Owner</label>
                 <select asp-for="Owner.Id" class="form-control" asp-items="@(ViewBag.Owners)">
@@ -28,8 +24,6 @@
                 </select>
                 <span asp-validation-for="Owner.Id" class="text-danger"></span>
             </div>
-
-            <!-- Prodotti con Checkboxes -->
             <div class="form-group">
                 <label class="form-label">Products</label>
                 <div class="row">

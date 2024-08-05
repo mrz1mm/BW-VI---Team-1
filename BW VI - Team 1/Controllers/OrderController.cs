@@ -57,13 +57,6 @@ namespace BW_VI___Team_1.Controllers
                 return NotFound();
             }
 
-            var model = new OrderDTO
-            {
-                Products = order.Products,
-                Owner = order.Owner,
-                MedicalPrescription = order.MedicalPrescription,
-                Date = order.Date
-            };
             ViewBag.Products = await _context.Products.ToListAsync();
             ViewBag.Owners = await _context.Owners.Select(o => new SelectListItem
             {
@@ -71,8 +64,9 @@ namespace BW_VI___Team_1.Controllers
                 Text = $"{o.FirstName} {o.LastName}"
             }).ToListAsync();
 
-            return View(model);
+            return View(order);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> DeleteOrder(int id)
@@ -148,7 +142,26 @@ namespace BW_VI___Team_1.Controllers
 
             try
             {
-                await _orderSvc.UpdateOrderAsync(model);
+                var order = await _orderSvc.GetOrderByIdAsync(model.Id);
+                if (order == null)
+                {
+                    return NotFound();
+                }
+
+                order.MedicalPrescription = model.MedicalPrescription;
+                order.Date = model.Date;
+                order.Owner = model.Owner;
+
+                if (model.Products != null && model.Products.Any())
+                {
+                    var productEntities = await _context.Products
+                        .Where(p => model.Products.Select(prod => prod.Id).Contains(p.Id))
+                        .ToListAsync();
+
+                    order.Products = productEntities;
+                }
+
+                await _orderSvc.UpdateOrderAsync(order);
                 TempData["Success"] = "Ordine modificato con successo";
                 return RedirectToAction(nameof(Index));
             }
@@ -159,6 +172,7 @@ namespace BW_VI___Team_1.Controllers
                 return View(model);
             }
         }
+
 
     }
 }
