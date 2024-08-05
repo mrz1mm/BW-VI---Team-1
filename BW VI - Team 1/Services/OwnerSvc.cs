@@ -55,13 +55,13 @@ namespace BW_VI___Team_1.Services
 
         public async Task<bool> DeleteOwnerAsync(int id)
         {
-            var animal = await _context.Owners.FindAsync(id);
-            if (animal == null)
+            var owner = await _context.Owners.FindAsync(id);
+            if (owner == null)
             {
                 return false;
             }
 
-            _context.Owners.Remove(animal);
+            _context.Owners.Remove(owner);
             await _context.SaveChangesAsync();
             return true;
         }
