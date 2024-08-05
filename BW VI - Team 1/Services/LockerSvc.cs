@@ -27,7 +27,7 @@ namespace BW_VI___Team_1.Services
         {
             var newLocker = new Locker
             {
-                // Aggiungere cose (es. Name = model.Name)
+                Number = model.Number,
             };
             _context.Lockers.Add(newLocker);
             await _context.SaveChangesAsync();
@@ -40,29 +40,29 @@ namespace BW_VI___Team_1.Services
             var locker = await _context.Lockers.FindAsync(model.Id);
             if (locker == null)
             {
-                return null;
+                throw new KeyNotFoundException();
             }
 
-            // Aggiungere cose (es. locker.Name = model.Name)
+            locker.Number = model.Number;
 
             _context.Lockers.Update(locker);
             await _context.SaveChangesAsync();
             return locker;
         }
 
-        public async Task<bool> DeleteLockerAsync(int id) 
+        public async Task DeleteLockerAsync(int id) 
         { 
             var locker = await _context.Lockers.FindAsync(id);
 
             if (locker == null)
             {
-                return false;
+                throw new KeyNotFoundException();
             }
 
             _context.Lockers.Remove(locker);
             await _context.SaveChangesAsync();
 
-            return true;
+           
         }
     }
 }

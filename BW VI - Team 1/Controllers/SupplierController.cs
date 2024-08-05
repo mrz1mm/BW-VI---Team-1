@@ -17,9 +17,9 @@ namespace BW_VI___Team_1.Controllers
 
         // VISTE
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var suppliers = _supplierSvc.GetAllSuppliersAsync();
+            var suppliers = await _supplierSvc.GetAllSuppliersAsync();
             return View(suppliers);
         }
 
@@ -30,37 +30,28 @@ namespace BW_VI___Team_1.Controllers
         }
 
         [HttpGet]
-        public IActionResult UpdateSupplier(int id)
+        public async Task<IActionResult> UpdateSupplier(int id)
         {
-            var supplier = _supplierSvc.GetSupplierByIdAsync(id);
+            var supplier = await _supplierSvc.GetSupplierByIdAsync(id);
             if (supplier == null)
             {
                 return NotFound();
             }
-
-            var model = new Supplier
-            {
-                // aggiungere cose (es. Name = supplier.Name)
-            };
-
-            return View(model);
+            return View(supplier);
         }
 
-        [HttpGet]
-        public IActionResult DeleteSupplier(int id)
+        [HttpPost]
+        public async Task<IActionResult> DeleteSupplier(int id)
         {
-            var supplier = _supplierSvc.GetSupplierByIdAsync(id);
-            if (supplier == null)
+            try
+            {
+                await _supplierSvc.DeleteSupplierAsync(id);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-
-            var model = new Supplier
-            {
-                // aggiungere cose (es. Name = supplier.Name)
-            };
-
-            return View();
+            return RedirectToAction(nameof(Index));
         }
 
 
@@ -111,23 +102,6 @@ namespace BW_VI___Team_1.Controllers
                 ModelState.AddModelError("", ex.Message);
                 TempData["Error"] = "Errore nella modifica dell'suppliere";
                 return View(model);
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmDeleteSupplier(int id)
-        {
-            try
-            {
-                await _supplierSvc.DeleteSupplierAsync(id);
-                TempData["Success"] = "Suppliere eliminato con successo";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "Errore nell'eliminazione dell'suppliere";
-                return RedirectToAction(nameof(Index));
             }
         }
     }
