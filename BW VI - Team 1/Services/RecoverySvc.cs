@@ -1,10 +1,11 @@
 ﻿using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.EntityFrameworkCore;
+using BW_VI___Team_1.Interfaces;
 
 namespace BW_VI___Team_1.Services
 {
-    public class RecoverySvc
+    public class RecoverySvc : IRecoverySvc
     {
         private readonly LifePetDBContext _context;
         public RecoverySvc(LifePetDBContext context)
@@ -36,30 +37,40 @@ namespace BW_VI___Team_1.Services
 
         public async Task<Recovery> UpdateRecoveryAsync(Recovery model)
         {
-            var animal = await _context.Recoverys.FindAsync(model.Id);
-            if (animal == null)
+            var recovery = await _context.Recoverys.FindAsync(model.Id);
+            if (recovery == null)
             {
                 return null;
             }
 
-            // Aggiungere cose (es. animal.Name = model.Name)
+            // Aggiungere cose (es. recovery.Name = model.Name)
 
-            _context.Recoverys.Update(animal);
+            _context.Recoverys.Update(recovery);
             await _context.SaveChangesAsync();
-            return animal;
+            return recovery;
         }
 
         public async Task<bool> DeleteRecoveryAsync(int id)
         {
-            var animal = await _context.Recoverys.FindAsync(id);
-            if (animal == null)
+            var recovery = await _context.Recoverys.FindAsync(id);
+            if (recovery == null)
             {
                 return false;
             }
 
-            _context.Recoverys.Remove(animal);
+            _context.Recoverys.Remove(recovery);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<List<Recovery>> GetAllRecoveriesAsync()
+            {
+            return await _context.Recoverys.ToListAsync();
+        }
+
+        public async Task<Recovery> GetRecoveryByAnimal(int id)
+            {
+            return await _context.Recoverys.FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }

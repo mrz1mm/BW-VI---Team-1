@@ -1,10 +1,11 @@
 ﻿using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.EntityFrameworkCore;
+using BW_VI___Team_1.Interfaces;
 
 namespace BW_VI___Team_1.Services
 {
-    public class ProductSvc
+    public class ProductSvc : IProductSvc
     {
         private readonly LifePetDBContext _context;
         public ProductSvc(LifePetDBContext context)
@@ -14,12 +15,12 @@ namespace BW_VI___Team_1.Services
 
         public async Task<List<Product>> GetAllProductsAsync()
         {
-            return await _context.Products.Include(p => p.Suppliers).Include(p => p.Usages).ToListAsync();
+            return await _context.Products.ToListAsync();
         }
 
         public async Task<Product> GetProductByIdAsync(int id)
         {
-            return await _context.Products.Include(p => p.Suppliers).Include(p => p.Usages).FirstOrDefaultAsync(p => p.Id == id);
+            return await _context.Products.FindAsync(id);
         }
 
         public async Task<Product> AddProductAsync(ProductDTO model)
@@ -57,17 +58,16 @@ namespace BW_VI___Team_1.Services
             return product;
         }
 
-        public async Task<bool> DeleteProductAsync(int id)
+        public async Task DeleteProductAsync(int id)
         {
-            var animal = await _context.Products.FindAsync(id);
-            if (animal == null)
+            var ProductDelete = await _context.Products.FindAsync(id);
+            if (ProductDelete == null)
             {
-                return false;
+                throw new KeyNotFoundException();
             }
 
-            _context.Products.Remove(animal);
+            _context.Products.Remove(ProductDelete);
             await _context.SaveChangesAsync();
-            return true;
         }
     }
 }

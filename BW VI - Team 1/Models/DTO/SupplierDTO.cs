@@ -7,6 +7,5 @@ namespace BW_VI___Team_1.Models.DTO
         public string Name { get; set; }
         public string Address { get; set; }
         public string Telephone { get; set; }
-        public List<int> Products { get; set; }
     }
 }

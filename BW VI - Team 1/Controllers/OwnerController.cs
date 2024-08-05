@@ -17,9 +17,9 @@ namespace BW_VI___Team_1.Controllers
 
         // VISTE
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var owners = _ownerSvc.GetAllOwnersAsync();
+            var owners = await _ownerSvc.GetAllOwnersAsync();
             return View(owners);
         }
 
@@ -30,9 +30,9 @@ namespace BW_VI___Team_1.Controllers
         }
 
         [HttpGet]
-        public IActionResult UpdateOwner(int id)
+        public async Task<IActionResult> UpdateOwner(int id)
         {
-            var owner = _ownerSvc.GetOwnerByIdAsync(id);
+            var owner = await _ownerSvc.GetOwnerByIdAsync(id);
             if (owner == null)
             {
                 return NotFound();
@@ -40,27 +40,27 @@ namespace BW_VI___Team_1.Controllers
 
             var model = new Owner
             {
-                // aggiungere cose (es. Name = owner.Name)
+                Id = owner.Id,
+                FirstName = owner.FirstName,
+                LastName = owner.LastName,
+                FiscalCode = owner.FiscalCode
             };
 
             return View(model);
         }
 
-        [HttpGet]
-        public IActionResult DeleteOwner(int id)
+        [HttpPost]
+        public async Task<IActionResult> DeleteOwner(int id)
         {
-            var owner = _ownerSvc.GetOwnerByIdAsync(id);
-            if (owner == null)
+            try
+            {
+                await _ownerSvc.DeleteOwnerAsync(id);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-
-            var model = new Owner
-            {
-                // aggiungere cose (es. Name = owner.Name)
-            };
-
-            return View();
+            return RedirectToAction(nameof(Index));
         }
 
 
@@ -111,23 +111,6 @@ namespace BW_VI___Team_1.Controllers
                 ModelState.AddModelError("", ex.Message);
                 TempData["Error"] = "Errore nella modifica dell'ownere";
                 return View(model);
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmDeleteOwner(int id)
-        {
-            try
-            {
-                await _ownerSvc.DeleteOwnerAsync(id);
-                TempData["Success"] = "Ownere eliminato con successo";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "Errore nell'eliminazione dell'ownere";
-                return RedirectToAction(nameof(Index));
             }
         }
     }

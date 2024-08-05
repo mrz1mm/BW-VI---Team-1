@@ -1,10 +1,12 @@
 ﻿using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.EntityFrameworkCore;
+using BW_VI___Team_1.Interfaces;
+using System.Linq;
 
 namespace BW_VI___Team_1.Services
 {
-    public class SupplierSvc
+    public class SupplierSvc  : ISupplierSvc
     {
         private readonly LifePetDBContext _context;
         public SupplierSvc(LifePetDBContext context)
@@ -26,7 +28,9 @@ namespace BW_VI___Team_1.Services
         {
             var newSupplier = new Supplier
             {
-                // Aggiungere cose (es. Name = model.Name)
+                Name = model.Name,
+                Address = model.Address,
+                Telephone = model.Telephone,
             };
             _context.Suppliers.Add(newSupplier);
             await _context.SaveChangesAsync();
@@ -36,30 +40,37 @@ namespace BW_VI___Team_1.Services
 
         public async Task<Supplier> UpdateSupplierAsync(Supplier model)
         {
-            var animal = await _context.Suppliers.FindAsync(model.Id);
-            if (animal == null)
+            var UpdatedSupplier = await _context.Suppliers.FindAsync(model.Id);
+            if (UpdatedSupplier == null)
             {
                 return null;
             }
 
-            // Aggiungere cose (es. animal.Name = model.Name)
+            UpdatedSupplier.Name = model.Name;
+            UpdatedSupplier.Address = model.Address;
+            UpdatedSupplier.Telephone = model.Telephone;
+            var productIds = model.Products.Select(p => p.Id).ToList();
 
-            _context.Suppliers.Update(animal);
+            UpdatedSupplier.Products = await _context.Products
+                .Where(p => productIds.Contains(p.Id))
+                .ToListAsync();
+
+            _context.Suppliers.Update(UpdatedSupplier);
             await _context.SaveChangesAsync();
-            return animal;
+            return UpdatedSupplier;
         }
 
-        public async Task<bool> DeleteSupplierAsync(int id)
+
+        public async Task DeleteSupplierAsync(int id)
         {
-            var animal = await _context.Suppliers.FindAsync(id);
-            if (animal == null)
+            var SupplierDelete = await _context.Suppliers.FirstOrDefaultAsync(o => o.Id == id);
+            if (SupplierDelete == null)
             {
-                return false;
+                throw new KeyNotFoundException();
             }
 
-            _context.Suppliers.Remove(animal);
+            _context.Suppliers.Remove(SupplierDelete);
             await _context.SaveChangesAsync();
-            return true;
         }
     }
 }

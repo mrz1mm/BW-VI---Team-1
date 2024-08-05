@@ -1,10 +1,11 @@
 ﻿using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.EntityFrameworkCore;
+using BW_VI___Team_1.Interfaces;
 
 namespace BW_VI___Team_1.Services
 {
-    public class UsageSvc
+    public class UsageSvc : IUsageSvc
     {
         private readonly LifePetDBContext _context;
         public UsageSvc(LifePetDBContext context)
@@ -26,7 +27,7 @@ namespace BW_VI___Team_1.Services
         {
             var newUsage = new Usage
             {
-                // Aggiungere cose (es. Name = model.Name)
+                Description = model.Description
             };
             _context.Usages.Add(newUsage);
             await _context.SaveChangesAsync();
@@ -36,28 +37,28 @@ namespace BW_VI___Team_1.Services
 
         public async Task<Usage> UpdateUsageAsync(Usage model)
         {
-            var animal = await _context.Usages.FindAsync(model.Id);
-            if (animal == null)
+            var usage = await _context.Usages.FindAsync(model.Id);
+            if (usage == null)
             {
                 return null;
             }
 
-            // Aggiungere cose (es. animal.Name = model.Name)
+            usage.Description = model.Description;
 
-            _context.Usages.Update(animal);
+            _context.Usages.Update(usage);
             await _context.SaveChangesAsync();
-            return animal;
+            return usage;
         }
 
         public async Task<bool> DeleteUsageAsync(int id)
         {
-            var animal = await _context.Usages.FindAsync(id);
-            if (animal == null)
+            var usage = await _context.Usages.FindAsync(id);
+            if (usage == null)
             {
                 return false;
             }
 
-            _context.Usages.Remove(animal);
+            _context.Usages.Remove(usage);
             await _context.SaveChangesAsync();
             return true;
         }

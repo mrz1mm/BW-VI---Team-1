@@ -1,10 +1,11 @@
 ﻿using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.EntityFrameworkCore;
+using BW_VI___Team_1.Interfaces;
 
 namespace BW_VI___Team_1.Services
 {
-    public class OrderSvc
+    public class OrderSvc   : IOrderSvc
     {
         private readonly LifePetDBContext _context;
         public OrderSvc(LifePetDBContext context)
@@ -45,10 +46,7 @@ namespace BW_VI___Team_1.Services
                 return null;
             }
 
-            order.Products = model.Products;
-            order.Owner = model.Owner;
-            order.MedicalPrescription = model.MedicalPrescription;
-            order.Date = model.Date;
+            // Aggiungere cose (es. order.Name = model.Name)
 
             _context.Orders.Update(order);
             await _context.SaveChangesAsync();
@@ -57,13 +55,13 @@ namespace BW_VI___Team_1.Services
 
         public async Task<bool> DeleteOrderAsync(int id)
         {
-            var animal = await _context.Orders.FindAsync(id);
-            if (animal == null)
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null)
             {
                 return false;
             }
 
-            _context.Orders.Remove(animal);
+            _context.Orders.Remove(order);
             await _context.SaveChangesAsync();
             return true;
         }

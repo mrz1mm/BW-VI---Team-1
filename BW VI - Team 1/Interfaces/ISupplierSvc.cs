@@ -9,6 +9,6 @@ namespace BW_VI___Team_1.Interfaces
         Task<Supplier> GetSupplierByIdAsync(int id);
         Task<Supplier> AddSupplierAsync(SupplierDTO supplier);
         Task<Supplier> UpdateSupplierAsync(Supplier supplier);
-        Task<bool> DeleteSupplierAsync(int id);
+        Task DeleteSupplierAsync(int id);
     }
 }

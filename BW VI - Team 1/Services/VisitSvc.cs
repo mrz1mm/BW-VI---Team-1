@@ -1,10 +1,11 @@
 ﻿using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.EntityFrameworkCore;
+using BW_VI___Team_1.Interfaces;
 
 namespace BW_VI___Team_1.Services
 {
-    public class VisitSvc
+    public class VisitSvc : IVisitSvc
     {
         private readonly LifePetDBContext _context;
         public VisitSvc(LifePetDBContext context)
@@ -26,7 +27,10 @@ namespace BW_VI___Team_1.Services
         {
             var newVisit = new Visit
             {
-                // Aggiungere cose (es. Name = model.Name)
+                Date = model.Date,
+                Exam = model.Exam,
+                Diagnosis = model.Diagnosis,
+                Animal = model.Animal
             };
             _context.Visits.Add(newVisit);
             await _context.SaveChangesAsync();
@@ -36,28 +40,31 @@ namespace BW_VI___Team_1.Services
 
         public async Task<Visit> UpdateVisitAsync(Visit model)
         {
-            var animal = await _context.Visits.FindAsync(model.Id);
-            if (animal == null)
+            var visit = await _context.Visits.FindAsync(model.Id);
+            if (visit == null)
             {
                 return null;
             }
 
-            // Aggiungere cose (es. animal.Name = model.Name)
+            visit.Date = model.Date;
+            visit.Exam = model.Exam;
+            visit.Diagnosis = model.Diagnosis;
+            visit.Animal = model.Animal;
 
-            _context.Visits.Update(animal);
+            _context.Visits.Update(visit);
             await _context.SaveChangesAsync();
-            return animal;
+            return visit;
         }
 
         public async Task<bool> DeleteVisitAsync(int id)
         {
-            var animal = await _context.Visits.FindAsync(id);
-            if (animal == null)
+            var visit = await _context.Visits.FindAsync(id);
+            if (visit == null)
             {
                 return false;
             }
 
-            _context.Visits.Remove(animal);
+            _context.Visits.Remove(visit);
             await _context.SaveChangesAsync();
             return true;
         }

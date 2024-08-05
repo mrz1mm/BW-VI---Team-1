@@ -7,12 +7,15 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BW_VI___Team_1.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/sweetalert2/sweetalert2.min.css">
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BW_VI___Team_1</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img id="logo" src="./images/logo.png" alt="logo" />
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -35,8 +38,8 @@
                                 Ordini
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="Index">Ordini</a></li>
-                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="AddAnimal">Aggiungi ordine</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Order" asp-action="Index">Ordini</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Order" asp-action="AddOrder">Aggiungi ordine</a></li>
                             </ul>
                         </div>
 
@@ -45,8 +48,8 @@
                                 Proprietari
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="Index">Proprietari</a></li>
-                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="AddAnimal">Aggiungi proprietario</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Owner" asp-action="Index">Proprietari</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Owner" asp-action="AddOwner">Aggiungi proprietario</a></li>
                             </ul>
                         </div>
 
@@ -55,8 +58,8 @@
                                 Prodotti
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="Index">Prodotti</a></li>
-                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="AddAnimal">Aggiungi prodotto</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Product" asp-action="Index">Prodotti</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Product" asp-action="AddProduct">Aggiungi prodotto</a></li>
                             </ul>
                         </div>
 
@@ -65,8 +68,8 @@
                                 Ricoveri
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="Index">Ricoveri</a></li>
-                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="AddAnimal">Aggiungi ricovero</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Recovery" asp-action="Index">Ricoveri</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Recovery" asp-action="AddRecovery">Aggiungi ricovero</a></li>
                             </ul>
                         </div>
 
@@ -75,8 +78,8 @@
                                 Fornitori
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="Index">Fornitori</a></li>
-                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="AddAnimal">Aggiungi fornitore</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Supplier" asp-action="Index">Fornitori</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Supplier" asp-action="AddSupplier">Aggiungi fornitore</a></li>
                             </ul>
                         </div>
 
@@ -85,8 +88,8 @@
                                 Usi
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="Index">Usi</a></li>
-                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="AddAnimal">Aggiungi uso</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Usage" asp-action="Index">Usi</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Usage" asp-action="AddUsage">Aggiungi uso</a></li>
                             </ul>
                         </div>
 
@@ -95,8 +98,8 @@
                                 Visite
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="Index">Visite</a></li>
-                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="AddAnimal">Aggiungi visita</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Visit" asp-action="Index">Visite</a></li>
+                                <li><a class="nav-link text-dark" asp-controller="Visit" asp-action="AddVisit">Aggiungi visita</a></li>
                             </ul>
                         </div>
                     </ul>
@@ -115,6 +118,7 @@
             &copy; 2024 - BW_VI___Team_1 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+    <script src="~/lib/sweetalert2/sweetalert2.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
