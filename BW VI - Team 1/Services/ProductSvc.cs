@@ -1,10 +1,11 @@
 ﻿using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.EntityFrameworkCore;
+using BW_VI___Team_1.Interfaces;
 
 namespace BW_VI___Team_1.Services
 {
-    public class ProductSvc
+    public class ProductSvc : IProductSvc
     {
         private readonly LifePetDBContext _context;
         public ProductSvc(LifePetDBContext context)
@@ -52,9 +53,9 @@ namespace BW_VI___Team_1.Services
             animal.Usages = model.Usages;
             animal.Locker = model.Type == Models.Type.Medicine ? model.Locker : null;
 
-            _context.Products.Update(animal);
+            _context.Products.Update(product);
             await _context.SaveChangesAsync();
-            return animal;
+            return product;
         }
 
         public async Task<bool> DeleteProductAsync(int id)

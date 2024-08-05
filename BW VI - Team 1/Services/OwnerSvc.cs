@@ -1,10 +1,11 @@
 ﻿using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.EntityFrameworkCore;
+using BW_VI___Team_1.Interfaces;
 
 namespace BW_VI___Team_1.Services
 {
-    public class OwnerSvc
+    public class OwnerSvc : IOwnerSvc
     {
         private readonly LifePetDBContext _context;
         public OwnerSvc(LifePetDBContext context)
@@ -26,40 +27,42 @@ namespace BW_VI___Team_1.Services
         {
             var newOwner = new Owner
             {
-                // Aggiungere cose (es. Name = model.Name)
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                FiscalCode = model.FiscalCode
             };
             _context.Owners.Add(newOwner);
             await _context.SaveChangesAsync();
             return newOwner;
-
         }
 
         public async Task<Owner> UpdateOwnerAsync(Owner model)
         {
-            var animal = await _context.Owners.FindAsync(model.Id);
-            if (animal == null)
+            var owner = await _context.Owners.FindAsync(model.Id);
+            if (owner == null)
             {
                 return null;
             }
 
-            // Aggiungere cose (es. animal.Name = model.Name)
+            owner.FirstName = model.FirstName;
+            owner.LastName = model.LastName;
+            owner.FiscalCode = model.FiscalCode;
 
-            _context.Owners.Update(animal);
+            _context.Owners.Update(owner);
             await _context.SaveChangesAsync();
-            return animal;
+            return owner;
         }
 
-        public async Task<bool> DeleteOwnerAsync(int id)
+        public async Task DeleteOwnerAsync(int id)
         {
-            var animal = await _context.Owners.FindAsync(id);
-            if (animal == null)
+            var ownerToDelete = await _context.Owners.FirstOrDefaultAsync(o => o.Id == id);
+            if (ownerToDelete == null)
             {
-                return false;
+                throw new KeyNotFoundException();
             }
 
-            _context.Owners.Remove(animal);
+            _context.Owners.Remove(ownerToDelete);
             await _context.SaveChangesAsync();
-            return true;
         }
     }
 }

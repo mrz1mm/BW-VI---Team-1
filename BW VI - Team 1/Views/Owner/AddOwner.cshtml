@@ -1,4 +1,4 @@
-﻿@model BW_VI___Team_1.Models.Owner
+﻿@model BW_VI___Team_1.Models.DTO.OwnerDTO
 
 @{
     ViewData["Title"] = "AddOwner";
@@ -10,26 +10,23 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="AddOwner">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="AddOwner" method="post">
             <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
+                <label asp-for="FirstName"></label>
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
+                <label asp-for="LastName"></label>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FiscalCode" class="control-label"></label>
+                <label asp-for="FiscalCode"></label>
                 <input asp-for="FiscalCode" class="form-control" />
                 <span asp-validation-for="FiscalCode" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
 </div>
