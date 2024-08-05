@@ -14,19 +14,23 @@ namespace BW_VI___Team_1.Services
 
         public async Task<List<Product>> GetAllProductsAsync()
         {
-            return await _context.Products.ToListAsync();
+            return await _context.Products.Include(p => p.Suppliers).Include(p => p.Usages).ToListAsync();
         }
 
         public async Task<Product> GetProductByIdAsync(int id)
         {
-            return await _context.Products.FindAsync(id);
+            return await _context.Products.Include(p => p.Suppliers).Include(p => p.Usages).FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<Product> AddProductAsync(ProductDTO model)
         {
             var newProduct = new Product
             {
-                // Aggiungere cose (es. Name = model.Name)
+                Name = model.Name,
+                Suppliers = model.Suppliers,
+                Type = model.Type,
+                Usages = model.Usages,
+                Locker = model.Type == Models.Type.Medicine ? model.Locker : null
             };
             _context.Products.Add(newProduct);
             await _context.SaveChangesAsync();
@@ -42,7 +46,11 @@ namespace BW_VI___Team_1.Services
                 return null;
             }
 
-            // Aggiungere cose (es. animal.Name = model.Name)
+            animal.Name = model.Name;
+            animal.Suppliers = model.Suppliers;
+            animal.Type = model.Type;
+            animal.Usages = model.Usages;
+            animal.Locker = model.Type == Models.Type.Medicine ? model.Locker : null;
 
             _context.Products.Update(animal);
             await _context.SaveChangesAsync();

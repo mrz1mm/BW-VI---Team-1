@@ -17,9 +17,9 @@ namespace BW_VI___Team_1.Controllers
 
         // VISTE
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var products = _productSvc.GetAllProductsAsync();
+            var products = await _productSvc.GetAllProductsAsync();
             return View(products);
         }
 
@@ -30,44 +30,42 @@ namespace BW_VI___Team_1.Controllers
         }
 
         [HttpGet]
-        public IActionResult UpdateProduct(int id)
+        public async Task<IActionResult> UpdateProduct(int id)
         {
-            var product = _productSvc.GetProductByIdAsync(id);
+            var product = await _productSvc.GetProductByIdAsync(id);
             if (product == null)
             {
                 return NotFound();
             }
 
-            var model = new Product
+            var model = new ProductDTO
             {
-                // aggiungere cose (es. Name = product.Name)
+                Name = product.Name,
+                Suppliers = product.Suppliers,
+                Type = product.Type,
+                Usages = product.Usages,
+                Locker = product.Locker
             };
 
             return View(model);
         }
 
         [HttpGet]
-        public IActionResult DeleteProduct(int id)
+        public async Task<IActionResult> DeleteProduct(int id)
         {
-            var product = _productSvc.GetProductByIdAsync(id);
+            var product = await _productSvc.GetProductByIdAsync(id);
             if (product == null)
             {
                 return NotFound();
             }
 
-            var model = new Product
-            {
-                // aggiungere cose (es. Name = product.Name)
-            };
-
-            return View();
+            return View(product);
         }
-
 
         // METODI
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddProduct(ProductDTO model) // aggiungere il Binding
+        public async Task<IActionResult> AddProduct(ProductDTO model)
         {
             if (!ModelState.IsValid)
             {
@@ -78,21 +76,20 @@ namespace BW_VI___Team_1.Controllers
             try
             {
                 await _productSvc.AddProductAsync(model);
-                TempData["Success"] = "Producte aggiunto con successo";
+                TempData["Success"] = "Prodotto aggiunto con successo";
                 return RedirectToAction(nameof(Index));
-
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                TempData["Error"] = "Errore nell'aggiunta dell'producte";
+                TempData["Error"] = "Errore nell'aggiunta del prodotto";
                 return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProduct(Product model) // aggiungere il Binding
+        public async Task<IActionResult> UpdateProduct(Product model)
         {
             if (!ModelState.IsValid)
             {
@@ -102,14 +99,26 @@ namespace BW_VI___Team_1.Controllers
 
             try
             {
-                await _productSvc.UpdateProductAsync(model);
-                TempData["Success"] = "Producte modificato con successo";
+                var product = await _productSvc.GetProductByIdAsync(model.Id);
+                if (product == null)
+                {
+                    return NotFound();
+                }
+
+                product.Name = model.Name;
+                product.Suppliers = model.Suppliers;
+                product.Type = model.Type;
+                product.Usages = model.Usages;
+                product.Locker = model.Type == Models.Type.Medicine ? model.Locker : null;
+
+                await _productSvc.UpdateProductAsync(product);
+                TempData["Success"] = "Prodotto modificato con successo";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                TempData["Error"] = "Errore nella modifica dell'producte";
+                TempData["Error"] = "Errore nella modifica del prodotto";
                 return View(model);
             }
         }
@@ -121,12 +130,12 @@ namespace BW_VI___Team_1.Controllers
             try
             {
                 await _productSvc.DeleteProductAsync(id);
-                TempData["Success"] = "Producte eliminato con successo";
+                TempData["Success"] = "Prodotto eliminato con successo";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                TempData["Error"] = "Errore nell'eliminazione dell'producte";
+                TempData["Error"] = "Errore nell'eliminazione del prodotto";
                 return RedirectToAction(nameof(Index));
             }
         }
