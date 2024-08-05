@@ -1,10 +1,11 @@
 ﻿using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.EntityFrameworkCore;
+using BW_VI___Team_1.Interfaces;
 
 namespace BW_VI___Team_1.Services
 {
-    public class RecoverySvc
+    public class RecoverySvc : IRecoverySvc
     {
         private readonly LifePetDBContext _context;
         public RecoverySvc(LifePetDBContext context)
@@ -60,6 +61,16 @@ namespace BW_VI___Team_1.Services
             _context.Recoverys.Remove(animal);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<List<Recovery>> GetAllRecoveriesAsync()
+            {
+            return await _context.Recoverys.ToListAsync();
+        }
+
+        public async Task<Recovery> GetRecoveryByAnimal(int id)
+            {
+            return await _context.Recoverys.FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }
