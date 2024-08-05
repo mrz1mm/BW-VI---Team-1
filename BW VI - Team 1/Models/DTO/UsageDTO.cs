@@ -3,6 +3,5 @@
     public class UsageDTO
     {
         public string Description { get; set; }
-        public List<int> Products { get; set; }
     }
 }

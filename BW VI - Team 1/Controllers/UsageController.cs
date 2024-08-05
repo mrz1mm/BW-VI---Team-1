@@ -1,6 +1,7 @@
 ﻿using BW_VI___Team_1.Interfaces;
 using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
+using BW_VI___Team_1.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BW_VI___Team_1.Controllers
@@ -17,9 +18,9 @@ namespace BW_VI___Team_1.Controllers
 
         // VISTE
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var usages = _usageSvc.GetAllUsagesAsync();
+            var usages = await _usageSvc.GetAllUsagesAsync();
             return View(usages);
         }
 
@@ -30,44 +31,36 @@ namespace BW_VI___Team_1.Controllers
         }
 
         [HttpGet]
-        public IActionResult UpdateUsage(int id)
+        public async Task<IActionResult> UpdateUsage(int id)
         {
-            var usage = _usageSvc.GetUsageByIdAsync(id);
+            var usage = await _usageSvc.GetUsageByIdAsync(id);
             if (usage == null)
             {
                 return NotFound();
             }
 
-            var model = new Usage
-            {
-                // aggiungere cose (es. Name = usage.Name)
-            };
-
-            return View(model);
+            return View(usage); 
         }
 
-        [HttpGet]
-        public IActionResult DeleteUsage(int id)
+        [HttpPost]
+        public async Task<IActionResult> DeleteUsage(int id)
         {
-            var usage = _usageSvc.GetUsageByIdAsync(id);
-            if (usage == null)
+            try
+            {
+                await _usageSvc.DeleteUsageAsync(id);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-
-            var model = new Usage
-            {
-                // aggiungere cose (es. Name = usage.Name)
-            };
-
-            return View();
+            return RedirectToAction(nameof(Index));
         }
 
 
         // METODI
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddUsage(UsageDTO model) // aggiungere il Binding
+        public async Task<IActionResult> AddUsage([Bind("Description,Products")] UsageDTO model)
         {
             if (!ModelState.IsValid)
             {
@@ -78,21 +71,19 @@ namespace BW_VI___Team_1.Controllers
             try
             {
                 await _usageSvc.AddUsageAsync(model);
-                TempData["Success"] = "Usagee aggiunto con successo";
+                TempData["Success"] = "Usage aggiunto con successo";
                 return RedirectToAction(nameof(Index));
-
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                TempData["Error"] = "Errore nell'aggiunta dell'usagee";
+                TempData["Error"] = "Errore nell'aggiunta dell'usage";
                 return View(model);
             }
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateUsage(Usage model) // aggiungere il Binding
+        public async Task<IActionResult> UpdateUsage(int id, [Bind("Description,Products")] Usage model)
         {
             if (!ModelState.IsValid)
             {
@@ -102,32 +93,19 @@ namespace BW_VI___Team_1.Controllers
 
             try
             {
-                await _usageSvc.UpdateUsageAsync(model);
-                TempData["Success"] = "Usagee modificato con successo";
+                var dto = new UsageDTO
+                {
+                    Description = model.Description
+                };
+                await _usageSvc.UpdateUsageAsync(dto, id);
+                TempData["Success"] = "Usage modificato con successo";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                TempData["Error"] = "Errore nella modifica dell'usagee";
+                TempData["Error"] = "Errore nella modifica dell'usage";
                 return View(model);
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmDeleteUsage(int id)
-        {
-            try
-            {
-                await _usageSvc.DeleteUsageAsync(id);
-                TempData["Success"] = "Usagee eliminato con successo";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "Errore nell'eliminazione dell'usagee";
-                return RedirectToAction(nameof(Index));
             }
         }
     }
