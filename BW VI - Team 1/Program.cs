@@ -2,6 +2,8 @@ using BW_VI___Team_1.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using BW_VI___Team_1.Services;
+using BW_VI___Team_1.Interfaces;
 
 namespace BW_VI___Team_1
 {
@@ -42,6 +44,19 @@ namespace BW_VI___Team_1
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            builder.Services
+    .AddScoped<IAnimalSvc, AnimalSvc>()
+    .AddScoped<IAuthSvc, AuthSvc>()
+    .AddScoped<IImageSvc, ImageSvc>()
+    .AddScoped<ILockerSvc, LockerSvc>()
+    .AddScoped<IOrderSvc, OrderSvc>()
+    .AddScoped<IOwnerSvc, OwnerSvc>()
+    .AddScoped<IProductSvc, ProductSvc>()
+    .AddScoped<IRecoverySvc, RecoverySvc>()
+    .AddScoped<ISupplierSvc, SupplierSvc>()
+    .AddScoped<IUsageSvc, UsageSvc>()
+    .AddScoped<IVisitSvc, VisitSvc>();
 
 
 

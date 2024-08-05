@@ -1,10 +1,11 @@
 ﻿using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.EntityFrameworkCore;
+using BW_VI___Team_1.Interfaces;
 
 namespace BW_VI___Team_1.Services
 {
-    public class UsageSvc
+    public class UsageSvc : IUsageSvc
     {
         private readonly LifePetDBContext _context;
         public UsageSvc(LifePetDBContext context)
