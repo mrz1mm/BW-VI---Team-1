@@ -2,6 +2,8 @@
 using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using ProductType = BW_VI___Team_1.Models.Type;
+
 
 namespace BW_VI___Team_1.Controllers
 {
@@ -26,6 +28,7 @@ namespace BW_VI___Team_1.Controllers
         [HttpGet]
         public IActionResult AddProduct()
         {
+            ViewBag.ProductTypes = new List<string> { "AnimalFood", "Medicine" };
             return View();
         }
 
@@ -38,8 +41,11 @@ namespace BW_VI___Team_1.Controllers
                 return NotFound();
             }
 
-            var model = new ProductDTO
+            ViewBag.ProductTypes = Enum.GetValues(typeof(ProductType)).Cast<ProductType>().Select(t => t.ToString()).ToList();
+
+            var model = new Product
             {
+                Id = product.Id,
                 Name = product.Name,
                 Suppliers = product.Suppliers,
                 Type = product.Type,
@@ -50,22 +56,25 @@ namespace BW_VI___Team_1.Controllers
             return View(model);
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var product = await _productSvc.GetProductByIdAsync(id);
-            if (product == null)
+            try
+            {
+                await _productSvc.DeleteProductAsync(id);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-
-            return View(product);
+            return RedirectToAction(nameof(Index));
         }
+
 
         // METODI
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddProduct(ProductDTO model)
+        public async Task<IActionResult> AddProduct(ProductDTO model) // aggiungere il Binding
         {
             if (!ModelState.IsValid)
             {
@@ -76,20 +85,21 @@ namespace BW_VI___Team_1.Controllers
             try
             {
                 await _productSvc.AddProductAsync(model);
-                TempData["Success"] = "Prodotto aggiunto con successo";
+                TempData["Success"] = "Producte aggiunto con successo";
                 return RedirectToAction(nameof(Index));
+
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                TempData["Error"] = "Errore nell'aggiunta del prodotto";
+                TempData["Error"] = "Errore nell'aggiunta dell'producte";
                 return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProduct(Product model)
+        public async Task<IActionResult> UpdateProduct(Product model) // aggiungere il Binding
         {
             if (!ModelState.IsValid)
             {
@@ -99,44 +109,15 @@ namespace BW_VI___Team_1.Controllers
 
             try
             {
-                var product = await _productSvc.GetProductByIdAsync(model.Id);
-                if (product == null)
-                {
-                    return NotFound();
-                }
-
-                product.Name = model.Name;
-                product.Suppliers = model.Suppliers;
-                product.Type = model.Type;
-                product.Usages = model.Usages;
-                product.Locker = model.Type == Models.Type.Medicine ? model.Locker : null;
-
-                await _productSvc.UpdateProductAsync(product);
-                TempData["Success"] = "Prodotto modificato con successo";
+                await _productSvc.UpdateProductAsync(model);
+                TempData["Success"] = "Producte modificato con successo";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                TempData["Error"] = "Errore nella modifica del prodotto";
+                TempData["Error"] = "Errore nella modifica dell'producte";
                 return View(model);
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmDeleteProduct(int id)
-        {
-            try
-            {
-                await _productSvc.DeleteProductAsync(id);
-                TempData["Success"] = "Prodotto eliminato con successo";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "Errore nell'eliminazione del prodotto";
-                return RedirectToAction(nameof(Index));
             }
         }
     }

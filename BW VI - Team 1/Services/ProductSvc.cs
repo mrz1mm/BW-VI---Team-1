@@ -15,12 +15,12 @@ namespace BW_VI___Team_1.Services
 
         public async Task<List<Product>> GetAllProductsAsync()
         {
-            return await _context.Products.Include(p => p.Suppliers).Include(p => p.Usages).ToListAsync();
+            return await _context.Products.ToListAsync();
         }
 
         public async Task<Product> GetProductByIdAsync(int id)
         {
-            return await _context.Products.Include(p => p.Suppliers).Include(p => p.Usages).FirstOrDefaultAsync(p => p.Id == id);
+            return await _context.Products.FindAsync(id);
         }
 
         public async Task<Product> AddProductAsync(ProductDTO model)
@@ -47,28 +47,27 @@ namespace BW_VI___Team_1.Services
                 return null;
             }
 
-            animal.Name = model.Name;
-            animal.Suppliers = model.Suppliers;
-            animal.Type = model.Type;
-            animal.Usages = model.Usages;
-            animal.Locker = model.Type == Models.Type.Medicine ? model.Locker : null;
+            product.Name = model.Name;
+            product.Suppliers = model.Suppliers;
+            product.Type = model.Type;
+            product.Usages = model.Usages;
+            product.Locker = model.Type == Models.Type.Medicine ? model.Locker : null;
 
             _context.Products.Update(product);
             await _context.SaveChangesAsync();
             return product;
         }
 
-        public async Task<bool> DeleteProductAsync(int id)
+        public async Task DeleteProductAsync(int id)
         {
-            var product = await _context.Products.FindAsync(id);
-            if (product == null)
+            var ProductDelete = await _context.Products.FindAsync(id);
+            if (ProductDelete == null)
             {
-                return false;
+                throw new KeyNotFoundException();
             }
 
-            _context.Products.Remove(product);
+            _context.Products.Remove(ProductDelete);
             await _context.SaveChangesAsync();
-            return true;
         }
     }
 }
