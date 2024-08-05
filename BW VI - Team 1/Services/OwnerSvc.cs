@@ -27,27 +27,30 @@ namespace BW_VI___Team_1.Services
         {
             var newOwner = new Owner
             {
-                // Aggiungere cose (es. Name = model.Name)
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                FiscalCode = model.FiscalCode
             };
             _context.Owners.Add(newOwner);
             await _context.SaveChangesAsync();
             return newOwner;
-
         }
 
         public async Task<Owner> UpdateOwnerAsync(Owner model)
         {
-            var animal = await _context.Owners.FindAsync(model.Id);
-            if (animal == null)
+            var owner = await _context.Owners.FindAsync(model.Id);
+            if (owner == null)
             {
                 return null;
             }
 
-            // Aggiungere cose (es. animal.Name = model.Name)
+            owner.FirstName = model.FirstName;
+            owner.LastName = model.LastName;
+            owner.FiscalCode = model.FiscalCode;
 
-            _context.Owners.Update(animal);
+            _context.Owners.Update(owner);
             await _context.SaveChangesAsync();
-            return animal;
+            return owner;
         }
 
         public async Task<bool> DeleteOwnerAsync(int id)

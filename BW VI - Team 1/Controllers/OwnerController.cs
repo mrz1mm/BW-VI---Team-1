@@ -17,9 +17,9 @@ namespace BW_VI___Team_1.Controllers
 
         // VISTE
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var owners = _ownerSvc.GetAllOwnersAsync();
+            var owners = await _ownerSvc.GetAllOwnersAsync();
             return View(owners);
         }
 
@@ -30,9 +30,9 @@ namespace BW_VI___Team_1.Controllers
         }
 
         [HttpGet]
-        public IActionResult UpdateOwner(int id)
+        public async Task<IActionResult> UpdateOwner(int id)
         {
-            var owner = _ownerSvc.GetOwnerByIdAsync(id);
+            var owner = await _ownerSvc.GetOwnerByIdAsync(id);
             if (owner == null)
             {
                 return NotFound();
@@ -40,7 +40,10 @@ namespace BW_VI___Team_1.Controllers
 
             var model = new Owner
             {
-                // aggiungere cose (es. Name = owner.Name)
+                Id = owner.Id,
+                FirstName = owner.FirstName,
+                LastName = owner.LastName,
+                FiscalCode = owner.FiscalCode
             };
 
             return View(model);
