@@ -26,3 +26,8 @@ body {
     top: 90px;
     right: 12px;
 }
+
+#logo {
+    width: 200px;
+    height: auto;
+}
