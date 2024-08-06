@@ -1,71 +1,72 @@
 ﻿@model BW_VI___Team_1.Models.DTO.AnimalDTO
 
 @{
-    ViewData["Title"] = "Update Animal";
+    ViewData["Title"] = "Modifica Animale";
     var animalId = ViewBag.AnimalId;
 }
 
-<h1>Update Animal</h1>
+<h1>Modifica Animale</h1>
 
-<h4>Animal</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="UpdateAnimal" method="post" enctype="multipart/form-data">
-            <input type="hidden" asp-for="@animalId" name="id" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Species" class="control-label"></label>
-                <input asp-for="Species" class="form-control" />
-                <span asp-validation-for="Species" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Breed" class="control-label"></label>
-                <input asp-for="Breed" class="form-control" />
-                <span asp-validation-for="Breed" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Color" class="control-label"></label>
-                <input asp-for="Color" class="form-control" />
-                <span asp-validation-for="Color" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BirthDate" class="control-label"></label>
-                <input asp-for="BirthDate" class="form-control" />
-                <span asp-validation-for="BirthDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RegisterDate" class="control-label"></label>
-                <input asp-for="RegisterDate" class="form-control" />
-                <span asp-validation-for="RegisterDate" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Microchip" /> @Html.DisplayNameFor(model => model.Microchip)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="MicrochipNumber" class="control-label"></label>
-                <input asp-for="MicrochipNumber" class="form-control" />
-                <span asp-validation-for="MicrochipNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="UpdateAnimal" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="@animalId" />
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-</div>
+    <div class="form-group">
+        <label asp-for="Species" class="control-label"></label>
+        <input asp-for="Species" class="form-control" />
+        <span asp-validation-for="Species" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Breed" class="control-label"></label>
+        <input asp-for="Breed" class="form-control" />
+        <span asp-validation-for="Breed" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Color" class="control-label"></label>
+        <input asp-for="Color" class="form-control" />
+        <span asp-validation-for="Color" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="BirthDate" class="control-label"></label>
+        <input asp-for="BirthDate" class="form-control" />
+        <span asp-validation-for="BirthDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Microchip" class="control-label"></label>
+        <input asp-for="Microchip" class="form-control" />
+        <span asp-validation-for="Microchip" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="MicrochipNumber" class="control-label"></label>
+        <input asp-for="MicrochipNumber" class="form-control" />
+        <span asp-validation-for="MicrochipNumber" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Owner.FirstName" class="control-label"></label>
+        <input asp-for="Owner.FirstName" class="form-control" />
+        <span asp-validation-for="Owner.FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Owner.LastName" class="control-label"></label>
+        <input asp-for="Owner.LastName" class="form-control" />
+        <span asp-validation-for="Owner.LastName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Owner.FiscalCode" class="control-label"></label>
+        <input asp-for="Owner.FiscalCode" class="form-control" />
+        <span asp-validation-for="Owner.FiscalCode" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ImageFile" class="control-label"></label>
+        <input asp-for="ImageFile" type="file" class="form-control" />
+        <span asp-validation-for="ImageFile" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Salva</button>
+</form>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Torna alla lista</a>
 </div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
