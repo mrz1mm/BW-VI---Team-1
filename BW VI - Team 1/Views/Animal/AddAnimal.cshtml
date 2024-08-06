@@ -1,4 +1,4 @@
-﻿@model BW_VI___Team_1.Models.Animal
+﻿@model BW_VI___Team_1.Models.DTO.AnimalDTO
 
 @{
     ViewData["Title"] = "AddAnimal";
@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="AddAnimal">
+        <form asp-action="AddAnimal" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -53,21 +53,13 @@
                 <span asp-validation-for="MicrochipNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ImageUrl" class="control-label"></label>
-                <input asp-for="ImageUrl" class="form-control" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input asp-for="ImageFile" type="file" class="form-control" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+</div
