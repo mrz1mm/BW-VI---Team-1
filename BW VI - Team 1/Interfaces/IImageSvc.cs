@@ -16,6 +16,6 @@
         /// Elimina un'immagine
         /// </summary>
         /// <param name="imageUrl">URL dell'immagine</param>
-        Task DeleteImageAsync(string imageUrl);    
+        Task DeleteImageAsync(string imageUrl);
     }
 }
