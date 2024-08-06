@@ -169,6 +169,9 @@ namespace BW_VI___Team_1.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("DrawerId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("LockerId")
                         .HasColumnType("int");
 
@@ -183,6 +186,8 @@ namespace BW_VI___Team_1.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DrawerId");
 
                     b.HasIndex("LockerId");
 
@@ -378,15 +383,25 @@ namespace BW_VI___Team_1.Migrations
 
             modelBuilder.Entity("BW_VI___Team_1.Models.Product", b =>
                 {
-                    b.HasOne("BW_VI___Team_1.Models.Locker", "Locker")
+                    b.HasOne("BW_VI___Team_1.Models.Drawer", "Drawer")
                         .WithMany()
-                        .HasForeignKey("LockerId");
+                        .HasForeignKey("DrawerId");
 
-                    b.HasOne("BW_VI___Team_1.Models.Order", null)
+                    b.HasOne("BW_VI___Team_1.Models.Locker", "Locker")
                         .WithMany("Products")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("LockerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("BW_VI___Team_1.Models.Order", "Order")
+                        .WithMany("Products")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Drawer");
 
                     b.Navigation("Locker");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("BW_VI___Team_1.Models.Recovery", b =>
@@ -444,6 +459,8 @@ namespace BW_VI___Team_1.Migrations
             modelBuilder.Entity("BW_VI___Team_1.Models.Locker", b =>
                 {
                     b.Navigation("Drawers");
+
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("BW_VI___Team_1.Models.Order", b =>

@@ -47,16 +47,23 @@ namespace BW_VI___Team_1.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteLocker(int id)
+        public async Task<IActionResult> DeleteLocker(int id)
         {
-            try 
+            try
             {
-                _lockerSvc.DeleteLockerAsync(id);
+                await _lockerSvc.DeleteLockerAsync(id);
+                TempData["Success"] = "Locker eliminato con successo";
             }
             catch (KeyNotFoundException)
             {
+                TempData["Error"] = "Locker non trovato";
                 return NotFound();
             }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Errore nell'eliminazione del locker: {ex.Message}";
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

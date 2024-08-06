@@ -31,18 +31,37 @@ namespace BW_VI___Team_1.Services
                 Suppliers = model.Suppliers,
                 Type = model.Type,
                 Usages = model.Usages,
-                Locker = model.Type == Models.Type.Medicine ? model.Locker : null 
+                Locker = model.Type == Models.Type.Medicine ? model.Locker : null
             };
+            if (model.Locker != null)
+            {
+                var existingLocker = await _context.Lockers
+                    .FirstOrDefaultAsync(l => l.Number == model.Locker.Number);
+
+                if (existingLocker != null)
+                {
+                    newProduct.Locker = existingLocker;
+                }
+                else
+                {
+                    newProduct.Locker = model.Locker;
+                    _context.Lockers.Add(newProduct.Locker);
+                }
+            }
+
             _context.Products.Add(newProduct);
             await _context.SaveChangesAsync();
             return newProduct;
         }
+
 
         public async Task<Product> UpdateProductAsync(Product model)
         {
             var product = await _context.Products
                 .Include(p => p.Suppliers)
                 .Include(p => p.Usages)
+                .Include(p => p.Locker)
+                .Include(p => p.Drawer)
                 .FirstOrDefaultAsync(p => p.Id == model.Id);
 
             if (product == null)
@@ -52,7 +71,10 @@ namespace BW_VI___Team_1.Services
 
             product.Name = model.Name;
             product.Type = model.Type;
-            product.Locker = model.Type == Models.Type.Medicine ? model.Locker : null;
+            product.LockerId = model.LockerId;
+            product.Locker = await _context.Lockers.FindAsync(model.LockerId);
+            product.DrawerId = model.DrawerId;
+            product.Drawer = await _context.Drawers.FindAsync(model.DrawerId);
 
             product.Suppliers.Clear();
             if (model.Suppliers != null)
@@ -66,7 +88,6 @@ namespace BW_VI___Team_1.Services
                     }
                 }
             }
-
             product.Usages.Clear();
             if (model.Usages != null)
             {
@@ -79,11 +100,16 @@ namespace BW_VI___Team_1.Services
                     }
                 }
             }
-
             _context.Products.Update(product);
             await _context.SaveChangesAsync();
             return product;
         }
+
+
+
+
+
+
 
         public async Task DeleteProductAsync(int id)
         {

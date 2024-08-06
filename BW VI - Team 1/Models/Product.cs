@@ -15,6 +15,14 @@ namespace BW_VI___Team_1.Models
         [Required]
         public List<Usage> Usages { get; set; } = [];
         public Locker? Locker { get; set; }
+        public int? LockerId { get; set; }
+
+        public int? OrderId { get; set; }
+        public Order? Order { get; set; }
+
+        public int? DrawerId { get; set; } 
+        public Drawer? Drawer { get; set; }
+
     }
 
     public enum Type
