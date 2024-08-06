@@ -9,6 +9,7 @@ namespace BW_VI___Team_1.Services
     {
         private readonly LifePetDBContext _context;
         private readonly IImageSvc _imageSvc;
+
         public AnimalSvc(LifePetDBContext context, IImageSvc imageSvc)
         {
             _context = context;
@@ -29,6 +30,26 @@ namespace BW_VI___Team_1.Services
         {
             var imageUrl = await _imageSvc.SaveImageAsync(model.ImageFile);
 
+            var existingOwner = await _context.Owners
+                .FirstOrDefaultAsync(o => o.FiscalCode == model.Owner.FiscalCode);
+
+            Owner owner;
+            if (existingOwner == null)
+            {
+                owner = new Owner
+                {
+                    FirstName = model.Owner.FirstName,
+                    LastName = model.Owner.LastName,
+                    FiscalCode = model.Owner.FiscalCode
+                };
+                _context.Owners.Add(owner);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                owner = existingOwner;
+            }
+
             var newAnimal = new Animal
             {
                 Name = model.Name,
@@ -39,13 +60,14 @@ namespace BW_VI___Team_1.Services
                 RegisterDate = model.RegisterDate,
                 Microchip = model.Microchip,
                 MicrochipNumber = model.MicrochipNumber,
-                Owner = model.Owner,
+                Owner = owner,
                 ImageUrl = imageUrl
             };
             _context.Animals.Add(newAnimal);
             await _context.SaveChangesAsync();
             return newAnimal;
         }
+
 
         public async Task<Animal> UpdateAnimalAsync(Animal model)
         {
@@ -55,18 +77,16 @@ namespace BW_VI___Team_1.Services
                 return null;
             }
 
-            // Aggiungere cose (es. animal.Name = model.Name)
-            /*
-             *             if (model.ProductImageFile != null)
-            {
-                if (!string.IsNullOrEmpty(product.ProductImageUrl))
-                {
-                    await _imageSvc.DeleteImageAsync(product.ProductImageUrl);
-                }
-                product.ProductImageUrl = await _imageSvc.SaveImageAsync(model.ProductImageFile);
-            }
-             * 
-             */
+            animal.Name = model.Name;
+            animal.Species = model.Species;
+            animal.Breed = model.Breed;
+            animal.Color = model.Color;
+            animal.BirthDate = model.BirthDate;
+            animal.RegisterDate = model.RegisterDate;
+            animal.Microchip = model.Microchip;
+            animal.MicrochipNumber = model.MicrochipNumber;
+            animal.Owner = model.Owner;
+            animal.ImageUrl = model.ImageUrl;
 
             _context.Animals.Update(animal);
             await _context.SaveChangesAsync();
