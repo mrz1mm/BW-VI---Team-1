@@ -136,7 +136,7 @@ namespace BW_VI___Team_1.Controllers
         }
 
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> DeleteVisit(int id)
         {
             try

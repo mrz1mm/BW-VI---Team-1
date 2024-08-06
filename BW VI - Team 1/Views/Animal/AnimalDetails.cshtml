@@ -4,62 +4,62 @@
     ViewData["Title"] = "Animal Details";
 }
 
-<h1>Animal Details</h1>
+<h1>Dettagli</h1>
 
 <div>
-    <h4>Animal</h4>
+    <h4>Dettagli Animali</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Animal.Name)
+            Nome
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Animal.Name)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Animal.Species)
+           Specie
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Animal.Species)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Animal.Breed)
+           Razza
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Animal.Breed)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Animal.Color)
+           Colore
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Animal.Color)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Animal.BirthDate)
+            Data di nascita
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Animal.BirthDate)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Animal.RegisterDate)
+            Data di registrazione
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Animal.RegisterDate)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Animal.Microchip)
+            Microchip
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Animal.Microchip)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Animal.MicrochipNumber)
+           Numero Microchip
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Animal.MicrochipNumber)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Animal.ImageUrl)
+            Foto
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Animal.ImageUrl)
@@ -68,20 +68,20 @@
 </div>
 
 <div>
-    <h4>Visit History</h4>
+    <h4>Visite</h4>
     <hr />
     <table class="table">
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Visits.First().Date)
+                   Data
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Visits.First().Exam)
+                   Esame
                 </th>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Visits.First().Diagnosis)
+                    Diagnosi
                 </th>
             </tr>
         </thead>
@@ -104,5 +104,5 @@
     </table>
 </div>
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Torna Indietro</a>
 </div>
