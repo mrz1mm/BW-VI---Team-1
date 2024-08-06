@@ -10,5 +10,7 @@ namespace BW_VI___Team_1.Interfaces
         Task<Animal> AddAnimalAsync(AnimalDTO animal);
         Task<Animal> UpdateAnimalAsync(Animal animal);
         Task<bool> DeleteAnimalAsync(int id);
+        Task<List<Visit>> GetVisitsByAnimalIdAsync(int animalId);
+
     }
 }

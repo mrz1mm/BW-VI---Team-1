@@ -5,6 +5,6 @@
     /// </summary>
     public interface IImageSvc
     {
-       
+        Task<string> SaveImageAsync(IFormFile imageFile);
     }
 }
