@@ -25,6 +25,8 @@ namespace BW_VI___Team_1.Controllers
             var products = await _context.Products
                 .Include(p => p.Suppliers)
                 .Include(p => p.Usages)
+                .Include(p => p.Locker)
+                .ThenInclude(l => l.Drawer)
                 .ToListAsync();
 
             return View(products);
@@ -34,11 +36,15 @@ namespace BW_VI___Team_1.Controllers
         public async Task<IActionResult> AddProduct()
         {
             ViewBag.ProductTypes = new List<string> { "AnimalFood", "Medicine" };
-            ViewBag.Usages = await _context.Usages.ToListAsync(); 
-            ViewBag.Suppliers = await _context.Suppliers.ToListAsync(); 
-
+            ViewBag.Usages = await _context.Usages.ToListAsync();
+            ViewBag.Suppliers = await _context.Suppliers.ToListAsync();
+            ViewBag.Lockers = await _context.Lockers.ToListAsync();
+            ViewBag.Drawers = await _context.Lockers
+                                            .SelectMany(l => l.Drawer)
+                                            .ToListAsync();
             return View();
         }
+
 
         [HttpGet]
         public async Task<IActionResult> UpdateProduct(int id)
@@ -97,7 +103,6 @@ namespace BW_VI___Team_1.Controllers
             {
                 model.Usages = await _context.Usages.Where(u => Usages.Contains(u.Id)).ToListAsync();
                 model.Suppliers = await _context.Suppliers.Where(s => Suppliers.Contains(s.Id)).ToListAsync();
-
                 await _productSvc.AddProductAsync(model);
                 TempData["Success"] = "Producte aggiunto con successo";
                 return RedirectToAction(nameof(Index));

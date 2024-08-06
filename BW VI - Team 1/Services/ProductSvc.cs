@@ -31,12 +31,11 @@ namespace BW_VI___Team_1.Services
                 Suppliers = model.Suppliers,
                 Type = model.Type,
                 Usages = model.Usages,
-                Locker = model.Type == Models.Type.Medicine ? model.Locker : null
+                Locker = model.Type == Models.Type.Medicine ? model.Locker : null 
             };
             _context.Products.Add(newProduct);
             await _context.SaveChangesAsync();
             return newProduct;
-
         }
 
         public async Task<Product> UpdateProductAsync(Product model)

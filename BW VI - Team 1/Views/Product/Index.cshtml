@@ -24,6 +24,12 @@
             <th>
                 Usages
             </th>
+            <th>
+                Locker
+            </th>
+            <th>
+                Drawers
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -55,6 +61,26 @@
                     else
                     {
                         <span>No Usages</span>
+                    }
+                </td>
+                <td>
+                    @if (item.Locker != null)
+                    {
+                        @item.Locker.Number
+                    }
+                    else
+                    {
+                        <span>No Locker</span>
+                    }
+                </td>
+                <td>
+                    @if (item.Locker != null && item.Locker.Drawer != null && item.Locker.Drawer.Any())
+                    {
+                        @string.Join(", ", item.Locker.Drawer.Select(d => d.Number))
+                    }
+                    else
+                    {
+                        <span>No Drawers</span>
                     }
                 </td>
                 <td>

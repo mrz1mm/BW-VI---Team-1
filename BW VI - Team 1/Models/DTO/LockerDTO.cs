@@ -3,6 +3,5 @@
     public class LockerDTO
     {
         public string Number { get; set; }
-        public List<int> Drawer { get; set; }
     }
 }
