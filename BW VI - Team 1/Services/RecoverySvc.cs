@@ -25,18 +25,25 @@ namespace BW_VI___Team_1.Services
 
         public async Task<Recovery> AddRecoveryAsync(RecoveryDTO dto)
         {
+            var animal = await _context.Animals.FindAsync(dto.AnimalId);
+            if (animal == null)
+            {
+                throw new KeyNotFoundException("Animal not found");
+            }
+
             var newRecovery = new Recovery
             {
-                StartDate = dto.StartDate,
+
                 EndDate = dto.EndDate,
-                Animal = dto.Animal,
-                IsRefound = dto.IsRefound
+                Animal = animal,
+
             };
 
             _context.Recoverys.Add(newRecovery);
             await _context.SaveChangesAsync();
             return newRecovery;
         }
+
 
         public async Task<Recovery> UpdateRecoveryAsync(Recovery model)
         {
@@ -46,9 +53,15 @@ namespace BW_VI___Team_1.Services
                 return null;
             }
 
+            var animal = await _context.Animals.FindAsync(model.Animal.Id);
+            if (animal == null)
+            {
+                throw new KeyNotFoundException("Animal not found");
+            }
+
             recovery.StartDate = model.StartDate;
             recovery.EndDate = model.EndDate;
-            recovery.Animal = model.Animal;
+            recovery.Animal = animal;
             recovery.IsRefound = model.IsRefound;
 
             _context.Recoverys.Update(recovery);
