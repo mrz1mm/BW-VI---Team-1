@@ -13,14 +13,16 @@
         <form asp-action="UpdateProduct">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Type" class="control-label"></label>
-                <select asp-for="Type" class="form-control">
+                <select asp-for="Type" class="form-control" id="productType">
                     @if (ViewBag.ProductTypes != null)
                     {
                         foreach (var type in ViewBag.ProductTypes)
@@ -35,9 +37,10 @@
                 </select>
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label for="Suppliers">Suppliers</label>
-                <select id="Suppliers" name="Suppliers" class="form-control">
+                <select id="Suppliers" name="Suppliers" class="form-control" multiple>
                     @if (ViewBag.Suppliers != null)
                     {
                         foreach (var supplier in ViewBag.Suppliers)
@@ -51,9 +54,10 @@
                     }
                 </select>
             </div>
+
             <div class="form-group">
                 <label for="Usages">Usages</label>
-                <select id="Usages" name="Usages" class="form-control">
+                <select id="Usages" name="Usages" class="form-control" multiple>
                     @if (ViewBag.Usages != null)
                     {
                         foreach (var usage in ViewBag.Usages)
@@ -67,8 +71,44 @@
                     }
                 </select>
             </div>
+
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <label for="LockerId">Locker</label>
+                <select id="LockerId" name="LockerId" class="form-control">
+                    <option value="">Select Locker</option>
+                    @if (ViewBag.Lockers != null)
+                    {
+                        foreach (var locker in ViewBag.Lockers)
+                        {
+                            <option value="@locker.Id">@locker.Number</option>
+                        }
+                    }
+                    else
+                    {
+                        <option>No lockers available</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+    <label for="DrawerId">Drawer</label>
+    <select id="DrawerId" name="DrawerId" class="form-control">
+        <option value="">Select Drawer</option>
+        @if (ViewBag.Drawers != null)
+        {
+            foreach (var drawer in ViewBag.Drawers)
+            {
+                <option value="@drawer.Id">@drawer.Number</option>
+            }
+        }
+        else
+        {
+            <option>No drawers available</option>
+        }
+    </select>
+</div>
+
+            <div class="form-group">
+                <input type="submit" value="Update" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -82,4 +122,15 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script type="text/javascript">
+        document.getElementById('productType').addEventListener('change', function () {
+            var lockerFields = document.getElementById('lockerFields');
+            if (this.value === 'Medicine') {
+                lockerFields.style.display = 'block';
+            } else {
+                lockerFields.style.display = 'none';
+            }
+        });
+    </script>
 }

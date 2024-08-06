@@ -55,6 +55,8 @@ namespace BW_VI___Team_1.Controllers
             ViewBag.ProductTypes = Enum.GetValues(typeof(ProductType)).Cast<ProductType>().Select(t => t.ToString()).ToList();
             ViewBag.Suppliers = await _context.Suppliers.ToListAsync();
             ViewBag.Usages = await _context.Usages.ToListAsync();
+            ViewBag.Lockers = await _context.Lockers.ToListAsync();
+            ViewBag.Drawers = await _context.Drawers.ToListAsync();
 
             var model = new Product
             {
@@ -63,11 +65,13 @@ namespace BW_VI___Team_1.Controllers
                 Suppliers = product.Suppliers,
                 Type = product.Type,
                 Usages = product.Usages,
-                Locker = product.Locker
+                Locker = product.Locker,
+                Drawer = product.Drawer
             };
 
             return View(model);
         }
+
 
 
         [HttpPost]
@@ -141,13 +145,22 @@ namespace BW_VI___Team_1.Controllers
                 model.Usages = await _context.Usages.Where(u => Usages.Contains(u.Id)).ToListAsync();
                 model.Suppliers = await _context.Suppliers.Where(s => Suppliers.Contains(s.Id)).ToListAsync();
 
+
+                var drawer = await _context.Drawers.FindAsync(model.DrawerId);
+                if (drawer == null)
+                {
+                    TempData["Error"] = "Drawer non trovato";
+                    return View(model);
+                }
+                model.Drawer = drawer;
+
                 await _productSvc.UpdateProductAsync(model);
-                TempData["Success"] = "Producte modificato con successo";
+                TempData["Success"] = "Prodotto modificato con successo";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
-                TempData["Error"] = $"Errore nella modifica dell'producte: {ex.Message}";
+                TempData["Error"] = $"Errore nella modifica del prodotto: {ex.Message}";
                 if (ex.InnerException != null)
                 {
                     TempData["Error"] += $" Inner Exception: {ex.InnerException.Message}";
@@ -155,5 +168,6 @@ namespace BW_VI___Team_1.Controllers
                 return View(model);
             }
         }
+
     }
 }

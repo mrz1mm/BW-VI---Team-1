@@ -10,5 +10,7 @@ namespace BW_VI___Team_1.Models
         public string Number { get; set; }
         [Required]
         public List<Drawer> Drawers { get; set; } = new List<Drawer>();
+
+        public List<Product> Products { get; set; } = new List<Product>();
     }
 }
