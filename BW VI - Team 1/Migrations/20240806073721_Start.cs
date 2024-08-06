@@ -83,22 +83,23 @@ namespace BW_VI___Team_1.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Drawer",
+                name: "Drawers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Number = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LockerId = table.Column<int>(type: "int", nullable: true)
+                    Number = table.Column<int>(type: "int", nullable: false),
+                    LockerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Drawer", x => x.Id);
+                    table.PrimaryKey("PK_Drawers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Drawer_Lockers_LockerId",
+                        name: "FK_Drawers_Lockers_LockerId",
                         column: x => x.LockerId,
                         principalTable: "Lockers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -274,8 +275,8 @@ namespace BW_VI___Team_1.Migrations
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Drawer_LockerId",
-                table: "Drawer",
+                name: "IX_Drawers_LockerId",
+                table: "Drawers",
                 column: "LockerId");
 
             migrationBuilder.CreateIndex(
@@ -318,7 +319,7 @@ namespace BW_VI___Team_1.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Drawer");
+                name: "Drawers");
 
             migrationBuilder.DropTable(
                 name: "ProductSupplier");

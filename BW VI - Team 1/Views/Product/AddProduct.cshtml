@@ -33,7 +33,12 @@
             <div id="lockerFields" style="display:none;">
                 <div class="form-group">
                     <label asp-for="Locker.Number" class="control-label"></label>
-                    <input asp-for="Locker.Number" class="form-control" />
+                    <select asp-for="Locker.Number" class="form-control">
+                        @foreach (var locker in ViewBag.Lockers as List<BW_VI___Team_1.Models.Locker>)
+                        {
+                            <option value="@locker.Number">@locker.Number</option>
+                        }
+                    </select>
                     <span asp-validation-for="Locker.Number" class="text-danger"></span>
                 </div>
 
