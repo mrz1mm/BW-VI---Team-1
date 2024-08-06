@@ -22,21 +22,29 @@ namespace BW_VI___Team_1.Services
 
         public async Task<Animal> GetAnimalByIdAsync(int id)
         {
-            return await _context.Animals.FindAsync(id);
+            return await _context.Animals.Include(a => a.Owner).FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<Animal> AddAnimalAsync(AnimalDTO model)
         {
+            var imageUrl = await _imageSvc.SaveImageAsync(model.ImageFile);
+
             var newAnimal = new Animal
             {
-                // Aggiungere cose (es. Name = model.Name)
-                // ProductImageUrl = model.ProductImageFile != null ? await _imageSvc.SaveImageAsync(model.ProductImageFile) : null,
-
+                Name = model.Name,
+                Species = model.Species,
+                Breed = model.Breed,
+                Color = model.Color,
+                BirthDate = model.BirthDate,
+                RegisterDate = model.RegisterDate,
+                Microchip = model.Microchip,
+                MicrochipNumber = model.MicrochipNumber,
+                Owner = model.Owner,
+                ImageUrl = imageUrl
             };
             _context.Animals.Add(newAnimal);
             await _context.SaveChangesAsync();
             return newAnimal;
-
         }
 
         public async Task<Animal> UpdateAnimalAsync(Animal model)
@@ -76,6 +84,11 @@ namespace BW_VI___Team_1.Services
             _context.Animals.Remove(animal);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<List<Visit>> GetVisitsByAnimalIdAsync(int animalId)
+        {
+            return await _context.Visits.Where(v => v.Animal.Id == animalId).OrderByDescending(v => v.Date).ToListAsync();
         }
     }
 }

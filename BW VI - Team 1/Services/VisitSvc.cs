@@ -1,7 +1,7 @@
-﻿using BW_VI___Team_1.Models;
+﻿using BW_VI___Team_1.Interfaces;
+using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.EntityFrameworkCore;
-using BW_VI___Team_1.Interfaces;
 
 namespace BW_VI___Team_1.Services
 {
@@ -15,12 +15,12 @@ namespace BW_VI___Team_1.Services
 
         public async Task<List<Visit>> GetAllVisitsAsync()
         {
-            return await _context.Visits.ToListAsync();
+            return await _context.Visits.Include(v => v.Animal).ToListAsync();
         }
 
         public async Task<Visit> GetVisitByIdAsync(int id)
         {
-            return await _context.Visits.FindAsync(id);
+            return await _context.Visits.Include(v => v.Animal).FirstOrDefaultAsync(v => v.Id == id);
         }
 
         public async Task<Visit> AddVisitAsync(VisitDTO model)
@@ -35,7 +35,6 @@ namespace BW_VI___Team_1.Services
             _context.Visits.Add(newVisit);
             await _context.SaveChangesAsync();
             return newVisit;
-
         }
 
         public async Task<Visit> UpdateVisitAsync(Visit model)
