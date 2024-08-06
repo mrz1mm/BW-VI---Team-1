@@ -1,5 +1,4 @@
 ﻿using BW_VI___Team_1.Interfaces;
-using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,12 +59,27 @@ namespace BW_VI___Team_1.Controllers
                 return NotFound();
             }
 
-            return View(animal);
+            var model = new AnimalDTO
+            {
+                Id = animal.Id,
+                Name = animal.Name,
+                Species = animal.Species,
+                Breed = animal.Breed,
+                Color = animal.Color,
+                BirthDate = animal.BirthDate,
+                RegisterDate = animal.RegisterDate,
+                Microchip = animal.Microchip,
+                MicrochipNumber = animal.MicrochipNumber,
+                Owner = animal.Owner,
+                ImageUrl = animal.ImageUrl
+            };
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateAnimal(Animal model)
+        public async Task<IActionResult> UpdateAnimal(AnimalDTO model)
         {
             if (!ModelState.IsValid)
             {
