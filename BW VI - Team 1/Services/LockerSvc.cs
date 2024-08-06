@@ -25,19 +25,25 @@ namespace BW_VI___Team_1.Services
 
         public async Task<Locker> AddLockerAsync(LockerDTO model)
         {
+            // Crea il nuovo locker
             var newLocker = new Locker
             {
                 Number = model.Number,
                 Drawers = new List<Drawer>()
             };
+
             for (int i = 1; i <= 5; i++)
             {
-                newLocker.Drawers.Add(new Drawer { Number = i });
+                var drawer = new Drawer
+                {
+                    Number = i,
+                    Locker = newLocker 
+                };
+                newLocker.Drawers.Add(drawer);
             }
             _context.Lockers.Add(newLocker);
             await _context.SaveChangesAsync();
             return newLocker;
-
         }
 
         public async Task<Locker> UpdateLockerAsync(Locker model)
@@ -55,6 +61,7 @@ namespace BW_VI___Team_1.Services
             await _context.SaveChangesAsync();
             return locker;
         }
+
 
         public async Task DeleteLockerAsync(int id) 
         { 

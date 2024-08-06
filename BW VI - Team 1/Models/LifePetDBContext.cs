@@ -29,10 +29,15 @@ namespace BW_VI___Team_1.Models
 
 
             modelBuilder.Entity<Product>()
-                .HasOne(p => p.Order) 
+                .HasOne(p => p.Order)
                 .WithMany(o => o.Products)
                 .HasForeignKey(p => p.OrderId)
-                .OnDelete(DeleteBehavior.Cascade); 
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Locker>()
+        .HasMany(l => l.Drawers)
+        .WithOne(d => d.Locker)
+        .HasForeignKey(d => d.LockerId);
         }
     }
 }
