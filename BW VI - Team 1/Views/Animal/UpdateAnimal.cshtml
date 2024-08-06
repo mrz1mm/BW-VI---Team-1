@@ -1,7 +1,8 @@
-﻿@model BW_VI___Team_1.Models.Animal
+﻿@model BW_VI___Team_1.Models.DTO.AnimalDTO
 
 @{
     ViewData["Title"] = "Update Animal";
+    var animalId = ViewBag.AnimalId;
 }
 
 <h1>Update Animal</h1>
@@ -10,9 +11,8 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="UpdateAnimal">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+        <form asp-action="UpdateAnimal" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="@animalId" name="id" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
