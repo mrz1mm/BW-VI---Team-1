@@ -81,18 +81,17 @@ namespace BW_VI___Team_1.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("LockerId")
+                    b.Property<int>("LockerId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("LockerId");
 
-                    b.ToTable("Drawer");
+                    b.ToTable("Drawers");
                 });
 
             modelBuilder.Entity("BW_VI___Team_1.Models.Locker", b =>
@@ -357,9 +356,13 @@ namespace BW_VI___Team_1.Migrations
 
             modelBuilder.Entity("BW_VI___Team_1.Models.Drawer", b =>
                 {
-                    b.HasOne("BW_VI___Team_1.Models.Locker", null)
-                        .WithMany("Drawer")
-                        .HasForeignKey("LockerId");
+                    b.HasOne("BW_VI___Team_1.Models.Locker", "Locker")
+                        .WithMany("Drawers")
+                        .HasForeignKey("LockerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Locker");
                 });
 
             modelBuilder.Entity("BW_VI___Team_1.Models.Order", b =>
@@ -440,7 +443,7 @@ namespace BW_VI___Team_1.Migrations
 
             modelBuilder.Entity("BW_VI___Team_1.Models.Locker", b =>
                 {
-                    b.Navigation("Drawer");
+                    b.Navigation("Drawers");
                 });
 
             modelBuilder.Entity("BW_VI___Team_1.Models.Order", b =>

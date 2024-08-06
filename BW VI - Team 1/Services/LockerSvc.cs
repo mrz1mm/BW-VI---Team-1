@@ -20,7 +20,7 @@ namespace BW_VI___Team_1.Services
 
         public async Task<Locker> GetLockerByIdAsync(int id) 
         {
-            return await _context.Lockers.Include(l => l.Drawer).FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Lockers.Include(l => l.Drawers).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<Locker> AddLockerAsync(LockerDTO model)
@@ -28,11 +28,11 @@ namespace BW_VI___Team_1.Services
             var newLocker = new Locker
             {
                 Number = model.Number,
-                Drawer = new List<Drawer>()
+                Drawers = new List<Drawer>()
             };
             for (int i = 1; i <= 5; i++)
             {
-                newLocker.Drawer.Add(new Drawer { Number = i });
+                newLocker.Drawers.Add(new Drawer { Number = i });
             }
             _context.Lockers.Add(newLocker);
             await _context.SaveChangesAsync();
@@ -43,7 +43,7 @@ namespace BW_VI___Team_1.Services
         public async Task<Locker> UpdateLockerAsync(Locker model)
         {
             var locker = await _context.Lockers
-                                       .Include(l => l.Drawer)
+                                       .Include(l => l.Drawers)
                                        .FirstOrDefaultAsync(l => l.Id == model.Id);
             if (locker == null)
             {

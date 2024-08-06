@@ -14,6 +14,7 @@ namespace BW_VI___Team_1.Models
         public virtual DbSet<Usage> Usages { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Visit> Visits { get; set; }
+        public virtual DbSet<Drawer> Drawers { get; set; }
         public LifePetDBContext(DbContextOptions<LifePetDBContext> options) : base(options) { }
     }
 }

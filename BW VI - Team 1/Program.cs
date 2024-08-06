@@ -46,20 +46,17 @@ namespace BW_VI___Team_1
             });
 
             builder.Services
-    .AddScoped<IAnimalSvc, AnimalSvc>()
-    .AddScoped<IAuthSvc, AuthSvc>()
-    .AddScoped<IImageSvc, ImageSvc>()
-    .AddScoped<ILockerSvc, LockerSvc>()
-    .AddScoped<IOrderSvc, OrderSvc>()
-    .AddScoped<IOwnerSvc, OwnerSvc>()
-    .AddScoped<IProductSvc, ProductSvc>()
-    .AddScoped<IRecoverySvc, RecoverySvc>()
-    .AddScoped<ISupplierSvc, SupplierSvc>()
-    .AddScoped<IUsageSvc, UsageSvc>()
-    .AddScoped<IVisitSvc, VisitSvc>();
-
-
-
+            .AddScoped<IAnimalSvc, AnimalSvc>()
+            .AddScoped<IAuthSvc, AuthSvc>()
+            .AddScoped<IImageSvc>(x => new ImageSvc(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images")))
+            .AddScoped<ILockerSvc, LockerSvc>()
+            .AddScoped<IOrderSvc, OrderSvc>()
+            .AddScoped<IOwnerSvc, OwnerSvc>()
+            .AddScoped<IProductSvc, ProductSvc>()
+            .AddScoped<IRecoverySvc, RecoverySvc>()
+            .AddScoped<ISupplierSvc, SupplierSvc>()
+            .AddScoped<IUsageSvc, UsageSvc>()
+            .AddScoped<IVisitSvc, VisitSvc>();
 
             var app = builder.Build();
 
