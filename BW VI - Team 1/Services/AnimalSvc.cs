@@ -84,33 +84,20 @@ namespace BW_VI___Team_1.Services
             animal.RegisterDate = model.RegisterDate;
             animal.Microchip = model.Microchip;
             animal.MicrochipNumber = model.MicrochipNumber;
+            animal.Owner.FirstName = model.Owner.FirstName;
+            animal.Owner.LastName = model.Owner.LastName;
+            animal.Owner.FiscalCode = model.Owner.FiscalCode;
 
             if (model.ImageFile != null)
             {
+                // Delete the old image
                 if (!string.IsNullOrEmpty(animal.ImageUrl))
                 {
                     await _imageSvc.DeleteImageAsync(animal.ImageUrl);
                 }
 
+                // Save the new image
                 animal.ImageUrl = await _imageSvc.SaveImageAsync(model.ImageFile);
-            }
-
-            var existingOwner = await _context.Owners
-                .FirstOrDefaultAsync(o => o.FiscalCode == model.Owner.FiscalCode);
-
-            if (existingOwner == null)
-            {
-                animal.Owner = new Owner
-                {
-                    FirstName = model.Owner.FirstName,
-                    LastName = model.Owner.LastName,
-                    FiscalCode = model.Owner.FiscalCode
-                };
-                _context.Owners.Add(animal.Owner);
-            }
-            else
-            {
-                animal.Owner = existingOwner;
             }
 
             _context.Animals.Update(animal);

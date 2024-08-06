@@ -7,10 +7,12 @@ namespace BW_VI___Team_1.Controllers
     public class AnimalController : Controller
     {
         private readonly IAnimalSvc _animalSvc;
+        private readonly IImageSvc _imageSvc;
 
-        public AnimalController(IAnimalSvc animalSvc)
+        public AnimalController(IAnimalSvc animalSvc, IImageSvc imageSvc)
         {
             _animalSvc = animalSvc;
+            _imageSvc = imageSvc;
         }
 
         [HttpGet]
@@ -72,7 +74,7 @@ namespace BW_VI___Team_1.Controllers
                 Owner = animal.Owner
             };
 
-            ViewBag.AnimalId = id;
+            ViewBag.AnimalId = id; // Pass the animal ID to the view using ViewBag
             return View(model);
         }
 
