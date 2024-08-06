@@ -74,9 +74,9 @@
                     }
                 </td>
                 <td>
-                    @if (item.Locker != null && item.Locker.Drawers != null && item.Locker.Drawers.Any())
+                    @if (item.Drawer != null )
                     {
-                        @string.Join(", ", item.Locker.Drawers.Select(d => d.Number))
+                        @item.Drawer.Number
                     }
                     else
                     {

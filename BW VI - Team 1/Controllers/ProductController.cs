@@ -111,9 +111,17 @@ namespace BW_VI___Team_1.Controllers
                     TempData["Error"] = "Drawer non trovato";
                     return View(model);
                 }
-                if (model.Locker != null)
+
+                if (model.Type == Models.Type.Medicine)
                 {
-                    model.Locker.Drawers = new List<Drawer> { drawer };
+                    if (model.Locker != null)
+                    {
+                        model.Locker.Drawers = new List<Drawer> { drawer };
+                    }
+                }
+                else
+                {
+                    model.Locker = null; 
                 }
 
                 await _productSvc.AddProductAsync(model);
@@ -127,6 +135,8 @@ namespace BW_VI___Team_1.Controllers
                 return View(model);
             }
         }
+
+
 
 
 
