@@ -68,10 +68,9 @@ namespace BW_VI___Team_1.Services
             return newAnimal;
         }
 
-
-        public async Task<Animal> UpdateAnimalAsync(Animal model)
+        public async Task<Animal> UpdateAnimalAsync(int id, AnimalDTO model)
         {
-            var animal = await _context.Animals.FindAsync(model.Id);
+            var animal = await _context.Animals.Include(a => a.Owner).FirstOrDefaultAsync(a => a.Id == id);
             if (animal == null)
             {
                 return null;
@@ -85,8 +84,34 @@ namespace BW_VI___Team_1.Services
             animal.RegisterDate = model.RegisterDate;
             animal.Microchip = model.Microchip;
             animal.MicrochipNumber = model.MicrochipNumber;
-            animal.Owner = model.Owner;
-            animal.ImageUrl = model.ImageUrl;
+
+            if (model.ImageFile != null)
+            {
+                if (!string.IsNullOrEmpty(animal.ImageUrl))
+                {
+                    await _imageSvc.DeleteImageAsync(animal.ImageUrl);
+                }
+
+                animal.ImageUrl = await _imageSvc.SaveImageAsync(model.ImageFile);
+            }
+
+            var existingOwner = await _context.Owners
+                .FirstOrDefaultAsync(o => o.FiscalCode == model.Owner.FiscalCode);
+
+            if (existingOwner == null)
+            {
+                animal.Owner = new Owner
+                {
+                    FirstName = model.Owner.FirstName,
+                    LastName = model.Owner.LastName,
+                    FiscalCode = model.Owner.FiscalCode
+                };
+                _context.Owners.Add(animal.Owner);
+            }
+            else
+            {
+                animal.Owner = existingOwner;
+            }
 
             _context.Animals.Update(animal);
             await _context.SaveChangesAsync();
