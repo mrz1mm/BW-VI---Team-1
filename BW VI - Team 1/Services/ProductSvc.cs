@@ -31,7 +31,8 @@ namespace BW_VI___Team_1.Services
                 Suppliers = model.Suppliers,
                 Type = model.Type,
                 Usages = model.Usages,
-                Locker = model.Type == Models.Type.Medicine ? model.Locker : null
+                Locker = model.Type == Models.Type.Medicine ? model.Locker : null,
+                DrawerId = model.DrawerId
             };
             if (model.Locker != null)
             {
@@ -49,10 +50,17 @@ namespace BW_VI___Team_1.Services
                 }
             }
 
+            var drawer = await _context.Drawers.FindAsync(model.DrawerId);
+            if (drawer != null)
+            {
+                newProduct.Drawer = drawer;
+            }
+
             _context.Products.Add(newProduct);
             await _context.SaveChangesAsync();
             return newProduct;
         }
+
 
 
         public async Task<Product> UpdateProductAsync(Product model)

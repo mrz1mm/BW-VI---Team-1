@@ -52,10 +52,11 @@
                     </select>
                     <span asp-validation-for="DrawerId" class="text-danger"></span>
                 </div>
-                </div>
+            </div>
+
             <div class="form-group">
                 <label for="Usages">Usages</label>
-                <select id="Usages" name="Usages" class="form-control">
+                <select id="Usages" name="Usages" class="form-control" multiple>
                     @foreach (var usage in ViewBag.Usages as List<Usage>)
                     {
                         <option value="@usage.Id">@usage.Description</option>
@@ -65,7 +66,7 @@
 
             <div class="form-group">
                 <label for="Suppliers">Suppliers</label>
-                <select id="Suppliers" name="Suppliers" class="form-control" >
+                <select id="Suppliers" name="Suppliers" class="form-control" multiple>
                     @foreach (var supplier in ViewBag.Suppliers as List<Supplier>)
                     {
                         <option value="@supplier.Id">@supplier.Name</option>
@@ -90,13 +91,20 @@
     }
 
     <script type="text/javascript">
-        document.getElementById('productType').addEventListener('change', function () {
+        document.addEventListener('DOMContentLoaded', function () {
+            var productTypeSelect = document.getElementById('productType');
             var lockerFields = document.getElementById('lockerFields');
-            if (this.value === 'Medicine') {
-                lockerFields.style.display = 'block';
-            } else {
-                lockerFields.style.display = 'none';
+
+            function toggleLockerFields() {
+                if (productTypeSelect.value === 'Medicine') {
+                    lockerFields.style.display = 'block';
+                } else {
+                    lockerFields.style.display = 'none';
+                }
             }
+
+            toggleLockerFields();
+            productTypeSelect.addEventListener('change', toggleLockerFields);
         });
     </script>
 }
