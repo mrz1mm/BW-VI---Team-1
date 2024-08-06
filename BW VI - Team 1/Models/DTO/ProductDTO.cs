@@ -7,5 +7,6 @@
         public Type Type { get; set; }
         public List<Usage> Usages { get; set; } = [];
         public Locker? Locker { get; set; }
+        public int DrawerId { get; set; }
     }
 }

@@ -38,9 +38,7 @@ namespace BW_VI___Team_1.Controllers
             ViewBag.Usages = await _context.Usages.ToListAsync();
             ViewBag.Suppliers = await _context.Suppliers.ToListAsync();
             ViewBag.Lockers = await _context.Lockers.ToListAsync(); 
-            ViewBag.Drawers = await _context.Lockers
-                                            .SelectMany(l => l.Drawers)
-                                            .ToListAsync(); 
+            ViewBag.Drawers = await _context.Drawers.ToListAsync();
             return View();
         }
 
@@ -103,17 +101,29 @@ namespace BW_VI___Team_1.Controllers
                 model.Usages = await _context.Usages.Where(u => Usages.Contains(u.Id)).ToListAsync();
                 model.Suppliers = await _context.Suppliers.Where(s => Suppliers.Contains(s.Id)).ToListAsync();
 
+                var drawer = await _context.Drawers.FindAsync(model.DrawerId);
+                if (drawer == null)
+                {
+                    TempData["Error"] = "Drawer non trovato";
+                    return View(model);
+                }
+                if (model.Locker != null)
+                {
+                    model.Locker.Drawers = new List<Drawer> { drawer };
+                }
+
                 await _productSvc.AddProductAsync(model);
-                TempData["Success"] = "Producte aggiunto con successo";
+                TempData["Success"] = "Prodotto aggiunto con successo";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                TempData["Error"] = "Errore nell'aggiunta dell'producte";
+                TempData["Error"] = "Errore nell'aggiunta del prodotto";
                 return View(model);
             }
         }
+
 
 
         [HttpPost]
