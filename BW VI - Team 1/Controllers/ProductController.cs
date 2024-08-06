@@ -37,7 +37,7 @@ namespace BW_VI___Team_1.Controllers
             ViewBag.ProductTypes = new List<string> { "AnimalFood", "Medicine" };
             ViewBag.Usages = await _context.Usages.ToListAsync();
             ViewBag.Suppliers = await _context.Suppliers.ToListAsync();
-            ViewBag.Lockers = await _context.Lockers.ToListAsync(); 
+            ViewBag.Lockers = await _context.Lockers.ToListAsync();
             ViewBag.Drawers = await _context.Drawers.ToListAsync();
             return View();
         }
@@ -105,25 +105,22 @@ namespace BW_VI___Team_1.Controllers
                 model.Usages = await _context.Usages.Where(u => Usages.Contains(u.Id)).ToListAsync();
                 model.Suppliers = await _context.Suppliers.Where(s => Suppliers.Contains(s.Id)).ToListAsync();
 
-                var drawer = await _context.Drawers.FindAsync(model.DrawerId);
-                if (drawer == null)
-                {
-                    TempData["Error"] = "Drawer non trovato";
-                    return View(model);
-                }
-
                 if (model.Type == Models.Type.Medicine)
                 {
                     if (model.Locker != null)
                     {
-                        model.Locker.Drawers = new List<Drawer> { drawer };
+                        var drawer = await _context.Drawers.FindAsync(model.DrawerId);
+                        if (drawer != null)
+                        {
+                            model.Locker.Drawers = new List<Drawer> { drawer };
+                        }
                     }
                 }
                 else
                 {
-                    model.Locker = null; 
+                    model.Locker = null;
+                    model.DrawerId = null;
                 }
-
                 await _productSvc.AddProductAsync(model);
                 TempData["Success"] = "Prodotto aggiunto con successo";
                 return RedirectToAction(nameof(Index));
@@ -135,6 +132,7 @@ namespace BW_VI___Team_1.Controllers
                 return View(model);
             }
         }
+
 
 
 
@@ -155,15 +153,21 @@ namespace BW_VI___Team_1.Controllers
                 model.Usages = await _context.Usages.Where(u => Usages.Contains(u.Id)).ToListAsync();
                 model.Suppliers = await _context.Suppliers.Where(s => Suppliers.Contains(s.Id)).ToListAsync();
 
-
-                var drawer = await _context.Drawers.FindAsync(model.DrawerId);
-                if (drawer == null)
+                if (model.Type == Models.Type.Medicine)
                 {
-                    TempData["Error"] = "Drawer non trovato";
-                    return View(model);
+                    if (model.Locker != null)
+                    {
+                        var drawer = await _context.Drawers.FindAsync(model.DrawerId);
+                        if (drawer != null)
+                        {
+                            model.Drawer = drawer;
+                        }
+                    }
                 }
-                model.Drawer = drawer;
-
+                else
+                {
+                    model.Drawer = null;
+                }              
                 await _productSvc.UpdateProductAsync(model);
                 TempData["Success"] = "Prodotto modificato con successo";
                 return RedirectToAction(nameof(Index));
@@ -178,6 +182,7 @@ namespace BW_VI___Team_1.Controllers
                 return View(model);
             }
         }
+
 
     }
 }
