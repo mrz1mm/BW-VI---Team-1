@@ -2,6 +2,8 @@
 using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace BW_VI___Team_1.Controllers
 {
@@ -17,50 +19,50 @@ namespace BW_VI___Team_1.Controllers
 
         // VISTE
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var recoverys = _recoverySvc.GetAllRecoveriesAsync();
-            return View(recoverys);
+            var recoveries = await _recoverySvc.GetAllRecoveriesAsync();
+            return View(recoveries);
         }
 
         [HttpGet]
-        public IActionResult AddRecovery()
+        public async Task<IActionResult> AddRecovery()
         {
+            var animals = await _context.Animals.ToListAsync();
+            ViewBag.Animals = new SelectList(animals, "Id", "Name");
             return View();
         }
 
         [HttpGet]
-        public IActionResult UpdateRecovery(int id)
+        public async Task<IActionResult> UpdateRecovery(int id)
         {
-            var recovery = _recoverySvc.GetRecoveryByIdAsync(id);
+            var recovery = await _recoverySvc.GetRecoveryByIdAsync(id);
             if (recovery == null)
             {
                 return NotFound();
             }
-
-            var model = new Recovery
+            var model = new RecoveryDTO
             {
-                // aggiungere cose (es. Name = recovery.Name)
+                StartDate = recovery.StartDate,
+                EndDate = recovery.EndDate,
+                Animal = recovery.Animal,
+                IsRefound = recovery.IsRefound
             };
 
             return View(model);
         }
 
-        [HttpGet]
-        public IActionResult DeleteRecovery(int id)
+        [HttpPost]
+        public async Task DeleteRecovery(int id)
         {
-            var recovery = _recoverySvc.GetRecoveryByIdAsync(id);
+            var recovery = await _context.Recoverys.FindAsync(id);
             if (recovery == null)
             {
-                return NotFound();
+                throw new KeyNotFoundException();
             }
 
-            var model = new Recovery
-            {
-                // aggiungere cose (es. Name = recovery.Name)
-            };
-
-            return View();
+            _context.Recoverys.Remove(recovery);
+            await _context.SaveChangesAsync();
         }
 
 
@@ -77,15 +79,31 @@ namespace BW_VI___Team_1.Controllers
 
             try
             {
-                await _recoverySvc.AddRecoveryAsync(model);
-                TempData["Success"] = "Recoverye aggiunto con successo";
-                return RedirectToAction(nameof(Index));
+                var animal = await _context.Animals.FindAsync(model.Animal.Id);
 
+                if (animal == null)
+                {
+                    TempData["Error"] = "Animale non trovato";
+                    return View(model);
+                }
+
+                var newRecovery = new Recovery
+                {
+                    StartDate = model.StartDate,
+                    EndDate = model.EndDate,
+                    Animal = animal,
+                    IsRefound = model.IsRefound
+                };
+
+                _context.Recoverys.Add(newRecovery);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Recovery aggiunto con successo";
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                TempData["Error"] = "Errore nell'aggiunta dell'recoverye";
+                TempData["Error"] = "Errore nell'aggiunta del recovery";
                 return View(model);
             }
         }
@@ -111,23 +129,6 @@ namespace BW_VI___Team_1.Controllers
                 ModelState.AddModelError("", ex.Message);
                 TempData["Error"] = "Errore nella modifica dell'recoverye";
                 return View(model);
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmDeleteRecovery(int id)
-        {
-            try
-            {
-                await _recoverySvc.DeleteRecoveryAsync(id);
-                TempData["Success"] = "Recoverye eliminato con successo";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "Errore nell'eliminazione dell'recoverye";
-                return RedirectToAction(nameof(Index));
             }
         }
     }

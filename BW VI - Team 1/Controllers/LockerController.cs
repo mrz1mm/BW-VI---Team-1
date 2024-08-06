@@ -17,9 +17,9 @@ namespace BW_VI___Team_1.Controllers
 
         // VISTE
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var lockers = _lockerSvc.GetAllLockersAsync();
+            var lockers = await _lockerSvc.GetAllLockersAsync();
             return View(lockers);
         }
 

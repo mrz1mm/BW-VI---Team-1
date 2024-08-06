@@ -12,21 +12,62 @@
     <div class="col-md-4">
         <form asp-action="AddProduct">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Type" class="control-label"></label>
-                <select asp-for="Type" class="form-control">
-                    @foreach (var type in ViewBag.ProductTypes)
+                <select asp-for="Type" class="form-control" id="productType">
+                    @foreach (var type in ViewBag.ProductTypes as List<string>)
                     {
                         <option value="@type">@type</option>
                     }
                 </select>
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
+
+            <div id="lockerFields" style="display:none;">
+                <div class="form-group">
+                    <label asp-for="Locker.Number" class="control-label"></label>
+                    <input asp-for="Locker.Number" class="form-control" />
+                    <span asp-validation-for="Locker.Number" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="Locker.Drawer" class="control-label">Drawer</label>
+                    <select id="Locker.Drawer" name="Locker.Drawer" class="form-control">
+                        @foreach (var drawer in ViewBag.Drawers as List<Drawer>)
+                        {
+                            <option value="@drawer.Id">@drawer.Number</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Usages">Usages</label>
+                <select id="Usages" name="Usages" class="form-control">
+                    @foreach (var usage in ViewBag.Usages as List<Usage>)
+                    {
+                        <option value="@usage.Id">@usage.Description</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="Suppliers">Suppliers</label>
+                <select id="Suppliers" name="Suppliers" class="form-control" >
+                    @foreach (var supplier in ViewBag.Suppliers as List<Supplier>)
+                    {
+                        <option value="@supplier.Id">@supplier.Name</option>
+                    }
+                </select>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -39,5 +80,18 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script type="text/javascript">
+        document.getElementById('productType').addEventListener('change', function () {
+            var lockerFields = document.getElementById('lockerFields');
+            if (this.value === 'Medicine') {
+                lockerFields.style.display = 'block';
+            } else {
+                lockerFields.style.display = 'none';
+            }
+        });
+    </script>
 }

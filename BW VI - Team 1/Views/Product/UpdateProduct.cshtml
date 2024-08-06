@@ -36,6 +36,38 @@
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label for="Suppliers">Suppliers</label>
+                <select id="Suppliers" name="Suppliers" class="form-control">
+                    @if (ViewBag.Suppliers != null)
+                    {
+                        foreach (var supplier in ViewBag.Suppliers)
+                        {
+                            <option value="@supplier.Id">@supplier.Name</option>
+                        }
+                    }
+                    else
+                    {
+                        <option>No suppliers available</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="Usages">Usages</label>
+                <select id="Usages" name="Usages" class="form-control">
+                    @if (ViewBag.Usages != null)
+                    {
+                        foreach (var usage in ViewBag.Usages)
+                        {
+                            <option value="@usage.Id">@usage.Description</option>
+                        }
+                    }
+                    else
+                    {
+                        <option>No usages available</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>

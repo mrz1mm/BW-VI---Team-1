@@ -8,7 +8,7 @@ namespace BW_VI___Team_1.Interfaces
         Task<List<Product>> GetAllProductsAsync();
         Task<Product> GetProductByIdAsync(int id);
         Task<Product> AddProductAsync(ProductDTO product);
-        Task<Product> UpdateProductAsync(Product product);
+        Task<Product> UpdateProductAsync(Product model);
         Task DeleteProductAsync(int id);
     }
 }

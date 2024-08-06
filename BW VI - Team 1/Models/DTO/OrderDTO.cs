@@ -6,5 +6,6 @@
         public Owner Owner { get; set; }
         public string MedicalPrescription { get; set; }
         public DateOnly Date { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public int[] SelectedProductIds { get; set; }
     }
 }

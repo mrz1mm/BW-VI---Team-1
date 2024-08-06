@@ -8,9 +8,11 @@ namespace BW_VI___Team_1.Services
     public class AnimalSvc : IAnimalSvc
     {
         private readonly LifePetDBContext _context;
-        public AnimalSvc(LifePetDBContext context)
+        private readonly IImageSvc _imageSvc;
+        public AnimalSvc(LifePetDBContext context, IImageSvc imageSvc)
         {
             _context = context;
+            _imageSvc = imageSvc;
         }
 
         public async Task<List<Animal>> GetAllAnimalsAsync()
@@ -28,6 +30,8 @@ namespace BW_VI___Team_1.Services
             var newAnimal = new Animal
             {
                 // Aggiungere cose (es. Name = model.Name)
+                // ProductImageUrl = model.ProductImageFile != null ? await _imageSvc.SaveImageAsync(model.ProductImageFile) : null,
+
             };
             _context.Animals.Add(newAnimal);
             await _context.SaveChangesAsync();
@@ -44,6 +48,17 @@ namespace BW_VI___Team_1.Services
             }
 
             // Aggiungere cose (es. animal.Name = model.Name)
+            /*
+             *             if (model.ProductImageFile != null)
+            {
+                if (!string.IsNullOrEmpty(product.ProductImageUrl))
+                {
+                    await _imageSvc.DeleteImageAsync(product.ProductImageUrl);
+                }
+                product.ProductImageUrl = await _imageSvc.SaveImageAsync(model.ProductImageFile);
+            }
+             * 
+             */
 
             _context.Animals.Update(animal);
             await _context.SaveChangesAsync();

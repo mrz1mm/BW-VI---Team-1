@@ -10,22 +10,47 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="UpdateOrder">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+        <form asp-action="UpdateOrder" method="post">
+            <!-- Campo nascosto per l'ID -->
+            <input type="hidden" name="id" value="@Model.Id" />
+
             <div class="form-group">
-                <label asp-for="MedicalPrescription" class="control-label"></label>
+                <label asp-for="MedicalPrescription">Medical Prescription</label>
                 <input asp-for="MedicalPrescription" class="form-control" />
                 <span asp-validation-for="MedicalPrescription" class="text-danger"></span>
             </div>
+            <input asp-for="Date" type="hidden" />
             <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger"></span>
+                <label asp-for="Owner">Owner</label>
+                <select asp-for="Owner.Id" class="form-control" asp-items="@(ViewBag.Owners)">
+                    <option value="">Select an Owner</option>
+                </select>
+                <span asp-validation-for="Owner.Id" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <label class="form-label">Products</label>
+                <div class="row">
+                    @if (ViewBag.Products != null)
+                    {
+                        @foreach (var product in ViewBag.Products as List<BW_VI___Team_1.Models.Product>)
+                        {
+                            <div class="col-md-4 mb-2">
+                                <div class="form-check">
+                                    <input type="checkbox" name="SelectedProductIds" value="@product.Id" class="form-check-input" id="product-@product.Id"
+                                    @(Model.Products.Any(p => p.Id == product.Id) ? "checked" : "") />
+                                    <label class="form-check-label" for="product-@product.Id">@product.Name</label>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>No products available.</p>
+                    }
+                </div>
             </div>
+
+            <button type="submit" class="btn btn-primary">Update Order</button>
         </form>
     </div>
 </div>
@@ -35,5 +60,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

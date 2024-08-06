@@ -5,7 +5,7 @@ using BW_VI___Team_1.Interfaces;
 
 namespace BW_VI___Team_1.Services
 {
-    public class OrderSvc   : IOrderSvc
+    public class OrderSvc : IOrderSvc
     {
         private readonly LifePetDBContext _context;
         public OrderSvc(LifePetDBContext context)
@@ -15,55 +15,93 @@ namespace BW_VI___Team_1.Services
 
         public async Task<List<Order>> GetAllOrdersAsync()
         {
-            return await _context.Orders.Include(o => o.Products).Include(o => o.Owner).ToListAsync();
+            return await _context.Orders
+               .Include(o => o.Products)
+               .Include(o => o.Owner)
+               .ToListAsync();
         }
 
         public async Task<Order> GetOrderByIdAsync(int id)
         {
-            return await _context.Orders.Include(o => o.Products).Include(o => o.Owner).FirstOrDefaultAsync(o => o.Id == id);
+            return await _context.Orders
+                .Include(o => o.Products)
+                .Include(o => o.Owner)
+                .FirstOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<Order> AddOrderAsync(OrderDTO model)
         {
+
+            var selectedProducts = await _context.Products
+                .Where(p => model.SelectedProductIds.Contains(p.Id))
+                .ToListAsync();
+
             var newOrder = new Order
             {
-                Products = model.Products,
-                Owner = model.Owner,
                 MedicalPrescription = model.MedicalPrescription,
-                Date = model.Date
+                Date = model.Date,
+                Products = selectedProducts,
+                Owner = model.Owner
             };
+
             _context.Orders.Add(newOrder);
             await _context.SaveChangesAsync();
             return newOrder;
-
         }
 
-        public async Task<Order> UpdateOrderAsync(Order model)
+
+
+
+        public async Task UpdateOrderAsync(int id, OrderDTO dto)
         {
-            var order = await _context.Orders.FindAsync(model.Id);
-            if (order == null)
+            var existingOrder = await _context.Orders
+                .Include(o => o.Products)
+                .Include(o => o.Owner)
+                .FirstOrDefaultAsync(o => o.Id == id);
+
+            if (existingOrder == null)
             {
-                return null;
+                throw new KeyNotFoundException("Order not found.");
             }
 
-            // Aggiungere cose (es. order.Name = model.Name)
+            existingOrder.MedicalPrescription = dto.MedicalPrescription;
+            existingOrder.Date = dto.Date;
 
-            _context.Orders.Update(order);
-            await _context.SaveChangesAsync();
-            return order;
-        }
-
-        public async Task<bool> DeleteOrderAsync(int id)
-        {
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null)
+            if (dto.SelectedProductIds != null && dto.SelectedProductIds.Any())
             {
-                return false;
+                var productEntities = await _context.Products
+                    .Where(p => dto.SelectedProductIds.Contains(p.Id))
+                    .ToListAsync();
+
+                existingOrder.Products = productEntities;
+            }
+            else
+            {
+                existingOrder.Products.Clear();
             }
 
-            _context.Orders.Remove(order);
+            _context.Orders.Update(existingOrder);
             await _context.SaveChangesAsync();
-            return true;
         }
+
+
+
+
+
+        public async Task DeleteOrderAsync(int id)
+        {
+            var orderToDelete = await _context.Orders
+                .Include(o => o.Products) 
+                .FirstOrDefaultAsync(o => o.Id == id);
+
+            if (orderToDelete == null)
+            {
+                throw new KeyNotFoundException();
+            }
+            _context.Products.RemoveRange(orderToDelete.Products);
+            _context.Orders.Remove(orderToDelete);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

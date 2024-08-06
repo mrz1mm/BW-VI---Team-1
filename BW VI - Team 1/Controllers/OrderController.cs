@@ -2,6 +2,8 @@
 using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace BW_VI___Team_1.Controllers
 {
@@ -17,17 +19,35 @@ namespace BW_VI___Team_1.Controllers
 
         // VISTE
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var orders = _orderSvc.GetAllOrdersAsync();
+            var orders = await _orderSvc.GetAllOrdersAsync();
             return View(orders);
         }
 
         [HttpGet]
-        public IActionResult AddOrder()
+        public async Task<IActionResult> AddOrder()
         {
-            return View();
+            var products = await _context.Products.ToListAsync();
+            var owners = await _context.Owners.ToListAsync();
+
+            ViewBag.Products = products;
+            ViewBag.Owners = owners.Select(o => new SelectListItem
+            {
+                Value = o.Id.ToString(),
+                Text = $"{o.FirstName} {o.LastName}"
+            }).ToList();
+
+            var model = new OrderDTO
+            {
+                Date = DateOnly.FromDateTime(DateTime.Now)
+            };
+
+            return View(model);
         }
+
+
+
         [HttpGet]
         public async Task<IActionResult> UpdateOrder(int id)
         {
@@ -37,99 +57,115 @@ namespace BW_VI___Team_1.Controllers
                 return NotFound();
             }
 
-            var model = new OrderDTO
+            ViewBag.Products = await _context.Products.ToListAsync();
+            ViewBag.Owners = await _context.Owners.Select(o => new SelectListItem
             {
-                Products = order.Products,
-                Owner = order.Owner,
-                MedicalPrescription = order.MedicalPrescription,
-                Date = order.Date
-            };
+                Value = o.Id.ToString(),
+                Text = $"{o.FirstName} {o.LastName}"
+            }).ToListAsync();
 
-            return View(model);
+            return View(order);
         }
-        [HttpGet]
-        public IActionResult DeleteOrder(int id)
+
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteOrder(int id)
         {
-            var order = _orderSvc.GetOrderByIdAsync(id);
-            if (order == null)
+            try
+            {
+                await _orderSvc.DeleteOrderAsync(id);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-
-            var model = new Order
-            {
-                // aggiungere cose (es. Name = order.Name)
-            };
-
-            return View();
+            return RedirectToAction(nameof(Index));
         }
 
 
         // METODI
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrder(OrderDTO model)
+        public async Task<IActionResult> AddOrder(OrderDTO model, int[] selectedProductIds)
         {
-            if (!ModelState.IsValid)
-            {
-                TempData["Error"] = "Errore nella compilazione dei campi";
-                return View(model);
-            }
-
             try
             {
+                if (model.Owner == null)
+                {
+                    ModelState.AddModelError("", "Owner is required.");
+                    return View(model);
+                }
+
+                var selectedOwner = await _context.Owners.FindAsync(model.Owner.Id);
+                if (selectedOwner == null)
+                {
+                    return View(model);
+                }
+
+                model.Owner = selectedOwner;
+
+                if (selectedProductIds == null || !selectedProductIds.Any())
+                {
+                    return View(model);
+                }
+
+                model.SelectedProductIds = selectedProductIds;
+
                 await _orderSvc.AddOrderAsync(model);
-                TempData["Success"] = "Ordere aggiunto con successo";
+                TempData["Success"] = "Order added successfully.";
                 return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Error adding order: {ex.Message}");
+                TempData["Error"] = "Error adding order.";
+                return View(model);
+            }
+        }
 
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateOrder(int id, Order model, int[] selectedProductIds)
+        {
+            try
+            {
+                if (selectedProductIds == null)
+                {
+                    ModelState.AddModelError("", "At least one product must be selected.");
+                    ViewBag.Products = await _context.Products.ToListAsync();
+                    ViewBag.Owners = await _context.Owners.Select(o => new SelectListItem
+                    {
+                        Value = o.Id.ToString(),
+                        Text = $"{o.FirstName} {o.LastName}"
+                    }).ToListAsync();
+                    return View(model);
+                }
+
+                var dto = new OrderDTO
+                {
+                    MedicalPrescription = model.MedicalPrescription,
+                    Date = model.Date,
+                    Owner = model.Owner,
+                    SelectedProductIds = selectedProductIds
+                };
+
+                await _orderSvc.UpdateOrderAsync(id, dto);
+                TempData["Success"] = "Order updated successfully.";
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                TempData["Error"] = "Errore nell'aggiunta dell'ordere";
+                ViewBag.Products = await _context.Products.ToListAsync();
+                ViewBag.Owners = await _context.Owners.Select(o => new SelectListItem
+                {
+                    Value = o.Id.ToString(),
+                    Text = $"{o.FirstName} {o.LastName}"
+                }).ToListAsync();
                 return View(model);
             }
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateOrder(Order model)
-        {
-            if (!ModelState.IsValid)
-            {
-                TempData["Error"] = "Errore nella compilazione dei campi";
-                return View(model);
-            }
-
-            try
-            {
-                await _orderSvc.UpdateOrderAsync(model);
-                TempData["Success"] = "Ordere modificato con successo";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError("", ex.Message);
-                TempData["Error"] = "Errore nella modifica dell'ordere";
-                return View(model);
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmDeleteOrder(int id)
-        {
-            try
-            {
-                await _orderSvc.DeleteOrderAsync(id);
-                TempData["Success"] = "Ordere eliminato con successo";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "Errore nell'eliminazione dell'ordere";
-                return RedirectToAction(nameof(Index));
-            }
-        }
     }
 }

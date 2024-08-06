@@ -13,10 +13,22 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.First().Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Type)
+                @Html.DisplayNameFor(model => model.First().Type)
+            </th>
+            <th>
+                Suppliers
+            </th>
+            <th>
+                Usages
+            </th>
+            <th>
+                Locker
+            </th>
+            <th>
+                Drawers
             </th>
             <th></th>
         </tr>
@@ -30,6 +42,46 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @if (item.Suppliers != null && item.Suppliers.Any())
+                    {
+                        @string.Join(", ", item.Suppliers.Select(s => s.Name))
+                    }
+                    else
+                    {
+                        <span>No Suppliers</span>
+                    }
+                </td>
+                <td>
+                    @if (item.Usages != null && item.Usages.Any())
+                    {
+                        @string.Join(", ", item.Usages.Select(u => u.Description))
+                    }
+                    else
+                    {
+                        <span>No Usages</span>
+                    }
+                </td>
+                <td>
+                    @if (item.Locker != null)
+                    {
+                        @item.Locker.Number
+                    }
+                    else
+                    {
+                        <span>No Locker</span>
+                    }
+                </td>
+                <td>
+                    @if (item.Locker != null && item.Locker.Drawer != null && item.Locker.Drawer.Any())
+                    {
+                        @string.Join(", ", item.Locker.Drawer.Select(d => d.Number))
+                    }
+                    else
+                    {
+                        <span>No Drawers</span>
+                    }
                 </td>
                 <td>
                     <a asp-action="UpdateProduct" asp-route-id="@item.Id">Edit</a> |
