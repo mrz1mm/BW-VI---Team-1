@@ -43,16 +43,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="Locker.Drawer" class="control-label">Drawer</label>
-                    <select id="Locker.Drawer" name="Locker.Drawer" class="form-control">
-                        @foreach (var drawer in ViewBag.Drawers as List<Drawer>)
+                    <label asp-for="DrawerId" class="control-label"></label>
+                    <select asp-for="DrawerId" class="form-control">
+                        @foreach (var drawer in ViewBag.Drawers as List<BW_VI___Team_1.Models.Drawer>)
                         {
                             <option value="@drawer.Id">@drawer.Number</option>
                         }
                     </select>
+                    <span asp-validation-for="DrawerId" class="text-danger"></span>
                 </div>
-            </div>
-
+                </div>
             <div class="form-group">
                 <label for="Usages">Usages</label>
                 <select id="Usages" name="Usages" class="form-control">
