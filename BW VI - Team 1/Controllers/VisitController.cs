@@ -76,14 +76,24 @@ namespace BW_VI___Team_1.Controllers
             {
                 return NotFound();
             }
+            var model = new VisitDTO
+            {
+                Date = visit.Date,
+                Exam = visit.Exam,
+                Diagnosis = visit.Diagnosis,
+                AnimalId = visit.Animal.Id 
+            };
+            ViewBag.VisitId = id;
             ViewBag.Animals = await _context.Animals.ToListAsync();
 
-            return View(visit);
+            return View(model);
         }
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateVisit(int id, Visit model)
+        public async Task<IActionResult> UpdateVisit(VisitDTO model, int id)
         {
             if (!ModelState.IsValid)
             {
@@ -104,7 +114,7 @@ namespace BW_VI___Team_1.Controllers
                 visit.Exam = model.Exam;
                 visit.Diagnosis = model.Diagnosis;
 
-                var animal = await _context.Animals.FindAsync(model.Animal.Id);
+                var animal = await _context.Animals.FindAsync(model.AnimalId);
                 if (animal == null)
                 {
                     TempData["Error"] = "Animale non trovato";
@@ -124,6 +134,7 @@ namespace BW_VI___Team_1.Controllers
                 return View(model);
             }
         }
+
 
         [HttpGet]
         public async Task<IActionResult> DeleteVisit(int id)

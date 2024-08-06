@@ -1,4 +1,4 @@
-﻿@model BW_VI___Team_1.Models.Visit
+﻿@model BW_VI___Team_1.Models.DTO.VisitDTO
 
 @{
     ViewData["Title"] = "UpdateVisit";
@@ -10,39 +10,44 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="UpdateVisit" method="post">
-            <input type="hidden" asp-for="Id" />
+        <form asp-action="UpdateVisit">
+            <input type="hidden" name="Id" value="@ViewBag.VisitId" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
+                <input asp-for="Date" class="form-control" type="date" />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Exam" class="control-label"></label>
                 <input asp-for="Exam" class="form-control" />
                 <span asp-validation-for="Exam" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Diagnosis" class="control-label"></label>
                 <input asp-for="Diagnosis" class="form-control" />
                 <span asp-validation-for="Diagnosis" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Animal.Id" class="control-label"></label>
-                <select asp-for="Animal.Id" class="form-control">
-                    @if (ViewBag.Animals != null)
+                <label asp-for="AnimalId" class="control-label">Animal</label>
+                <select asp-for="AnimalId" class="form-control">
+                    @foreach (var animal in ViewBag.Animals)
                     {
-                        @foreach (var animal in ViewBag.Animals)
-                        {
-                            <option value="@animal.Id">@animal.Name</option>
-                        }
+                        <option value="@animal.Id">@animal.Name</option>
                     }
                 </select>
-                <span asp-validation-for="Animal.Id" class="text-danger"></span>
+                <span asp-validation-for="AnimalId" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-primary">Salva</button>
-        </form>
 
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
     </div>
 </div>
 
