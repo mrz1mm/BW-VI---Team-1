@@ -1,0 +1,46 @@
+﻿@model IEnumerable<BW_VI___Team_1.Models.Recovery>
+
+@{
+    ViewData["Title"] = "Recoveries";
+}
+
+<h1>Recoveries</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Animal</th>
+            <th>Is Refound</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.StartDate</td>
+                <td>@item.EndDate</td>
+                <td>
+                    @if (item.Animal != null)
+                    {
+                        <div>
+                            <img src="@item.Animal.ImageUrl" alt="Photo of @item.Animal.Name" style="width: 100px; height: auto;" />
+                            <p>@item.Animal.Name</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <p>No animal data</p>
+                    }
+                </td>
+                <td>@item.IsRefound</td>
+                <td>
+                    <a asp-action="UpdateRecovery" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="DeleteRecovery" asp-route-id="@item.Id" onclick="return confirm('Are you sure?')">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

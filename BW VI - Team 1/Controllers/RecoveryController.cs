@@ -21,7 +21,10 @@ namespace BW_VI___Team_1.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var recoveries = await _recoverySvc.GetAllRecoveriesAsync();
+            var recoveries = await _context.Recoverys
+                .Include(r => r.Animal) 
+                .ToListAsync();
+
             return View(recoveries);
         }
 
@@ -43,11 +46,13 @@ namespace BW_VI___Team_1.Controllers
             }
             var model = new RecoveryDTO
             {
-                StartDate = recovery.StartDate,
+
                 EndDate = recovery.EndDate,
-                Animal = recovery.Animal,
-                IsRefound = recovery.IsRefound
+                AnimalId = recovery.Animal.Id,
+
             };
+            var animals = await _context.Animals.ToListAsync();
+            ViewBag.Animals = new SelectList(animals, "Id", "Name");
 
             return View(model);
         }
@@ -79,7 +84,7 @@ namespace BW_VI___Team_1.Controllers
 
             try
             {
-                var animal = await _context.Animals.FindAsync(model.Animal.Id);
+                var animal = await _context.Animals.FindAsync(model.AnimalId);
 
                 if (animal == null)
                 {
@@ -89,10 +94,10 @@ namespace BW_VI___Team_1.Controllers
 
                 var newRecovery = new Recovery
                 {
-                    StartDate = model.StartDate,
+
                     EndDate = model.EndDate,
                     Animal = animal,
-                    IsRefound = model.IsRefound
+
                 };
 
                 _context.Recoverys.Add(newRecovery);
