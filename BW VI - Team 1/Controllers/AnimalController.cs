@@ -1,4 +1,5 @@
 ﻿using BW_VI___Team_1.Interfaces;
+using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,18 +7,32 @@ namespace BW_VI___Team_1.Controllers
 {
     public class AnimalController : Controller
     {
+        private readonly LifePetDBContext _context;
         private readonly IAnimalSvc _animalSvc;
-
-        public AnimalController(IAnimalSvc animalSvc)
+        public AnimalController(LifePetDBContext context, IAnimalSvc animalSvc)
         {
+            _context = context;
             _animalSvc = animalSvc;
         }
 
+        // VISTE
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var animals = await _animalSvc.GetAllAnimalsAsync();
+            var animals = _animalSvc.GetAllAnimalsAsync();
             return View(animals);
+        }
+
+        [HttpGet]
+        public IActionResult AnimalDetails(int id)
+        {
+            var animal = _animalSvc.GetAnimalByIdAsync(id);
+            if (animal == null)
+            {
+                return NotFound();
+            }
+
+            return View(animal);
         }
 
         [HttpGet]
@@ -26,9 +41,45 @@ namespace BW_VI___Team_1.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult UpdateAnimal(int id)
+        {
+            var animal = _animalSvc.GetAnimalByIdAsync(id);
+            if (animal == null)
+            {
+                return NotFound();
+            }
+
+            var model = new Animal
+            {
+                // aggiungere cose (es. Name = animal.Name)
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult DeleteAnimal(int id)
+        {
+            var animal = _animalSvc.GetAnimalByIdAsync(id);
+            if (animal == null)
+            {
+                return NotFound();
+            }
+
+            var model = new Animal
+            {
+                // aggiungere cose (es. Name = animal.Name)
+            };
+
+            return View();
+        }
+
+
+        // METODI
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddAnimal(AnimalDTO model)
+        public async Task<IActionResult> AddAnimal(AnimalDTO model) // aggiungere il Binding
         {
             if (!ModelState.IsValid)
             {
@@ -41,6 +92,7 @@ namespace BW_VI___Team_1.Controllers
                 await _animalSvc.AddAnimalAsync(model);
                 TempData["Success"] = "Animale aggiunto con successo";
                 return RedirectToAction(nameof(Index));
+
             }
             catch (Exception ex)
             {
@@ -50,36 +102,9 @@ namespace BW_VI___Team_1.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> UpdateAnimal(int id)
-        {
-            var animal = await _animalSvc.GetAnimalByIdAsync(id);
-            if (animal == null)
-            {
-                return NotFound();
-            }
-
-            var model = new AnimalDTO
-            {
-                Id = animal.Id,
-                Name = animal.Name,
-                Species = animal.Species,
-                Breed = animal.Breed,
-                Color = animal.Color,
-                BirthDate = animal.BirthDate,
-                RegisterDate = animal.RegisterDate,
-                Microchip = animal.Microchip,
-                MicrochipNumber = animal.MicrochipNumber,
-                Owner = animal.Owner,
-                ImageUrl = animal.ImageUrl
-            };
-
-            return View(model);
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateAnimal(AnimalDTO model)
+        public async Task<IActionResult> UpdateAnimal(Animal model) // aggiungere il Binding
         {
             if (!ModelState.IsValid)
             {
@@ -101,18 +126,6 @@ namespace BW_VI___Team_1.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> DeleteAnimal(int id)
-        {
-            var animal = await _animalSvc.GetAnimalByIdAsync(id);
-            if (animal == null)
-            {
-                return NotFound();
-            }
-
-            return View(animal);
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmDeleteAnimal(int id)
@@ -128,25 +141,6 @@ namespace BW_VI___Team_1.Controllers
                 TempData["Error"] = "Errore nell'eliminazione dell'animale";
                 return RedirectToAction(nameof(Index));
             }
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> AnimalDetails(int id)
-        {
-            var animal = await _animalSvc.GetAnimalByIdAsync(id);
-            if (animal == null)
-            {
-                return NotFound();
-            }
-
-            var visits = await _animalSvc.GetVisitsByAnimalIdAsync(id);
-            var model = new VisitHistoryDTO
-            {
-                Animal = animal,
-                Visits = visits
-            };
-
-            return View(model);
         }
     }
 }
