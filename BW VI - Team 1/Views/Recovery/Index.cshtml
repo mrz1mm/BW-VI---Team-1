@@ -38,9 +38,32 @@
                 <td>@item.IsRefound</td>
                 <td>
                     <a asp-action="UpdateRecovery" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="DeleteRecovery" asp-route-id="@item.Id" onclick="return confirm('Are you sure?')">Delete</a>
+                    <form asp-action="DeleteRecovery" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="confirmDelete(event, this);">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+@section Scripts {
+    <script type="text/javascript">
+        function confirmDelete(event, form) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Sei sicuro?',
+                text: "Non potrai annullare questa operazione!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sì, elimina!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+    </script>
+}

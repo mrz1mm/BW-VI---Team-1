@@ -25,17 +25,25 @@ namespace BW_VI___Team_1.Services
 
         public async Task<Visit> AddVisitAsync(VisitDTO model)
         {
+            var animal = await _context.Animals.FindAsync(model.AnimalId);
+            if (animal == null)
+            {
+                throw new ArgumentException("Animal not found");
+            }
+
             var newVisit = new Visit
             {
                 Date = model.Date,
                 Exam = model.Exam,
                 Diagnosis = model.Diagnosis,
-                Animal = model.Animal
+                Animal = animal
             };
+
             _context.Visits.Add(newVisit);
             await _context.SaveChangesAsync();
             return newVisit;
         }
+
 
         public async Task<Visit> UpdateVisitAsync(Visit model)
         {
@@ -44,28 +52,32 @@ namespace BW_VI___Team_1.Services
             {
                 return null;
             }
+            var animal = await _context.Animals.FindAsync(model.Animal.Id);
+            if (animal == null)
+            {
+                throw new ArgumentException("Animal not found.");
+            }
 
             visit.Date = model.Date;
             visit.Exam = model.Exam;
             visit.Diagnosis = model.Diagnosis;
-            visit.Animal = model.Animal;
+            visit.Animal = animal;
 
             _context.Visits.Update(visit);
             await _context.SaveChangesAsync();
             return visit;
         }
 
-        public async Task<bool> DeleteVisitAsync(int id)
+        public async Task DeleteVisitAsync(int id)
         {
             var visit = await _context.Visits.FindAsync(id);
             if (visit == null)
             {
-                return false;
+                throw new KeyNotFoundException();
             }
 
             _context.Visits.Remove(visit);
             await _context.SaveChangesAsync();
-            return true;
         }
     }
 }

@@ -11,6 +11,8 @@ namespace BW_VI___Team_1.Models
         [Required]
         public DateOnly EndDate { get; set; }
         [Required]
+        public int AnimalId { get; set; }
+        [Required]
         public Animal Animal { get; set; }
         [Required]
         public bool IsRefound { get; set; } = false;

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BW_VI___Team_1.Migrations
 {
     [DbContext(typeof(LifePetDBContext))]
-    [Migration("20240806103850_Start")]
+    [Migration("20240806135605_Start")]
     partial class Start
     {
         /// <inheritdoc />
