@@ -22,7 +22,7 @@ namespace BW_VI___Team_1.Controllers
         public async Task<IActionResult> Index()
         {
             var recoveries = await _context.Recoverys
-                .Include(r => r.Animal) 
+                .Include(r => r.Animal)
                 .ToListAsync();
 
             return View(recoveries);
@@ -44,31 +44,13 @@ namespace BW_VI___Team_1.Controllers
             {
                 return NotFound();
             }
-            var model = new RecoveryDTO
-            {
 
-                EndDate = recovery.EndDate,
-                AnimalId = recovery.Animal.Id,
-
-            };
             var animals = await _context.Animals.ToListAsync();
             ViewBag.Animals = new SelectList(animals, "Id", "Name");
 
-            return View(model);
+            return View(recovery);
         }
 
-        [HttpPost]
-        public async Task DeleteRecovery(int id)
-        {
-            var recovery = await _context.Recoverys.FindAsync(id);
-            if (recovery == null)
-            {
-                throw new KeyNotFoundException();
-            }
-
-            _context.Recoverys.Remove(recovery);
-            await _context.SaveChangesAsync();
-        }
 
 
         // METODI
@@ -76,12 +58,6 @@ namespace BW_VI___Team_1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddRecovery(RecoveryDTO model) // aggiungere il Binding
         {
-            if (!ModelState.IsValid)
-            {
-                TempData["Error"] = "Errore nella compilazione dei campi";
-                return View(model);
-            }
-
             try
             {
                 var animal = await _context.Animals.FindAsync(model.AnimalId);
@@ -115,26 +91,49 @@ namespace BW_VI___Team_1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateRecovery(Recovery model) // aggiungere il Binding
+        public async Task<IActionResult> UpdateRecovery(Recovery model)
         {
-            if (!ModelState.IsValid)
-            {
-                TempData["Error"] = "Errore nella compilazione dei campi";
-                return View(model);
-            }
-
             try
             {
+                var animal = await _context.Animals.FindAsync(model.AnimalId);
+                if (animal == null)
+                {
+                    ModelState.AddModelError("", "Animal not found");
+                    return View(model);
+                }
+
+                model.Animal = animal;
                 await _recoverySvc.UpdateRecoveryAsync(model);
-                TempData["Success"] = "Recoverye modificato con successo";
+                TempData["Success"] = "Recovery modificato con successo";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                TempData["Error"] = "Errore nella modifica dell'recoverye";
+                TempData["Error"] = "Errore nella modifica del recovery";
                 return View(model);
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteRecovery(int id)
+        {
+            try
+            {
+                await _recoverySvc.DeleteRecoveryAsync(id);
+                TempData["Success"] = "Recovery eliminato con successo";
+            }
+            catch (KeyNotFoundException)
+            {
+                TempData["Error"] = "Recovery non trovato";
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Errore durante la cancellazione: {ex.Message}";
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
