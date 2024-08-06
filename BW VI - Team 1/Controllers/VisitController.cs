@@ -2,6 +2,7 @@
 using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BW_VI___Team_1.Controllers
 {
@@ -9,11 +10,13 @@ namespace BW_VI___Team_1.Controllers
     {
         private readonly IVisitSvc _visitSvc;
         private readonly LifePetDBContext _context;
+        private readonly IAnimalSvc _animalSvc;
 
-        public VisitController(IVisitSvc visitSvc, LifePetDBContext context)
+        public VisitController(IVisitSvc visitSvc, LifePetDBContext context, IAnimalSvc animalSvc)
         {
             _visitSvc = visitSvc;
             _context = context;
+            _animalSvc = animalSvc;
         }
 
         // VISTE
@@ -25,10 +28,11 @@ namespace BW_VI___Team_1.Controllers
         }
 
         [HttpGet]
-        public IActionResult AddVisit()
+        public async Task<IActionResult> AddVisit()
         {
-            // Popola ViewBag.Animals con l'elenco degli animali
-            ViewBag.Animals = _context.Animals.ToList();
+            var animals = await _animalSvc.GetAllAnimalsAsync();
+            ViewBag.Animals = animals;
+
             return View(new VisitDTO { Date = DateOnly.FromDateTime(DateTime.Now) });
         }
 
@@ -38,8 +42,9 @@ namespace BW_VI___Team_1.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // Popola di nuovo ViewBag.Animals in caso di errore di validazione
-                ViewBag.Animals = _context.Animals.ToList();
+                var animals = await _animalSvc.GetAllAnimalsAsync();
+                ViewBag.Animals = animals;
+
                 TempData["Error"] = "Errore nella compilazione dei campi";
                 return View(model);
             }
@@ -52,13 +57,16 @@ namespace BW_VI___Team_1.Controllers
             }
             catch (Exception ex)
             {
-                // Popola di nuovo ViewBag.Animals in caso di eccezione
-                ViewBag.Animals = _context.Animals.ToList();
+                var animals = await _animalSvc.GetAllAnimalsAsync();
+                ViewBag.Animals = animals;
+
                 ModelState.AddModelError("", ex.Message);
                 TempData["Error"] = "Errore nell'aggiunta della visita";
                 return View(model);
             }
         }
+
+
 
         [HttpGet]
         public async Task<IActionResult> UpdateVisit(int id)
@@ -68,31 +76,18 @@ namespace BW_VI___Team_1.Controllers
             {
                 return NotFound();
             }
+            ViewBag.Animals = await _context.Animals.ToListAsync();
 
-            // Popola ViewBag.Animals con l'elenco degli animali
-            ViewBag.Animals = _context.Animals.ToList();
-
-            var model = new VisitDTO
-            {
-                Date = visit.Date,
-                Exam = visit.Exam,
-                Diagnosis = visit.Diagnosis,
-                Animal = visit.Animal
-            };
-
-            ViewBag.VisitId = id; // Aggiungi l'ID alla ViewBag
-
-            return View(model);
+            return View(visit);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateVisit(int id, VisitDTO model)
+        public async Task<IActionResult> UpdateVisit(int id, Visit model)
         {
             if (!ModelState.IsValid)
             {
-                // Popola di nuovo ViewBag.Animals in caso di errore di validazione
-                ViewBag.Animals = _context.Animals.ToList();
+                ViewBag.Animals = await _context.Animals.ToListAsync();
                 TempData["Error"] = "Errore nella compilazione dei campi";
                 return View(model);
             }
@@ -108,7 +103,14 @@ namespace BW_VI___Team_1.Controllers
                 visit.Date = model.Date;
                 visit.Exam = model.Exam;
                 visit.Diagnosis = model.Diagnosis;
-                visit.Animal = model.Animal;
+
+                var animal = await _context.Animals.FindAsync(model.Animal.Id);
+                if (animal == null)
+                {
+                    TempData["Error"] = "Animale non trovato";
+                    return View(model);
+                }
+                visit.Animal = animal;
 
                 await _visitSvc.UpdateVisitAsync(visit);
                 TempData["Success"] = "Visita modificata con successo";
@@ -116,8 +118,7 @@ namespace BW_VI___Team_1.Controllers
             }
             catch (Exception ex)
             {
-                // Popola di nuovo ViewBag.Animals in caso di eccezione
-                ViewBag.Animals = _context.Animals.ToList();
+                ViewBag.Animals = await _context.Animals.ToListAsync();
                 ModelState.AddModelError("", ex.Message);
                 TempData["Error"] = "Errore nella modifica della visita";
                 return View(model);
@@ -127,30 +128,17 @@ namespace BW_VI___Team_1.Controllers
         [HttpGet]
         public async Task<IActionResult> DeleteVisit(int id)
         {
-            var visit = await _visitSvc.GetVisitByIdAsync(id);
-            if (visit == null)
-            {
-                return NotFound();
-            }
-
-            return View(visit);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmDeleteVisit(int id)
-        {
             try
             {
                 await _visitSvc.DeleteVisitAsync(id);
-                TempData["Success"] = "Visita eliminata con successo";
-                return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            catch (KeyNotFoundException)
             {
-                TempData["Error"] = "Errore nell'eliminazione della visita";
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
+            return RedirectToAction(nameof(Index));
         }
+
+
     }
 }

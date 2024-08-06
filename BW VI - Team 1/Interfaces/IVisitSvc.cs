@@ -9,6 +9,6 @@ namespace BW_VI___Team_1.Interfaces
         Task<Visit> GetVisitByIdAsync(int id);
         Task<Visit> AddVisitAsync(VisitDTO visit);
         Task<Visit> UpdateVisitAsync(Visit visit);
-        Task<bool> DeleteVisitAsync(int id);
+        Task DeleteVisitAsync(int id);
     }
 }
