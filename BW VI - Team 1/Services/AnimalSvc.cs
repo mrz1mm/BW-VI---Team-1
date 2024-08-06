@@ -9,6 +9,7 @@ namespace BW_VI___Team_1.Services
     {
         private readonly LifePetDBContext _context;
         private readonly IImageSvc _imageSvc;
+
         public AnimalSvc(LifePetDBContext context, IImageSvc imageSvc)
         {
             _context = context;
@@ -29,6 +30,26 @@ namespace BW_VI___Team_1.Services
         {
             var imageUrl = await _imageSvc.SaveImageAsync(model.ImageFile);
 
+            var existingOwner = await _context.Owners
+                .FirstOrDefaultAsync(o => o.FiscalCode == model.Owner.FiscalCode);
+
+            Owner owner;
+            if (existingOwner == null)
+            {
+                owner = new Owner
+                {
+                    FirstName = model.Owner.FirstName,
+                    LastName = model.Owner.LastName,
+                    FiscalCode = model.Owner.FiscalCode
+                };
+                _context.Owners.Add(owner);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                owner = existingOwner;
+            }
+
             var newAnimal = new Animal
             {
                 Name = model.Name,
@@ -39,7 +60,7 @@ namespace BW_VI___Team_1.Services
                 RegisterDate = model.RegisterDate,
                 Microchip = model.Microchip,
                 MicrochipNumber = model.MicrochipNumber,
-                Owner = model.Owner,
+                Owner = owner,
                 ImageUrl = imageUrl
             };
             _context.Animals.Add(newAnimal);
@@ -47,48 +68,77 @@ namespace BW_VI___Team_1.Services
             return newAnimal;
         }
 
-        public async Task<Animal> UpdateAnimalAsync(Animal model)
+
+        public async Task<Animal> UpdateAnimalAsync(AnimalDTO model)
         {
-            var animal = await _context.Animals.FindAsync(model.Id);
+            var animal = await _context.Animals.Include(a => a.Owner).FirstOrDefaultAsync(a => a.Id == model.Id);
             if (animal == null)
             {
                 return null;
             }
 
-            // Aggiungere cose (es. animal.Name = model.Name)
-            /*
-             *             if (model.ProductImageFile != null)
+            // Update animal fields
+            animal.Name = model.Name;
+            animal.Species = model.Species;
+            animal.Breed = model.Breed;
+            animal.Color = model.Color;
+            animal.BirthDate = model.BirthDate;
+            animal.RegisterDate = model.RegisterDate;
+            animal.Microchip = model.Microchip;
+            animal.MicrochipNumber = model.MicrochipNumber;
+
+            // Update image if a new file is provided
+            if (model.ImageFile != null)
             {
-                if (!string.IsNullOrEmpty(product.ProductImageUrl))
+                // Optionally, delete the old image file
+                if (!string.IsNullOrEmpty(animal.ImageUrl))
                 {
-                    await _imageSvc.DeleteImageAsync(product.ProductImageUrl);
+                    await _imageSvc.DeleteImageAsync(animal.ImageUrl);
                 }
-                product.ProductImageUrl = await _imageSvc.SaveImageAsync(model.ProductImageFile);
+
+                animal.ImageUrl = await _imageSvc.SaveImageAsync(model.ImageFile);
             }
-             * 
-             */
+
+            // Update or add owner
+            var existingOwner = await _context.Owners
+                .FirstOrDefaultAsync(o => o.FiscalCode == model.Owner.FiscalCode);
+
+            if (existingOwner == null)
+            {
+                animal.Owner = new Owner
+                {
+                    FirstName = model.Owner.FirstName,
+                    LastName = model.Owner.LastName,
+                    FiscalCode = model.Owner.FiscalCode
+                };
+                _context.Owners.Add(animal.Owner);
+            }
+            else
+            {
+                animal.Owner = existingOwner;
+            }
 
             _context.Animals.Update(animal);
             await _context.SaveChangesAsync();
             return animal;
-        }
 
-        public async Task<bool> DeleteAnimalAsync(int id)
-        {
-            var animal = await _context.Animals.FindAsync(id);
-            if (animal == null)
+
+            public async Task<bool> DeleteAnimalAsync(int id)
             {
-                return false;
+                var animal = await _context.Animals.FindAsync(id);
+                if (animal == null)
+                {
+                    return false;
+                }
+
+                _context.Animals.Remove(animal);
+                await _context.SaveChangesAsync();
+                return true;
             }
 
-            _context.Animals.Remove(animal);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<List<Visit>> GetVisitsByAnimalIdAsync(int animalId)
-        {
-            return await _context.Visits.Where(v => v.Animal.Id == animalId).OrderByDescending(v => v.Date).ToListAsync();
+            public async Task<List<Visit>> GetVisitsByAnimalIdAsync(int animalId)
+            {
+                return await _context.Visits.Where(v => v.Animal.Id == animalId).OrderByDescending(v => v.Date).ToListAsync();
+            }
         }
     }
-}
