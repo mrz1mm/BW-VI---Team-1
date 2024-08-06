@@ -68,16 +68,14 @@ namespace BW_VI___Team_1.Services
             return newAnimal;
         }
 
-
-        public async Task<Animal> UpdateAnimalAsync(AnimalDTO model)
+        public async Task<Animal> UpdateAnimalAsync(int id, AnimalDTO model)
         {
-            var animal = await _context.Animals.Include(a => a.Owner).FirstOrDefaultAsync(a => a.Id == model.Id);
+            var animal = await _context.Animals.Include(a => a.Owner).FirstOrDefaultAsync(a => a.Id == id);
             if (animal == null)
             {
                 return null;
             }
 
-            // Update animal fields
             animal.Name = model.Name;
             animal.Species = model.Species;
             animal.Breed = model.Breed;
@@ -87,10 +85,8 @@ namespace BW_VI___Team_1.Services
             animal.Microchip = model.Microchip;
             animal.MicrochipNumber = model.MicrochipNumber;
 
-            // Update image if a new file is provided
             if (model.ImageFile != null)
             {
-                // Optionally, delete the old image file
                 if (!string.IsNullOrEmpty(animal.ImageUrl))
                 {
                     await _imageSvc.DeleteImageAsync(animal.ImageUrl);
@@ -99,7 +95,6 @@ namespace BW_VI___Team_1.Services
                 animal.ImageUrl = await _imageSvc.SaveImageAsync(model.ImageFile);
             }
 
-            // Update or add owner
             var existingOwner = await _context.Owners
                 .FirstOrDefaultAsync(o => o.FiscalCode == model.Owner.FiscalCode);
 
@@ -121,24 +116,24 @@ namespace BW_VI___Team_1.Services
             _context.Animals.Update(animal);
             await _context.SaveChangesAsync();
             return animal;
+        }
 
-
-            public async Task<bool> DeleteAnimalAsync(int id)
+        public async Task<bool> DeleteAnimalAsync(int id)
+        {
+            var animal = await _context.Animals.FindAsync(id);
+            if (animal == null)
             {
-                var animal = await _context.Animals.FindAsync(id);
-                if (animal == null)
-                {
-                    return false;
-                }
-
-                _context.Animals.Remove(animal);
-                await _context.SaveChangesAsync();
-                return true;
+                return false;
             }
 
-            public async Task<List<Visit>> GetVisitsByAnimalIdAsync(int animalId)
-            {
-                return await _context.Visits.Where(v => v.Animal.Id == animalId).OrderByDescending(v => v.Date).ToListAsync();
-            }
+            _context.Animals.Remove(animal);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<List<Visit>> GetVisitsByAnimalIdAsync(int animalId)
+        {
+            return await _context.Visits.Where(v => v.Animal.Id == animalId).OrderByDescending(v => v.Date).ToListAsync();
         }
     }
+}

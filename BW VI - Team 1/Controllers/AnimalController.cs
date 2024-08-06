@@ -61,7 +61,6 @@ namespace BW_VI___Team_1.Controllers
 
             var model = new AnimalDTO
             {
-                Id = animal.Id,
                 Name = animal.Name,
                 Species = animal.Species,
                 Breed = animal.Breed,
@@ -70,8 +69,7 @@ namespace BW_VI___Team_1.Controllers
                 RegisterDate = animal.RegisterDate,
                 Microchip = animal.Microchip,
                 MicrochipNumber = animal.MicrochipNumber,
-                Owner = animal.Owner,
-                ImageUrl = animal.ImageUrl
+                Owner = animal.Owner
             };
 
             return View(model);
@@ -79,7 +77,7 @@ namespace BW_VI___Team_1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateAnimal(AnimalDTO model)
+        public async Task<IActionResult> UpdateAnimal(int id, AnimalDTO model)
         {
             if (!ModelState.IsValid)
             {
@@ -89,7 +87,7 @@ namespace BW_VI___Team_1.Controllers
 
             try
             {
-                await _animalSvc.UpdateAnimalAsync(model);
+                await _animalSvc.UpdateAnimalAsync(id, model);
                 TempData["Success"] = "Animale modificato con successo";
                 return RedirectToAction(nameof(Index));
             }
