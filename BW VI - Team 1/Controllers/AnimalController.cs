@@ -72,6 +72,7 @@ namespace BW_VI___Team_1.Controllers
                 Owner = animal.Owner
             };
 
+            ViewBag.AnimalId = id;
             return View(model);
         }
 
