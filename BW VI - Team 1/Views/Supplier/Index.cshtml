@@ -4,66 +4,67 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Telephone)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telephone)
-            </td>
-            <td>
-                    <a asp-action="UpdateSupplier" asp-route-id="@item.Id">Edit</a> |
-                    <form asp-action="DeleteSupplier" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="confirmDelete(event, this);">
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
-
-@section Scripts {
-    <script type="text/javascript">
-        function confirmDelete(event, form) {
-            event.preventDefault();
-            Swal.fire({
-                title: 'Sei sicuro?',
-                text: "Non potrai annullare questa operazione!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sì, elimina!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
+<div class="table">
+    <section class="table_header"><h1 class="text-center">Registro Fornitori</h1></section>
+    <section class="table_body d-flex align-item-center justify-content-center">
+        <table>
+            <thead>
+                <tr class="text-center">
+                    <th>
+                        Nome
+                    </th>
+                    <th>
+                        Indirizzo
+                    </th>
+                    <th>
+                        Recapito Telefonico
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="text-center">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Address)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Telephone)
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-action="UpdateSupplier" asp-route-id="@item.Id"> <button class="btn btn-primary btn-sm">Edit</button></a>
+                                <form asp-action="DeleteSupplier" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="confirmDelete(event, this);">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
                 }
-            });
+            </tbody>
+        </table>
+
+        @section Scripts {
+            <script type="text/javascript">
+                function confirmDelete(event, form) {
+                    event.preventDefault();
+                    Swal.fire({
+                        title: 'Sei sicuro?',
+                        text: "Non potrai annullare questa operazione!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sì, elimina!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                }
+            </script>
         }
-    </script>
-}

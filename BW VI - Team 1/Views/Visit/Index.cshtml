@@ -4,25 +4,23 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="AddVisit">Create New</a>
-</p>
-<table class="table">
+<div class="table">
+    <section class="table_header"><h1 class="text-center">Registro Visite</h1></section>
+    <section class="table_body d-flex align-item-center justify-content-center">
+<table>
     <thead>
-        <tr>
+                <tr class="text-center">
             <th>
-                @Html.DisplayNameFor(model => model.Date)
+                Data
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Exam)
+                Esame
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Diagnosis)
+               Diagnosi
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Animal.Name)
+                Animale
             </th>
             <th></th>
         </tr>
@@ -30,7 +28,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
+                    <tr class="text-center">
                 <td>
                     @Html.DisplayFor(modelItem => item.Date)
                 </td>
@@ -43,12 +41,14 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Animal.Name)
                 </td>
-                <td>
-                    <a asp-action="UpdateVisit" asp-route-id="@item.Id">Edit</a> |
-                    <form asp-action="DeleteVisit" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="confirmDelete(event, this);">
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-                </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-action="UpdateVisit" asp-route-id="@item.Id"> <button class="btn btn-primary btn-sm">Edit</button></a>
+                                <form asp-action="DeleteVisit" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="confirmDelete(event, this);">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        </td>
             </tr>
         }
     </tbody>
