@@ -105,17 +105,16 @@ namespace BW_VI___Team_1.Services
             return animal;
         }
 
-        public async Task<bool> DeleteAnimalAsync(int id)
+        public async Task DeleteAnimalAsync(int id)
         {
             var animal = await _context.Animals.FindAsync(id);
             if (animal == null)
             {
-                return false;
+                throw new KeyNotFoundException();
             }
 
             _context.Animals.Remove(animal);
             await _context.SaveChangesAsync();
-            return true;
         }
 
         public async Task<List<Visit>> GetVisitsByAnimalIdAsync(int animalId)
