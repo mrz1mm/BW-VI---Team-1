@@ -150,7 +150,7 @@ nav ul li {
 
 #description {
   overflow: hidden;
-  height: 55px;
+  height: 100px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -158,7 +158,7 @@ nav ul li {
 
 #description p {
   color: white;
-  font-size: 12px;
+  font-size: 16px;
   max-height: 55px;
   opacity: 0.8;
   position: relative;
@@ -289,7 +289,7 @@ nav ul li {
 }
 
 .controls i {
-  color: yellow;
+  color: gray;
   font-size: 12px;
   cursor: pointer;
 }
@@ -299,8 +299,17 @@ nav ul li {
   z-index: 10;
 }
 
-.cw {
-    color: white;
+#hero {
+  margin-top: 3rem;
+  position: absolute;
+  color: white;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+a {
+  color: white;
+  text-decoration: none;
 }
 
 @media only screen and (max-width: 1600px) {
