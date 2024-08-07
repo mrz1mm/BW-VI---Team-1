@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\importedProject\Homepage\.vscode\settings.json" />
+    <Content Include="wwwroot\importedProject\EmployeesOfTheMonth\.vscode\settings.json" />
   </ItemGroup>
 
   <ItemGroup>
