@@ -75,14 +75,10 @@
                         </td>
                         <td>
                             <div class="btn-group" role="group">
-                                <form asp-action="UpdateAnimal" asp-route-id="@item.Id" method="post" style="display:inline;">
-                                    <button type="submit" class="btn btn-primary">Edit</button>
-                                </form>
-                                <form asp-action="AnimalDetails" asp-route-id="@item.Id" method="post" style="display:inline;">
-                                    <button type="submit" class="btn btn-warning">Details</button>
-                                </form>
-                                <form asp-action="DeleteAnimal" asp-route-id="@item.Id" method="post" style="display:inline;">
-                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                <a asp-action="UpdateAnimal" asp-route-id="@item.Id"> <button class="btn btn-primary btn-sm">Edit</button></a>
+                                <a asp-action="AnimalDetails" asp-route-id="@item.Id"> <button class="btn btn-warning btn-sm">Details</button></a>
+                                <form asp-action="DeleteAnimal" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="confirmDelete(event, this);">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                 </form>
                             </div>
                         </td>
@@ -92,3 +88,25 @@
         </table>
     </section>
 </div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        function confirmDelete(event, form) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Sei sicuro?',
+                text: "Non potrai annullare questa operazione!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sì, elimina!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+    </script>
+}
