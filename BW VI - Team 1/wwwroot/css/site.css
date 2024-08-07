@@ -110,7 +110,7 @@ tbody tr:nth-child(even) {
 tbody tr:hover {
     background-color: #fff6;
 }
-/*asd*/
+/*hero*/
 
 .banner {
     margin-top: -15px;
@@ -201,3 +201,8 @@ tbody tr:hover {
     transform: translateX(100px) translateY(100px);
 }
 
+/*Homepage*/
+
+.ColorText {
+    color: #130C14;
+}
