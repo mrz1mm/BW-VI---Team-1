@@ -102,16 +102,18 @@ namespace BW_VI___Team_1.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> DeleteAnimal(int id)
         {
-            var animal = await _animalSvc.GetAnimalByIdAsync(id);
-            if (animal == null)
+            try
+            {
+                await _animalSvc.DeleteAnimalAsync(id);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-
-            return View(animal);
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
