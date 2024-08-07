@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using BW_VI___Team_1.Services;
 using BW_VI___Team_1.Interfaces;
-using Microsoft.Extensions.FileProviders;
 
 namespace BW_VI___Team_1
 {
@@ -73,26 +72,9 @@ namespace BW_VI___Team_1
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();
-            app.UseEndpoints(endpoints =>
-            {
-                // Mappare la pagina importata come la rotta predefinita
-                endpoints.MapGet("/", async context =>
-                {
-                    context.Response.ContentType = "text/html";
-                    await context.Response.SendFileAsync(Path.Combine(app.Environment.WebRootPath, "importedProject/Homepage/index.html"));
-                });
-
-                // Mappare la pagina importata anche a una rotta specifica (opzionale)
-                endpoints.MapGet("/imported-project", async context =>
-                {
-                    context.Response.ContentType = "text/html";
-                    await context.Response.SendFileAsync(Path.Combine(app.Environment.WebRootPath, "importedProject/Homepage/index.html"));
-                });
-
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
             app.Run();
         }
     }
