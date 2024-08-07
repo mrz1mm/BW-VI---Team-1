@@ -4,66 +4,71 @@
     ViewData["Title"] = "Recoveries";
 }
 
-<h1>Recoveries</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Animal</th>
-            <th>Is Refound</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.StartDate</td>
-                <td>@item.EndDate</td>
-                <td>
-                    @if (item.Animal != null)
-                    {
-                        <div>
-                            <img src="@item.Animal.ImageUrl" alt="Photo of @item.Animal.Name" style="width: 100px; height: auto;" />
-                            <p>@item.Animal.Name</p>
-                        </div>
-                    }
-                    else
-                    {
-                        <p>No animal data</p>
-                    }
-                </td>
-                <td>@item.IsRefound</td>
-                <td>
-                    <a asp-action="UpdateRecovery" asp-route-id="@item.Id">Edit</a> |
-                    <form asp-action="DeleteRecovery" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="confirmDelete(event, this);">
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-@section Scripts {
-    <script type="text/javascript">
-        function confirmDelete(event, form) {
-            event.preventDefault();
-            Swal.fire({
-                title: 'Sei sicuro?',
-                text: "Non potrai annullare questa operazione!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sì, elimina!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
+<div class="table">
+    <section class="table_header"><h1 class="text-center">Registro Ricoveri</h1></section>
+    <section class="table_body d-flex align-item-center justify-content-center">
+        <table>
+            <thead>
+                <tr class="text-center">
+                    <th>Animale</th>
+                    <th>Inizio Ricovero</th>
+                    <th>Fine Ricovero</th>
+                    <th>Rimborso</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="text-center">                       
+                        <td class="d-flex align-item-center justify-content-center">
+                            @if (item.Animal != null)
+                            {
+                                <div>
+                                    <img src="@item.Animal.ImageUrl" alt="Photo of @item.Animal.Name" />
+                                    <p>@item.Animal.Name</p>
+                                </div>
+                            }
+                            else
+                            {
+                                <p>No animal data</p>
+                            }
+                        </td>
+                        <td>@item.StartDate</td>
+                        <td>@item.EndDate</td>
+                        <td>
+                            <input type="checkbox" disabled="disabled" @(item.IsRefound ? "checked" : "") />
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-action="UpdateRecovery" asp-route-id="@item.Id"> <button class="btn btn-primary btn-sm">Edit</button></a>
+                                <form asp-action="DeleteRecovery" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="confirmDelete(event, this);">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
                 }
-            });
+            </tbody>
+        </table>
+
+        @section Scripts {
+            <script type="text/javascript">
+                function confirmDelete(event, form) {
+                    event.preventDefault();
+                    Swal.fire({
+                        title: 'Sei sicuro?',
+                        text: "Non potrai annullare questa operazione!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sì, elimina!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                }
+            </script>
         }
-    </script>
-}
