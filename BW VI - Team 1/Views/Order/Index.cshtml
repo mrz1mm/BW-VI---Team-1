@@ -4,64 +4,66 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.First().Id)</th>
-            <th>@Html.DisplayNameFor(model => model.First().MedicalPrescription)</th>
-            <th>@Html.DisplayNameFor(model => model.First().Date)</th>
-            <th>@Html.DisplayNameFor(model => model.First().Owner)</th>
-            <th>@Html.DisplayNameFor(model => model.First().Products)</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.Id)</td>
-                <td>@Html.DisplayFor(modelItem => item.MedicalPrescription)</td>
-                <td>@Html.DisplayFor(modelItem => item.Date)</td>
-                <td>
-                    @if (item.Owner != null)
-                    {
-                        @Html.DisplayFor(modelItem => item.Owner.FirstName) @Html.DisplayFor(modelItem => item.Owner.LastName)
-                    }
-                    else
-                    {
-                        <span>N/A</span>
-                    }
-                </td>
-                <td>
-                    @if (item.Products != null && item.Products.Any())
-                    {
-                        <ul>
-                            @foreach (var product in item.Products)
+
+<div class="table">
+    <section class="table_header"><h1 class="text-center">Registro Ordini</h1></section>
+    <section class="table_body d-flex align-item-center justify-content-center">
+        <table>
+            <thead>
+                <tr class="text-center">
+                    <th>Prescrizione Medica</th>
+                    <th>Data Ordine</th>
+                    <th>Owner</th>
+                    <th>Prodotti</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="text-center">
+                        <td>@Html.DisplayFor(modelItem => item.MedicalPrescription)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Date)</td>
+                        <td>
+                            @if (item.Owner != null)
                             {
-                                <li>@Html.DisplayFor(modelItem => product.Name)</li>
+                                @Html.DisplayFor(modelItem => item.Owner.FirstName) @Html.DisplayFor(modelItem => item.Owner.LastName)
                             }
-                        </ul>
-                    }
-                    else
-                    {
-                        <span>No products</span>
-                    }
-                </td>
-                <td>
-                    <a asp-action="UpdateOrder" asp-route-id="@item.Id">Edit</a> |
-                    <form asp-action="DeleteOrder" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="confirmDelete(event, this);">
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                            else
+                            {
+                                <span>N/A</span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.Products != null && item.Products.Any())
+                            {
+                                <ul>
+                                    @foreach (var product in item.Products)
+                                    {
+                                        <li>@Html.DisplayFor(modelItem => product.Name)</li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span>No products</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-action="UpdateOrder" asp-route-id="@item.Id"> <button class="btn btn-primary btn-sm">Edit</button></a>
+                                <form asp-action="DeleteOrder" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="confirmDelete(event, this);">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </section>
+</div>
 
 <p>
     <a asp-action="AddOrder">Create New Order</a>

@@ -4,31 +4,31 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+
+<div class="table">
+    <section class="table_header"><h1 class="text-center">Registro Prodotti</h1></section>
+    <section class="table_body d-flex align-item-center justify-content-center">
+<table>
     <thead>
-        <tr>
+                <tr class="text-center">
             <th>
-                @Html.DisplayNameFor(model => model.First().Name)
+                Nome Prodotto
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.First().Type)
+                Tipo
             </th>
             <th>
-                Suppliers
+                Fornitore
             </th>
             <th>
-                Usages
+                Per uso
             </th>
             <th>
-                Locker
+                Armadietto
             </th>
             <th>
-                Drawers
+                Cassetto
             </th>
             <th></th>
         </tr>
@@ -36,7 +36,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
+                    <tr class="text-center">
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
@@ -83,12 +83,14 @@
                         <span>No Drawers</span>
                     }
                 </td>
-                <td>
-                    <a asp-action="UpdateProduct" asp-route-id="@item.Id">Edit</a> |
-                    <form asp-action="DeleteProduct" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="confirmDelete(event, this);">
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-                </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-action="UpdateProduct" asp-route-id="@item.Id"> <button class="btn btn-primary btn-sm">Edit</button></a>
+                                <form asp-action="DeleteProduct" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="confirmDelete(event, this);">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        </td>
             </tr>
         }
     </tbody>
