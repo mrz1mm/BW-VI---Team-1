@@ -4,69 +4,70 @@
     ViewData["Title"] = "Modifica Animale";
     var animalId = ViewBag.AnimalId;
 }
-
+<div class="container">
 <h1>Modifica Dati Animale</h1>
 
 <form asp-action="UpdateAnimal" method="post" enctype="multipart/form-data">
     <input type="hidden" name="id" value="@animalId" />
-    <div class="form-group">
-        <label asp-for="Name" class="control-label">Nome</label>
+    <div class="form-group my-2">
+            <label asp-for="Name" class="control-label my-1">Nome</label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="Species" class="control-label">Specie</label>
+    <div class="form-group my-2">
+            <label asp-for="Species" class="control-label my-1">Specie</label>
         <input asp-for="Species" class="form-control" />
         <span asp-validation-for="Species" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Breed" class="control-label">Razza</label>
+            <label asp-for="Breed" class="control-label my-1">Razza</label>
         <input asp-for="Breed" class="form-control" />
         <span asp-validation-for="Breed" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="Color" class="control-label">Colore</label>
+    <div class="form-group my-2">
+            <label asp-for="Color" class="control-label my-1">Colore</label>
         <input asp-for="Color" class="form-control" />
         <span asp-validation-for="Color" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="BirthDate" class="control-label">Data di nascita</label>
+    <div class="form-group my-2">
+            <label asp-for="BirthDate" class="control-label my-1">Data di nascita</label>
         <input asp-for="BirthDate" class="form-control" />
         <span asp-validation-for="BirthDate" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="Microchip" class="control-label">Microchip</label>
-        <input asp-for="Microchip" class="form-control" />
-        <span asp-validation-for="Microchip" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="MicrochipNumber" class="control-label">Numero Microchip</label>
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="Microchip" /> @Html.DisplayNameFor(model => model.Microchip)
+            </label>
+        </div>
+    <div class="form-group my-2">
+            <label asp-for="MicrochipNumber" class="control-label my-1">Numero Microchip</label>
         <input asp-for="MicrochipNumber" class="form-control" />
         <span asp-validation-for="MicrochipNumber" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="Owner.FirstName" class="control-label">Nome Proprietario</label>
+    <div class="form-group my-2">
+            <label asp-for="Owner.FirstName" class="control-label my-1">Nome Proprietario</label>
         <input asp-for="Owner.FirstName" class="form-control" />
         <span asp-validation-for="Owner.FirstName" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="Owner.LastName" class="control-label">Cognome Proprietario</label>
+    <div class="form-group my-2">
+            <label asp-for="Owner.LastName" class="control-label my-1">Cognome Proprietario</label>
         <input asp-for="Owner.LastName" class="form-control" />
         <span asp-validation-for="Owner.LastName" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="Owner.FiscalCode" class="control-label">Codice Fiscale</label>
+    <div class="form-group my-2">
+        <label asp-for="Owner.FiscalCode" class="control-label my-1">Codice Fiscale</label>
         <input asp-for="Owner.FiscalCode" class="form-control" />
         <span asp-validation-for="Owner.FiscalCode" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="ImageFile" class="control-label">Foto Animale</label>
+    <div class="form-group my-2">
+            <label asp-for="ImageFile" class="control-label my-1">Foto Animale</label>
         <input asp-for="ImageFile" type="file" class="form-control" />
         <span asp-validation-for="ImageFile" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Salva</button>
+    <button type="submit" class="btn btn-primary my-3">Salva</button>
 </form>
+</div>
 
-<div>
+<div class="mt-3">
     <a asp-action="Index">Torna alla lista</a>
 </div>
