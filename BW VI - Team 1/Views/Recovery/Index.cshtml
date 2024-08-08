@@ -37,7 +37,14 @@
                         <td>@item.StartDate</td>
                         <td>@item.EndDate</td>
                         <td>
-                            <input type="checkbox" disabled="disabled" @(item.IsRefound ? "checked" : "") />
+                            @if (item.IsRefound)
+                            {
+                                <span class="checkmark-static checked"></span>
+                            }
+                            else
+                            {
+                                <span class="checkmark-static"></span>
+                            }
                         </td>
                         <td>
                             <div class="btn-group gap-1" role="group">

@@ -1,18 +1,23 @@
 ﻿using BW_VI___Team_1.Interfaces;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using BW_VI___Team_1.Models;
 
 namespace BW_VI___Team_1.Controllers
 {
     public class AnimalController : Controller
     {
+        private readonly LifePetDBContext _context;
         private readonly IAnimalSvc _animalSvc;
         private readonly IImageSvc _imageSvc;
 
-        public AnimalController(IAnimalSvc animalSvc, IImageSvc imageSvc)
+        public AnimalController(IAnimalSvc animalSvc, IImageSvc imageSvc, LifePetDBContext context)
         {
             _animalSvc = animalSvc;
             _imageSvc = imageSvc;
+            _context = context;
         }
 
         [HttpGet]
@@ -23,24 +28,50 @@ namespace BW_VI___Team_1.Controllers
         }
 
         [HttpGet]
-        public IActionResult AddAnimal()
+        public async Task<IActionResult> AddAnimal()
         {
+            var owners = await _context.Owners.ToListAsync();
+            var ownerSelectList = owners.Select(o => new SelectListItem
+            {
+                Value = o.Id.ToString(),  
+                Text = $"{o.FirstName} {o.LastName}" 
+            }).ToList();
+            ViewBag.OwnerSelectList = ownerSelectList;
+
             return View();
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddAnimal(AnimalDTO model)
         {
-            if (!ModelState.IsValid)
-            {
-                TempData["Error"] = "Errore nella compilazione dei campi";
-                return View(model);
-            }
-
             try
             {
-                await _animalSvc.AddAnimalAsync(model);
+                var owner = await _context.Owners.FindAsync(model.OwnerId);
+                if (owner == null)
+                {
+                    ModelState.AddModelError("", "Proprietario non trovato.");
+                    return View(model);
+                }
+
+                var newAnimal = new Animal
+                {
+                    Name = model.Name,
+                    Species = model.Species,
+                    Breed = model.Breed,
+                    Color = model.Color,
+                    BirthDate = model.BirthDate,
+                    RegisterDate = model.RegisterDate,
+                    Microchip = model.Microchip,
+                    MicrochipNumber = model.MicrochipNumber,
+                    Owner = owner,
+                    ImageUrl = model.ImageFile != null ? await _imageSvc.SaveImageAsync(model.ImageFile) : null
+                };
+
+                _context.Animals.Add(newAnimal);
+                await _context.SaveChangesAsync();
+
                 TempData["Success"] = "Animale aggiunto con successo";
                 return RedirectToAction(nameof(Index));
             }
@@ -51,6 +82,7 @@ namespace BW_VI___Team_1.Controllers
                 return View(model);
             }
         }
+
 
         [HttpGet]
         public async Task<IActionResult> UpdateAnimal(int id)

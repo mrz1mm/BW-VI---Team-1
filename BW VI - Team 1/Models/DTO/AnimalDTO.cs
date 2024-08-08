@@ -12,5 +12,6 @@
         public string MicrochipNumber { get; set; }
         public Owner Owner { get; set; }
         public IFormFile ImageFile { get; set; }
+        public int OwnerId { get; set; }
     }
 }
