@@ -56,7 +56,8 @@ namespace BW_VI___Team_1.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OwnerId")
+                    b.Property<int?>("OwnerId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<DateOnly>("RegisterDate")

@@ -1,0 +1,48 @@
+﻿<div id="customerSearchSection" class="mb-4">
+    <input type="text" class="form-control" id="fiscalCode" name="fiscalCode" placeholder="Inserisci codice fiscale" />
+    <div id="searchResults" class="mt-4"></div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#fiscalCode').on('input', function () {
+                var fiscalCode = $(this).val();
+                if (fiscalCode.length > 0) {
+                    $.ajax({
+                        url: '/Api/SearchByPartialFiscalCode',
+                        type: 'GET',
+                        data: { partialFiscalCode: fiscalCode },
+                        success: function (response) {
+                            if (response.success) {
+                                var resultsHtml = '';
+                                response.data.forEach(function (owner) {
+                                    resultsHtml += `
+                                                <div>
+                                                    <h5>${owner.firstName} ${owner.lastName}</h5>
+                                                    <p>Codice Fiscale: ${owner.fiscalCode}</p>
+                                                    <p>Animali:</p>
+                                                    <ul>
+                                                        ${owner.animals.map(animal => `
+                                                            <li>${animal.name} (${animal.species}, ${animal.breed})</li>
+                                                        `).join('')}
+                                                    </ul>
+                                                </div>
+                                            `;
+                                });
+                                $('#searchResults').html(resultsHtml);
+                            } else {
+                                $('#searchResults').html('<p>Nessun risultato trovato.</p>');
+                            }
+                        },
+                        error: function () {
+                            $('#searchResults').html('<p>Errore nella richiesta.</p>');
+                        }
+                    });
+                } else {
+                    $('#searchResults').empty();
+                }
+            });
+        });
+    </script>
+}

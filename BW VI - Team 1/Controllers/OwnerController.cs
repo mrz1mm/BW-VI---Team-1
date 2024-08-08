@@ -29,6 +29,11 @@ namespace BW_VI___Team_1.Controllers
             return View();
         }
 
+        public IActionResult SearchBy()
+        {
+            return View();
+        }
+
         [HttpGet]
         public async Task<IActionResult> UpdateOwner(int id)
         {

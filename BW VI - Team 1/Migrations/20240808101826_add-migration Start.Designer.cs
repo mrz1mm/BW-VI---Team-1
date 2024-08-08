@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BW_VI___Team_1.Migrations
 {
     [DbContext(typeof(LifePetDBContext))]
-    [Migration("20240806135605_Start")]
-    partial class Start
+    [Migration("20240808101826_add-migration Start")]
+    partial class addmigrationStart
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,7 +59,8 @@ namespace BW_VI___Team_1.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OwnerId")
+                    b.Property<int?>("OwnerId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<DateOnly>("RegisterDate")
