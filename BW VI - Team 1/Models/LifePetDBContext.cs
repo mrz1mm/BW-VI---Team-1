@@ -21,28 +21,44 @@ namespace BW_VI___Team_1.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Configura la relazione molti-a-molti tra Order e Product
+            modelBuilder.Entity<Order>()
+                .HasMany(o => o.Products)
+                .WithMany(p => p.Orders)
+                .UsingEntity<Dictionary<string, object>>(
+                    "OrderProduct",
+                    j => j
+                        .HasOne<Product>()
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict),
+                    j => j
+                        .HasOne<Order>()
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                );
+
+            // Configurazioni aggiuntive
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Locker)
                 .WithMany(l => l.Products)
                 .HasForeignKey(p => p.LockerId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-
-            modelBuilder.Entity<Product>()
-                .HasOne(p => p.Order)
-                .WithMany(o => o.Products)
-                .HasForeignKey(p => p.OrderId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             modelBuilder.Entity<Locker>()
-        .HasMany(l => l.Drawers)
-        .WithOne(d => d.Locker)
-        .HasForeignKey(d => d.LockerId);
+                .HasMany(l => l.Drawers)
+                .WithOne(d => d.Locker)
+                .HasForeignKey(d => d.LockerId);
 
             modelBuilder.Entity<Owner>()
-           .HasMany(o => o.Animals)
-           .WithOne(a => a.Owner)
-           .HasForeignKey(a => a.OwnerId);
+                .HasMany(o => o.Animals)
+                .WithOne(a => a.Owner)
+                .HasForeignKey(a => a.OwnerId);
         }
+
+
+
     }
 }
