@@ -2,6 +2,8 @@
 html {
     font-size: 14px;
     font-family: "Poppins", Arial, Helvetica, sans-serif;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
@@ -22,6 +24,32 @@ html {
 body {
     margin-bottom: 60px;
 }
+html, body {
+    height: 100%;
+    margin: 0;
+}
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.container-fluid.flex-grow-1 {
+    flex-grow: 1;
+}
+
+footer {
+    width: 100%;
+    padding-top:2rem;
+   padding-bottom:3rem;
+}
+    footer a {
+        text-decoration: none;
+        color: #065A82;
+    }
+
+        footer a:hover {
+            color: darkviolet; 
+        }
 
 /* _Notification */
 .toast-top-right-custom {
@@ -50,12 +78,13 @@ td img {
 }
 
 div.table {
-    background-color: #F29CE3;
+    background-color: #065A82;
     backdorp-filter: blur(7px);
     box-shadow: 0 .4rem .8rem #0005;
     border-radius: .8rem;
     overflow: hidden;
-    margin-top:10px;
+    margin-top: 10px;
+    min-height: 70vh;
 }
 
 table, th, td {
@@ -66,9 +95,9 @@ table, th, td {
 .table_header {
     width: 100%;
     height: 10%;
-    background-color: #F29CE3;
+    background-color: #065A82;
     padding: .8rem 1rem;
-    color: #D137B0;
+    color: white;
 }
 
 .table_body {
@@ -103,7 +132,7 @@ thead th {
     position: sticky;
     top: 0;
     left: 0;
-    background-color: #D137B0;
+    background-color: #0F7173;
     color: white;
 }
 
@@ -214,5 +243,54 @@ tbody tr:hover {
 }
 
 .ColorNavbar {
-    background-color: #D137B0;
+    background-color: #0F7173;
+}
+
+.form-check-label .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+}
+
+.checkmark-static {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    background-color: #eee;
+    border-radius: 5px;
+    position: relative;
+}
+
+    .checkmark-static.checked {
+        background-color: #065A82;
+    }
+
+        .checkmark-static.checked:after {
+            content: "";
+            position: absolute;
+            display: block;
+            left: 9px;
+            top: 5px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg);
+        }
+
+.buttonEdit {
+    background-color: #E2C044;
+    color:white;
+}
+.buttonDelete {
+    background-color: #BF1A2F;
+    color: white;
+}
+.buttonDetails {
+    background-color: #04A777;
+    color: white;
 }
