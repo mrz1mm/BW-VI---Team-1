@@ -1,118 +1,79 @@
 ﻿@model BW_VI___Team_1.Models.DTO.AnimalDTO
 
 @{
-    ViewData["Title"] = "AddAnimal";
+    ViewData["Title"] = "Add Animal";
     var today = DateTime.Now.ToString("yyyy-MM-dd");
 }
 <div class="addPage">
     <h1>Aggiungi Animale</h1>
 
-    <p>Inserire le informazioni riguardati l'animale e il suo proprietario. </p>
-    <hr />
+<h1>Add Animal</h1>
 
-    <!-- Progress Bar -->
-    <div class="progress-container">
-        <div class="progress-bar">
-            <div class="progress" id="progress"></div>
-        </div>
-        <div class="step-labels">
-            <span class="step active" id="step1">Dettagli Animale</span>
-            <span class="step" id="step2">Caratteristiche Aniamle</span>
-            <span class="step" id="step3">Immagini</span>
-            <span class="step" id="step4">Dettagli Proprietario</span>
-          
-            <span class="step" id="step4">Fine</span>
-        </div>
+<h4>Animal</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddAnimal" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Species" class="control-label"></label>
+                <input asp-for="Species" class="form-control" />
+                <span asp-validation-for="Species" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Breed" class="control-label"></label>
+                <input asp-for="Breed" class="form-control" />
+                <span asp-validation-for="Breed" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Color" class="control-label"></label>
+                <input asp-for="Color" class="form-control" />
+                <span asp-validation-for="Color" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BirthDate" class="control-label"></label>
+                <input type="date" asp-for="BirthDate" class="form-control" />
+                <span asp-validation-for="BirthDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RegisterDate" class="control-label"></label>
+                <input asp-for="RegisterDate" class="form-control" value="@today" />
+                <span asp-validation-for="RegisterDate" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Microchip" /> @Html.DisplayNameFor(model => model.Microchip)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="MicrochipNumber" class="control-label"></label>
+                <input asp-for="MicrochipNumber" class="form-control" />
+                <span asp-validation-for="MicrochipNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="OwnerId" class="control-label">Owner</label>
+                <select asp-for="OwnerId" class="form-control" asp-items="ViewBag.OwnerSelectList"></select>
+                <span asp-validation-for="OwnerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input asp-for="ImageFile" type="file" class="form-control" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
     </div>
+</div>
 
-    <div class="row">
-        <div class="col-12">
-            <form id="animalForm" asp-action="AddAnimal" enctype="multipart/form-data">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                <!-- Step 1: Informazioni sull'animale -->
-                <div class="form-step form-step-active">
-                    <p class="text-center">Informazioni sull'animale</p>
-                    <!-- Animal Details Inputs -->
-                    <div class="form-group">
-                        <label asp-for="Name" class="control-label">Nome</label>
-                        <input asp-for="Name" class="form-control" id="animalName" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Species" class="control-label">Specie</label>
-                        <input asp-for="Species" class="form-control" id="animalSpecies" />
-                        <span asp-validation-for="Species" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Breed" class="control-label">Razza</label>
-                        <input asp-for="Breed" class="form-control" id="animalBreed" />
-                        <span asp-validation-for="Breed" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Color" class="control-label"> Colore</label>
-                        <input asp-for="Color" class="form-control" id="animalColor" />
-                        <span asp-validation-for="Color" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="BirthDate" class="control-label">Data di nascita</label>
-                        <input type="date" asp-for="BirthDate" class="form-control" id="animalBirthDate" />
-                        <span asp-validation-for="BirthDate" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="RegisterDate" class="control-label"> Registrazione animale</label>
-                        <input asp-for="RegisterDate" class="form-control" value="@today" id="animalRegisterDate" />
-                        <span asp-validation-for="RegisterDate" class="text-danger"></span>
-                    </div>
-                    <div class="form-group form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" asp-for="Microchip" id="animalMicrochip" /> @Html.DisplayNameFor(model => model.Microchip)
-                        </label>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="MicrochipNumber" class="control-label">Microchip</label>
-                        <input asp-for="MicrochipNumber" class="form-control" id="animalMicrochipNumber" />
-                        <span asp-validation-for="MicrochipNumber" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="ImageFile" class="control-label">Selezione Immagine dell'animale</label>
-                        <input asp-for="ImageFile" type="file" class="form-control" id="animalImageFile" />
-                        <span asp-validation-for="ImageFile" class="text-danger"></span>
-                    </div>
-                    <button type="button" class="btn btn-primary btn-next">Next</button>
-                </div>
-
-                <!-- Step 2: Informazioni sul Proprietario -->
-                <div class="form-step">
-                    <p class="mt-4 text-center">Informazioni sul Proprietario</p>
-                    <div class="form-group">
-                        <label asp-for="Owner.FirstName" class="control-label">Nome</label>
-                        <input asp-for="Owner.FirstName" class="form-control" id="ownerFirstName" />
-                        <span asp-validation-for="Owner.FirstName" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Owner.LastName" class="control-label">Cognome</label>
-                        <input asp-for="Owner.LastName" class="form-control" id="ownerLastName" />
-                        <span asp-validation-for="Owner.LastName" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Owner.FiscalCode" class="control-label">Codice Fiscale</label>
-                        <input asp-for="Owner.FiscalCode" class="form-control" id="ownerFiscalCode" />
-                        <span asp-validation-for="Owner.FiscalCode" class="text-danger"></span>
-                    </div>
-
-                    <div class="buttonAdd">
-                    <div class="form-group">
-                        <input type="submit" value="Create" class="btn" />
-                    </div>
-                    <div>
-                            <a asp-action="Index"> <Button class="btn" >Back to List</Button> </a>
-                    </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+<div>
+    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

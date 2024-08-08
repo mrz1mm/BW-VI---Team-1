@@ -38,6 +38,11 @@ namespace BW_VI___Team_1.Models
         .HasMany(l => l.Drawers)
         .WithOne(d => d.Locker)
         .HasForeignKey(d => d.LockerId);
+
+            modelBuilder.Entity<Owner>()
+           .HasMany(o => o.Animals)
+           .WithOne(a => a.Owner)
+           .HasForeignKey(a => a.OwnerId);
         }
     }
 }

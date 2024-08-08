@@ -24,7 +24,7 @@
                             @Html.DisplayFor(modelItem => item.Description)
                         </td>
                         <td>
-                            <div class="btn-group" role="group">
+                            <div class="btn-group gap-1" role="group">
                                 <a asp-action="UpdateUsage" asp-route-id="@item.Id"> <button class="btn buttonEdit btn-sm">Edit</button></a>
                                 <form asp-action="DeleteUsage" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="confirmDelete(event, this);">
                                     <button type="submit" class="btn buttonDelete btn-sm">Delete</button>

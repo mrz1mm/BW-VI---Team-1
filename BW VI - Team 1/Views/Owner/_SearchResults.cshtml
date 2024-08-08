@@ -1,0 +1,41 @@
+﻿@model IEnumerable<BW_VI___Team_1.Models.Owner>
+
+@if (Model != null && Model.Any())
+{
+    foreach (var owner in Model)
+    {
+        <div>
+            <h3>Proprietario</h3>
+            <p><strong>Nome:</strong> @owner.FirstName</p>
+            <p><strong>Cognome:</strong> @owner.LastName</p>
+            @if (owner.Animals != null && owner.Animals.Any())
+            {
+                <h4>Animali</h4>
+                <ul>
+                    @foreach (var animal in owner.Animals)
+                    {
+                        <li class="mt-1">
+                            <strong>Nome:</strong> @animal.Name<br />
+                            <strong>Specie:</strong> @animal.Species<br />
+                            <strong>Razza:</strong> @animal.Breed<br />
+                            <strong>Colore:</strong> @animal.Color<br />
+                            <strong>Data di Nascita:</strong> @animal.BirthDate<br />
+                            <strong>Microchip:</strong> @(animal.Microchip ? "Sì" : "No")<br />
+                            <strong>Numero Microchip:</strong> @animal.MicrochipNumber
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>Questo proprietario non ha animali registrati.</p>
+            }
+        </div>
+    }
+}
+else
+{
+    <div>
+        <p>Nessun proprietario trovato con il codice fiscale fornito.</p>
+    </div>
+}

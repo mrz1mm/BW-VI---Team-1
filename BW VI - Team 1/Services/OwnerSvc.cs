@@ -64,5 +64,13 @@ namespace BW_VI___Team_1.Services
             _context.Owners.Remove(ownerToDelete);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<Owner>> GetOwnersByPartialFiscalCodeAsync(string partialFiscalCode)
+        {
+            return await _context.Owners
+                .Where(o => EF.Functions.Like(o.FiscalCode, $"%{partialFiscalCode}%"))
+                .Include(o => o.Animals)
+                .ToListAsync();
+        }
     }
 }

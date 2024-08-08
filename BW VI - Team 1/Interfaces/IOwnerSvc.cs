@@ -10,6 +10,7 @@ namespace BW_VI___Team_1.Interfaces
         Task<Owner> AddOwnerAsync(OwnerDTO owner);
         Task<Owner> UpdateOwnerAsync(Owner owner);
         Task DeleteOwnerAsync(int id);
+        Task<List<Owner>> GetOwnersByPartialFiscalCodeAsync(string partialFiscalCode);
 
     }
 }
