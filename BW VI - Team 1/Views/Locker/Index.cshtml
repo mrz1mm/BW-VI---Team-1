@@ -24,10 +24,10 @@
                             @Html.DisplayFor(modelItem => item.Number)
                         </td>
                         <td>
-                            <div class="btn-group" role="group">
-                                <a asp-action="UpdateLocker" asp-route-id="@item.Id"> <button class="btn btn-primary btn-sm">Edit</button></a>
+                            <div class="btn-group gap-1" role="group">
+                                <a asp-action="UpdateLocker" asp-route-id="@item.Id"> <button class="btn buttonEdit btn-sm">Edit</button></a>
                                 <form asp-action="DeleteLocker" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="confirmDelete(event, this);">
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    <button type="submit" class="btn buttonDelete btn-sm">Delete</button>
                                 </form>
                             </div>
                         </td>

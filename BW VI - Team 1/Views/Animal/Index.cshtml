@@ -68,17 +68,25 @@
                             @Html.DisplayFor(modelItem => item.RegisterDate)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Microchip)
+                            @if (item.Microchip)
+                            {
+                                <span class="checkmark-static checked"></span>
+                            }
+                            else
+                            {
+                                <span class="checkmark-static"></span>
+                            }
                         </td>
+
                         <td>
                             @Html.DisplayFor(modelItem => item.MicrochipNumber)
                         </td>
                         <td>
-                            <div class="btn-group" role="group">
-                                <a asp-action="UpdateAnimal" asp-route-id="@item.Id"> <button class="btn btn-primary btn-sm">Edit</button></a>
-                                <a asp-action="AnimalDetails" asp-route-id="@item.Id"> <button class="btn btn-warning btn-sm">Details</button></a>
+                            <div class="btn-group gap-1" role="group">
+                                <a asp-action="UpdateAnimal" asp-route-id="@item.Id"> <button class="btn buttonEdit btn-sm">Edit</button></a>
+                                <a asp-action="AnimalDetails" asp-route-id="@item.Id"> <button class="btn buttonDetails btn-sm">Details</button></a>
                                 <form asp-action="DeleteAnimal" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="confirmDelete(event, this);">
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    <button type="submit" class="btn buttonDelete btn-sm">Delete</button>
                                 </form>
                             </div>
                         </td>
