@@ -3,9 +3,9 @@
 @{
     ViewData["Title"] = "Update Recovery";
 }
-<div class="container my-3">
-<h1 class="text-info">Update Recovery</h1>
-
+<div class="edit border border-1 rounded-1 my-3">
+    <h1 class="text-white text-center">Modifica Ricovero</h1>
+    <div class="ColorNavbar container border border-2 rounded-3  text-white mb-4">
 <form asp-action="UpdateRecovery" method="post">
     <input type="hidden" asp-for="Id" />
     <input type="hidden" asp-for="StartDate" />
@@ -29,6 +29,11 @@
         <span asp-validation-for="IsRefound" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Salva</button>
+    <button type="submit" class="btn btn-primary my-2">Salva</button>
 </form>
+    </div>
+
+</div>
+<div>
+    <a asp-action="Index" class="text-decoration-none">Torna alla lista</a>
 </div>

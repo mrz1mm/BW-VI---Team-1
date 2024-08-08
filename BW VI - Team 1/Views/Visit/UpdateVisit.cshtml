@@ -3,13 +3,13 @@
 @{
     ViewData["Title"] = "UpdateVisit";
 }
-<div class="container">
-<h1 class="text-info">Modifica Visita</h1>
+<div class="edit border border-1 rounded-1 my-3">
+    <h1 class="text-white text-center">Modifica Visita</h1>
 
-<h4>Visita</h4>
-<hr />
+    <h4 class="text-white text-center">Visita</h4>
+<hr class="text-light" />
 <div class="row">
-    <div class="col-md-4">
+        <div class="col-md-4 ColorNavbar container border border-2 rounded-3  text-white mb-4">
         <form asp-action="UpdateVisit">
             <input type="hidden" name="Id" value="@ViewBag.VisitId" />
 
@@ -51,8 +51,8 @@
     </div>
 </div>
 </div>
-<div>
-    <a asp-action="Index">Torna alla lista</a>
+<div class="my-3">
+    <a asp-action="Index" class="text-decoration-none">Torna alla lista</a>
 </div>
 
 @section Scripts {

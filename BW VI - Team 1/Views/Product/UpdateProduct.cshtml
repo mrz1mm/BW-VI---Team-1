@@ -3,13 +3,13 @@
 @{
     ViewData["Title"] = "UpdateProduct";
 }
-<div class="container">
-<h1>Modifica Prodotto</h1>
+<div class="edit border border-1 rounded-1 my-3">
+    <h1 class="text-white text-center">Modifica Prodotto</h1>
 
-<h4>Prodotto</h4>
-<hr />
+    <h4 class="text-white text-center">Prodotto</h4>
+    <hr class="text-light" />
 <div class="row">
-    <div class="col-md-4">
+        <div class="col-md-4 ColorNavbar container border border-2 rounded-3  text-white mb-4">
         <form asp-action="UpdateProduct">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
@@ -75,7 +75,7 @@
             <div class="form-group my-2">
                 <label for="LockerId">Armadietto</label>
                 <select id="LockerId" name="LockerId" class="form-control">
-                    <option value="">Select Locker</option>
+                    <option value="">Seleziona Locker</option>
                     @if (ViewBag.Lockers != null)
                     {
                         foreach (var locker in ViewBag.Lockers)
@@ -92,7 +92,7 @@
             <div class="form-group my-2">
     <label for="DrawerId">Cassetto</label>
     <select id="DrawerId" name="DrawerId" class="form-control">
-        <option value="">Select Drawer</option>
+        <option value="">Seleziona Drawer</option>
         @if (ViewBag.Drawers != null)
         {
             foreach (var drawer in ViewBag.Drawers)
@@ -114,9 +114,9 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Torna alla lista</a>
 </div>
+<div>
+    <a asp-action="Index" class="text-decoration-none">Torna alla lista</a>
 </div>
 @section Scripts {
     @{
