@@ -4,12 +4,13 @@
     ViewData["Title"] = "Add Order";
 }
 
-<h1>Add Order</h1>
+<div class="addPage">
+<h1>Aggiungi Ordini</h1>
 
-<h4>Order</h4>
+
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-12">
         <form asp-action="AddOrder" method="post">
             <div class="form-group">
                 <label asp-for="MedicalPrescription">Medical Prescription</label>
@@ -45,14 +46,17 @@
                     }
                 </div>
             </div>
-
-            <button type="submit" class="btn btn-primary">Add Order</button>
+                <div class="d-flex justify-content-around mt-3">
+                    <button type="submit" class="btn addButtonCreate">Crea Ordine</button>
+                <div>
+                        <a asp-action="Index" class="btn addButtonBack">Torna Indietro</a>
+                 </div>
+              </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+
 </div>
 
 @section Scripts {
