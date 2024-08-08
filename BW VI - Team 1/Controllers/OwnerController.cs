@@ -42,8 +42,10 @@ namespace BW_VI___Team_1.Controllers
             {
                 return PartialView("_SearchResults", null);
             }
+
             var owners = await _context.Owners
-                .Include(o => o.Animals)
+                .Include(o => o.Orders) 
+                .ThenInclude(o => o.Products) 
                 .Where(o => o.FiscalCode.Contains(fiscalCode))
                 .ToListAsync();
 

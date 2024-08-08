@@ -69,7 +69,8 @@ namespace BW_VI___Team_1.Services
         {
             return await _context.Owners
                 .Where(o => EF.Functions.Like(o.FiscalCode, $"%{partialFiscalCode}%"))
-                .Include(o => o.Animals)
+                .Include(o => o.Orders) 
+                    .ThenInclude(order => order.Products)
                 .ToListAsync();
         }
     }

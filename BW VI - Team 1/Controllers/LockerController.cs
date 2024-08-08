@@ -38,12 +38,7 @@ namespace BW_VI___Team_1.Controllers
                 return NotFound();
             }
 
-            var model = new LockerDTO
-            {
-                Number = locker.Number
-            };
-
-            return View(model);
+            return View(locker);
         }
 
         [HttpPost]
@@ -96,7 +91,7 @@ namespace BW_VI___Team_1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateLocker(Locker model) // aggiungere il Binding
+        public async Task<IActionResult> UpdateLocker(Locker model)
         {
             if (!ModelState.IsValid)
             {
@@ -107,13 +102,13 @@ namespace BW_VI___Team_1.Controllers
             try
             {
                 await _lockerSvc.UpdateLockerAsync(model);
-                TempData["Success"] = "Lockere modificato con successo";
+                TempData["Success"] = "Locker modificato con successo";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                TempData["Error"] = "Errore nella modifica dell'lockere";
+                TempData["Error"] = "Errore nella modifica del locker";
                 return View(model);
             }
         }

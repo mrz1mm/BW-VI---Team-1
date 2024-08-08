@@ -14,6 +14,6 @@ namespace BW_VI___Team_1.Models
         public string MedicalPrescription { get; set; }
         public DateOnly Date { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
-
+        public int OwnerId { get; set; }
     }
 }
