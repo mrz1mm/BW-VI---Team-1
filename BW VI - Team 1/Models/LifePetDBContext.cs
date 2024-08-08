@@ -21,8 +21,6 @@ namespace BW_VI___Team_1.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            // Configura la relazione molti-a-molti tra Order e Product
             modelBuilder.Entity<Order>()
                 .HasMany(o => o.Products)
                 .WithMany(p => p.Orders)
@@ -39,8 +37,6 @@ namespace BW_VI___Team_1.Models
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
                 );
-
-            // Configurazioni aggiuntive
            modelBuilder.Entity<Product>()
                 .HasOne(p => p.Locker)
                 .WithMany(l => l.Products)

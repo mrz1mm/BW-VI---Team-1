@@ -294,3 +294,70 @@ tbody tr:hover {
     background-color: #04A777;
     color: white;
 }
+
+/*AddPage*/
+.addPage {
+    max-width: 900px;
+    box-shadow: 0 .4rem .8rem #0005;
+    border-radius: .8rem;
+    overflow: hidden;
+    margin: 1rem auto 2rem auto;
+    padding: 0.5rem 1rem;
+}
+
+.progress-container {
+    margin-bottom: 2rem;
+    position: relative;
+    max-width: 900px;
+    margin: 1rem auto;
+}
+
+.progress-bar {
+    background-color: #f3f3f3;
+    height: 5px;
+    position: relative;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.progress {
+    background-color: #4caf50;
+    height: 100%;
+    width: 0%;
+    transition: width 0.4s ease;
+}
+
+.step-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: -1rem;
+}
+
+.step {
+    font-size: 1rem;
+    padding: 0.5rem;
+    color: #777;
+}
+
+    .step.active {
+        color: #4caf50;
+        font-weight: bold;
+    }
+
+.form-step {
+    display: none;
+}
+
+.form-step-active {
+    display: block;
+}
+
+.addButtonCreate {
+    background: #E2C044;
+    color: white;
+}
+
+.addButtonBack {
+    background: #BF1A2F;
+    color: white;
+}
