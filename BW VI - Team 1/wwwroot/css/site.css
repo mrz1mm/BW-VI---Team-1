@@ -294,3 +294,7 @@ tbody tr:hover {
     background-color: #04A777;
     color: white;
 }
+/******EDIT***/
+.edit {
+    background-color: #065A82;
+}
