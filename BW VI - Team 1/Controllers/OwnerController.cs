@@ -42,12 +42,12 @@ namespace BW_VI___Team_1.Controllers
             {
                 return PartialView("_SearchResults", null);
             }
-            var owner = await _context.Owners
+            var owners = await _context.Owners
                 .Include(o => o.Animals)
-                .Where(o => o.FiscalCode == fiscalCode)
-                .FirstOrDefaultAsync();
+                .Where(o => o.FiscalCode.Contains(fiscalCode))
+                .ToListAsync();
 
-            return PartialView("_SearchResults", owner);
+            return PartialView("_SearchResults", owners);
         }
 
         [HttpGet]

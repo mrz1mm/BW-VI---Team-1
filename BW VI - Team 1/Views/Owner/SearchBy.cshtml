@@ -1,7 +1,4 @@
-﻿@*
-  Vista per la ricerca degli owner
-*@
-@{
+﻿@{
     ViewData["Title"] = "Search Owners";
 }
 
@@ -16,7 +13,7 @@
         $(document).ready(function () {
             $('#fiscalCode').on('input', function () {
                 var fiscalCode = $(this).val();
-                if (fiscalCode.length >= 3) { // Ricerca solo se il codice fiscale è lungo almeno 3 caratteri
+                if (fiscalCode.length >= 1) { 
                     $.ajax({
                         url: '@Url.Action("Search", "Owner")',
                         type: 'GET',
