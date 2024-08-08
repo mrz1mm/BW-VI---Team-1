@@ -3,10 +3,10 @@
 @{
     ViewData["Title"] = "UpdateProduct";
 }
+<div class="container">
+<h1>Modifica Prodotto</h1>
 
-<h1>UpdateProduct</h1>
-
-<h4>Product</h4>
+<h4>Prodotto</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,14 +14,14 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
 
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+            <div class="form-group my-2">
+                <label asp-for="Name" class="control-label">Nome Prodotto</label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Type" class="control-label"></label>
+            <div class="form-group my-2">
+                <label asp-for="Type" class="control-label">Tipo Prodotto</label>
                 <select asp-for="Type" class="form-control" id="productType">
                     @if (ViewBag.ProductTypes != null)
                     {
@@ -38,8 +38,8 @@
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label for="Suppliers">Suppliers</label>
+            <div class="form-group my-2">
+                <label for="Suppliers">Fornitore</label>
                 <select id="Suppliers" name="Suppliers" class="form-control" multiple>
                     @if (ViewBag.Suppliers != null)
                     {
@@ -55,8 +55,8 @@
                 </select>
             </div>
 
-            <div class="form-group">
-                <label for="Usages">Usages</label>
+            <div class="form-group my-2">
+                <label for="Usages">Uso</label>
                 <select id="Usages" name="Usages" class="form-control" multiple>
                     @if (ViewBag.Usages != null)
                     {
@@ -72,8 +72,8 @@
                 </select>
             </div>
 
-            <div class="form-group">
-                <label for="LockerId">Locker</label>
+            <div class="form-group my-2">
+                <label for="LockerId">Armadietto</label>
                 <select id="LockerId" name="LockerId" class="form-control">
                     <option value="">Select Locker</option>
                     @if (ViewBag.Lockers != null)
@@ -89,8 +89,8 @@
                     }
                 </select>
             </div>
-            <div class="form-group">
-    <label for="DrawerId">Drawer</label>
+            <div class="form-group my-2">
+    <label for="DrawerId">Cassetto</label>
     <select id="DrawerId" name="DrawerId" class="form-control">
         <option value="">Select Drawer</option>
         @if (ViewBag.Drawers != null)
@@ -107,17 +107,17 @@
     </select>
 </div>
 
-            <div class="form-group">
-                <input type="submit" value="Update" class="btn btn-primary" />
+            <div class="form-group my-3">
+                <input type="submit" value="Salva" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Torna alla lista</a>
 </div>
-
+</div>
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

@@ -3,26 +3,26 @@
 @{
     ViewData["Title"] = "UpdateOwner";
 }
+<div class="container">
+<h1>Modifica Proprietario</h1>
 
-<h1>UpdateOwner</h1>
-
-<h4>Owner</h4>
+<h4>Proprietario</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="UpdateOwner" method="post">
-            <div class="form-group">
-                <label asp-for="FirstName"></label>
+            <div class="form-group my-2">
+                <label asp-for="FirstName">Nome</label>
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="LastName"></label>
+            <div class="form-group my-2">
+                <label asp-for="LastName">Cognome</label>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="FiscalCode"></label>
+            <div class="form-group my-2">
+                <label asp-for="FiscalCode">Codice Fiscale</label>
                 <input asp-for="FiscalCode" class="form-control" />
                 <span asp-validation-for="FiscalCode" class="text-danger"></span>
             </div>
@@ -31,9 +31,10 @@
         </form>
     </div>
 </div>
-
+    
+</div>
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Torna alla lista</a>
 </div>
 
 @section Scripts {
