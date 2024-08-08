@@ -351,3 +351,13 @@ tbody tr:hover {
 .form-step-active {
     display: block;
 }
+
+.addButtonCreate {
+    background: #E2C044;
+    color: white;
+}
+
+.addButtonBack {
+    background: #BF1A2F;
+    color: white;
+}
