@@ -2,6 +2,7 @@
 using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BW_VI___Team_1.Controllers
 {
@@ -32,6 +33,21 @@ namespace BW_VI___Team_1.Controllers
         public IActionResult SearchBy()
         {
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Search(string fiscalCode)
+        {
+            if (string.IsNullOrEmpty(fiscalCode))
+            {
+                return PartialView("_SearchResults", null);
+            }
+            var owner = await _context.Owners
+                .Include(o => o.Animals)
+                .Where(o => o.FiscalCode == fiscalCode)
+                .FirstOrDefaultAsync();
+
+            return PartialView("_SearchResults", owner);
         }
 
         [HttpGet]
