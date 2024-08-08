@@ -384,7 +384,7 @@ namespace BW_VI___Team_1.Migrations
             modelBuilder.Entity("BW_VI___Team_1.Models.Order", b =>
                 {
                     b.HasOne("BW_VI___Team_1.Models.Owner", "Owner")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -485,6 +485,8 @@ namespace BW_VI___Team_1.Migrations
             modelBuilder.Entity("BW_VI___Team_1.Models.Owner", b =>
                 {
                     b.Navigation("Animals");
+
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

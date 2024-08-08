@@ -41,7 +41,7 @@ namespace BW_VI___Team_1.Models
                 );
 
             // Configurazioni aggiuntive
-            modelBuilder.Entity<Product>()
+           modelBuilder.Entity<Product>()
                 .HasOne(p => p.Locker)
                 .WithMany(l => l.Products)
                 .HasForeignKey(p => p.LockerId)
@@ -56,6 +56,12 @@ namespace BW_VI___Team_1.Models
                 .HasMany(o => o.Animals)
                 .WithOne(a => a.Owner)
                 .HasForeignKey(a => a.OwnerId);
+
+            modelBuilder.Entity<Owner>()
+               .HasMany(o => o.Orders)
+               .WithOne(order => order.Owner)
+               .HasForeignKey(order => order.OwnerId);
+
         }
 
 
