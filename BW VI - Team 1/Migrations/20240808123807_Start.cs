@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BW_VI___Team_1.Migrations
 {
     /// <inheritdoc />
-    public partial class addmigrationStart : Migration
+    public partial class Start : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -136,9 +136,9 @@ namespace BW_VI___Team_1.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OwnerId = table.Column<int>(type: "int", nullable: false),
                     MedicalPrescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Date = table.Column<DateOnly>(type: "date", nullable: false)
+                    Date = table.Column<DateOnly>(type: "date", nullable: false),
+                    OwnerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -147,6 +147,33 @@ namespace BW_VI___Team_1.Migrations
                         name: "FK_Orders_Owners_OwnerId",
                         column: x => x.OwnerId,
                         principalTable: "Owners",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    LockerId = table.Column<int>(type: "int", nullable: true),
+                    DrawerId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Products_Drawers_DrawerId",
+                        column: x => x.DrawerId,
+                        principalTable: "Drawers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Products_Lockers_LockerId",
+                        column: x => x.LockerId,
+                        principalTable: "Lockers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -196,37 +223,27 @@ namespace BW_VI___Team_1.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "OrderProduct",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    LockerId = table.Column<int>(type: "int", nullable: true),
-                    OrderId = table.Column<int>(type: "int", nullable: true),
-                    DrawerId = table.Column<int>(type: "int", nullable: true)
+                    OrderId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.PrimaryKey("PK_OrderProduct", x => new { x.OrderId, x.ProductId });
                     table.ForeignKey(
-                        name: "FK_Products_Drawers_DrawerId",
-                        column: x => x.DrawerId,
-                        principalTable: "Drawers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Products_Lockers_LockerId",
-                        column: x => x.LockerId,
-                        principalTable: "Lockers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Products_Orders_OrderId",
+                        name: "FK_OrderProduct_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderProduct_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -288,6 +305,11 @@ namespace BW_VI___Team_1.Migrations
                 column: "LockerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrderProduct_ProductId",
+                table: "OrderProduct",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Orders_OwnerId",
                 table: "Orders",
                 column: "OwnerId");
@@ -301,11 +323,6 @@ namespace BW_VI___Team_1.Migrations
                 name: "IX_Products_LockerId",
                 table: "Products",
                 column: "LockerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Products_OrderId",
-                table: "Products",
-                column: "OrderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductSupplier_SuppliersId",
@@ -332,6 +349,9 @@ namespace BW_VI___Team_1.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "OrderProduct");
+
+            migrationBuilder.DropTable(
                 name: "ProductSupplier");
 
             migrationBuilder.DropTable(
@@ -345,6 +365,9 @@ namespace BW_VI___Team_1.Migrations
 
             migrationBuilder.DropTable(
                 name: "Visits");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "Suppliers");
@@ -362,13 +385,10 @@ namespace BW_VI___Team_1.Migrations
                 name: "Drawers");
 
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "Owners");
 
             migrationBuilder.DropTable(
                 name: "Lockers");
-
-            migrationBuilder.DropTable(
-                name: "Owners");
         }
     }
 }

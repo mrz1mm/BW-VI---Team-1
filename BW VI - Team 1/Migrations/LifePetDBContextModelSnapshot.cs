@@ -180,9 +180,6 @@ namespace BW_VI___Team_1.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
@@ -191,8 +188,6 @@ namespace BW_VI___Team_1.Migrations
                     b.HasIndex("DrawerId");
 
                     b.HasIndex("LockerId");
-
-                    b.HasIndex("OrderId");
 
                     b.ToTable("Products");
                 });
@@ -319,6 +314,21 @@ namespace BW_VI___Team_1.Migrations
                     b.ToTable("Visits");
                 });
 
+            modelBuilder.Entity("OrderProduct", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderProduct");
+                });
+
             modelBuilder.Entity("ProductSupplier", b =>
                 {
                     b.Property<int>("ProductsId")
@@ -374,7 +384,7 @@ namespace BW_VI___Team_1.Migrations
             modelBuilder.Entity("BW_VI___Team_1.Models.Order", b =>
                 {
                     b.HasOne("BW_VI___Team_1.Models.Owner", "Owner")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -393,16 +403,9 @@ namespace BW_VI___Team_1.Migrations
                         .HasForeignKey("LockerId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("BW_VI___Team_1.Models.Order", "Order")
-                        .WithMany("Products")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.Navigation("Drawer");
 
                     b.Navigation("Locker");
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("BW_VI___Team_1.Models.Recovery", b =>
@@ -425,6 +428,21 @@ namespace BW_VI___Team_1.Migrations
                         .IsRequired();
 
                     b.Navigation("Animal");
+                });
+
+            modelBuilder.Entity("OrderProduct", b =>
+                {
+                    b.HasOne("BW_VI___Team_1.Models.Order", null)
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BW_VI___Team_1.Models.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ProductSupplier", b =>
@@ -464,14 +482,11 @@ namespace BW_VI___Team_1.Migrations
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("BW_VI___Team_1.Models.Order", b =>
-                {
-                    b.Navigation("Products");
-                });
-
             modelBuilder.Entity("BW_VI___Team_1.Models.Owner", b =>
                 {
                     b.Navigation("Animals");
+
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

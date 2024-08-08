@@ -31,23 +31,32 @@ namespace BW_VI___Team_1.Services
 
         public async Task<Order> AddOrderAsync(OrderDTO model)
         {
-
-            var selectedProducts = await _context.Products
-                .Where(p => model.SelectedProductIds.Contains(p.Id))
-                .ToListAsync();
-
+            // Crea un nuovo ordine
             var newOrder = new Order
             {
                 MedicalPrescription = model.MedicalPrescription,
                 Date = model.Date,
-                Products = selectedProducts,
                 Owner = model.Owner
             };
+
+            // Trova i prodotti selezionati
+            var selectedProducts = await _context.Products
+                .Where(p => model.SelectedProductIds.Contains(p.Id))
+                .ToListAsync();
+
+            // Aggiungi i prodotti all'ordine
+            foreach (var product in selectedProducts)
+            {
+                newOrder.Products.Add(product);
+                product.Orders.Add(newOrder);
+            }
 
             _context.Orders.Add(newOrder);
             await _context.SaveChangesAsync();
             return newOrder;
         }
+
+
 
 
 
@@ -87,21 +96,27 @@ namespace BW_VI___Team_1.Services
 
 
 
-
         public async Task DeleteOrderAsync(int id)
         {
             var orderToDelete = await _context.Orders
-                .Include(o => o.Products) 
+                .Include(o => o.Products)
                 .FirstOrDefaultAsync(o => o.Id == id);
 
             if (orderToDelete == null)
             {
-                throw new KeyNotFoundException();
+                throw new KeyNotFoundException("Order not found.");
             }
-            _context.Products.RemoveRange(orderToDelete.Products);
+            foreach (var product in orderToDelete.Products.ToList())
+            {
+                orderToDelete.Products.Remove(product);
+            }
             _context.Orders.Remove(orderToDelete);
             await _context.SaveChangesAsync();
         }
+
+
+
+
 
     }
 }
