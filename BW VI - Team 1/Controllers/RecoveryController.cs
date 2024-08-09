@@ -51,12 +51,10 @@ namespace BW_VI___Team_1.Controllers
             return View(recovery);
         }
 
-
-
         // METODI
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddRecovery(RecoveryDTO model) // aggiungere il Binding
+        public async Task<IActionResult> AddRecovery([Bind("EndDate,AnimalId")] RecoveryDTO model) 
         {
             try
             {
@@ -70,10 +68,8 @@ namespace BW_VI___Team_1.Controllers
 
                 var newRecovery = new Recovery
                 {
-
                     EndDate = model.EndDate,
                     Animal = animal,
-
                 };
 
                 _context.Recoverys.Add(newRecovery);
@@ -91,7 +87,7 @@ namespace BW_VI___Team_1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateRecovery(Recovery model)
+        public async Task<IActionResult> UpdateRecovery(Recovery model) 
         {
             try
             {

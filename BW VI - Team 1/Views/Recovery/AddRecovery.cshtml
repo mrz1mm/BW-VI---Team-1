@@ -7,7 +7,7 @@
 <h1>Aggiungi Ricovero</h1>
 
 <form asp-action="AddRecovery" method="post">
-
+        @Html.AntiForgeryToken()
         <div class="form-group">
             <label asp-for="EndDate">Data di fine Ricovero</label>
             <input type="date" asp-for="EndDate" class="form-control" />

@@ -81,6 +81,7 @@ namespace BW_VI___Team_1.Controllers
                 return View(model);
             }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateUsage(int id, [Bind("Description,Products")] Usage model)
@@ -95,7 +96,7 @@ namespace BW_VI___Team_1.Controllers
             {
                 var dto = new UsageDTO
                 {
-                    Description = model.Description
+                    Description = model.Description,
                 };
                 await _usageSvc.UpdateUsageAsync(dto, id);
                 TempData["Success"] = "Usage modificato con successo";
@@ -110,3 +111,4 @@ namespace BW_VI___Team_1.Controllers
         }
     }
 }
+
