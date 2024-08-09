@@ -173,6 +173,17 @@ namespace BW_VI___Team_1.Controllers
                 return View(model);
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> GetDrawersByLocker(int lockerId)
+        {
+            var drawers = await _context.Drawers
+                                        .Where(d => d.LockerId == lockerId)
+                                        .Select(d => new { d.Id, d.Number })
+                                        .ToListAsync();
+
+            return Json(drawers);
+        }
+
     }
 }
 

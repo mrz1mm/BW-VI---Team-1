@@ -50,9 +50,10 @@
                     <div class="form-group">
                         <label asp-for="Locker.Number" class="control-label">Armadietto</label>
                         <select asp-for="Locker.Number" class="form-control" id="lockerNumber">
+                            <option value="">Seleziona un armadietto</option>
                             @foreach (var locker in ViewBag.Lockers as List<BW_VI___Team_1.Models.Locker>)
                             {
-                                <option value="@locker.Number">@locker.Number</option>
+                                <option value="@locker.Id">@locker.Number</option>
                             }
                         </select>
                         <span asp-validation-for="Locker.Number" class="text-danger"></span>
@@ -61,10 +62,7 @@
                     <div class="form-group">
                         <label asp-for="DrawerId" class="control-label">Cassetto</label>
                         <select asp-for="DrawerId" class="form-control" id="drawerId">
-                            @foreach (var drawer in ViewBag.Drawers as List<BW_VI___Team_1.Models.Drawer>)
-                            {
-                                <option value="@drawer.Id">@drawer.Number</option>
-                            }
+                            <option value="">Seleziona un cassetto</option>
                         </select>
                         <span asp-validation-for="DrawerId" class="text-danger"></span>
                     </div>
@@ -109,6 +107,8 @@
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', function () {
             var productTypeSelect = document.getElementById('productType');
+            var lockerSelect = document.getElementById('lockerNumber');
+            var drawerSelect = document.getElementById('drawerId');
             var lockerFields = document.getElementById('lockerFields');
             var formElements = [
                 document.getElementById('productName'),
@@ -125,28 +125,44 @@
                     lockerFields.style.display = 'block';
                 } else {
                     lockerFields.style.display = 'none';
+                    drawerSelect.innerHTML = '<option value="">Seleziona un cassetto</option>'; 
                 }
                 updateStepLabels();
+            }
+
+            function loadDrawers(lockerId) {
+                fetch('/Product/GetDrawersByLocker?lockerId=' + lockerId)
+                    .then(response => response.json())
+                    .then(data => {
+                        drawerSelect.innerHTML = '<option value="">Seleziona un cassetto</option>'; 
+                        data.forEach(drawer => {
+                            var option = document.createElement('option');
+                            option.value = drawer.id;
+                            option.text = 'Cassetto ' + drawer.number;
+                            drawerSelect.add(option);
+                        });
+                    })
+                    .catch(error => console.error('Errore nel caricamento dei cassetti:', error));
             }
 
             function updateStepLabels() {
                 const stepLabels = document.getElementById("step-labels");
                 if (productTypeSelect.value === 'Medicine') {
                     stepLabels.innerHTML = `
-                                <span class="step active" id="step1">Nome</span>
-                                <span class="step" id="step2">Tipo</span>
-                                <span class="step" id="step3">Locker</span>
-                                <span class="step" id="step4">Cassetto</span>
-                                <span class="step" id="step5">Uso</span>
-                                <span class="step" id="step6">Fornitore</span>
-                                <span class="step" id="step7">Fine</span>`;
+                                        <span class="step active" id="step1">Nome</span>
+                                        <span class="step" id="step2">Tipo</span>
+                                        <span class="step" id="step3">Locker</span>
+                                        <span class="step" id="step4">Cassetto</span>
+                                        <span class="step" id="step5">Uso</span>
+                                        <span class="step" id="step6">Fornitore</span>
+                                        <span class="step" id="step7">Fine</span>`;
                 } else {
                     stepLabels.innerHTML = `
-                                <span class="step active" id="step1">Nome</span>
-                                <span class="step" id="step2">Tipo</span>
-                                <span class="step" id="step3">Uso</span>
-                                <span class="step" id="step4">Fornitore</span>
-                                <span class="step" id="step5">Fine</span>`;
+                                        <span class="step active" id="step1">Nome</span>
+                                        <span class="step" id="step2">Tipo</span>
+                                        <span class="step" id="step3">Uso</span>
+                                        <span class="step" id="step4">Fornitore</span>
+                                        <span class="step" id="step5">Fine</span>`;
                 }
                 updateProgressBar();
             }
@@ -186,9 +202,19 @@
                 });
             }
 
+            lockerSelect.addEventListener('change', function () {
+                var selectedLockerId = lockerSelect.value;
+                if (selectedLockerId) {
+                    loadDrawers(selectedLockerId);
+                } else {
+                    drawerSelect.innerHTML = '<option value="">Seleziona un cassetto</option>'; 
+                }
+            });
+
             toggleLockerFields();
             productTypeSelect.addEventListener('change', toggleLockerFields);
-            updateProgressBar(); // Initial call to set the progress bar to zero
+            updateProgressBar(); 
         });
     </script>
 }
+
