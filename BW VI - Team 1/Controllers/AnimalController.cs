@@ -92,7 +92,6 @@ namespace BW_VI___Team_1.Controllers
             {
                 return NotFound();
             }
-
             var model = new AnimalDTO
             {
                 Name = animal.Name,
