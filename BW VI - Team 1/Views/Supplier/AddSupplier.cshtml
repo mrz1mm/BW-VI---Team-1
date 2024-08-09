@@ -3,40 +3,43 @@
 @{
     ViewData["Title"] = "AddSupplier";
 }
+<div class="addPage"> 
+<h1>Aggiungi Fornitori</h1>
 
-<h1>AddSupplier</h1>
-
-<h4>Supplier</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-12">
         <form asp-action="AddSupplier">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
+                <label asp-for="Name" class="control-label">Nome</label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
+                <label asp-for="Address" class="control-label">Indirizzo</label>
                 <input asp-for="Address" class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Telephone" class="control-label"></label>
+                <label asp-for="Telephone" class="control-label">Telefono</label>
                 <input asp-for="Telephone" class="form-control" />
                 <span asp-validation-for="Telephone" class="text-danger"></span>
             </div>
+
+                <div class="d-flex justify-content-around mt-3">
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                        <input type="submit" value="Aggiungi Fornitore" class="btn addButtonCreate" />
             </div>
+                    <div>
+                        <a asp-action="Index" class="btn addButtonBack">Torna Indietro</a>
+                    </div>
+                </div>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

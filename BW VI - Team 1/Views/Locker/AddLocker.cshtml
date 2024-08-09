@@ -3,29 +3,32 @@
 @{
     ViewData["Title"] = "AddLocker";
 }
+<div class="addPage">
 
-<h1>AddLocker</h1>
+<h1>Aggiungi Armadietto</h1>
 
-<h4>Locker</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-12">
         <form asp-action="AddLocker">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Number" class="control-label"></label>
+                <label asp-for="Number" class="control-label">Numero</label>
                 <input asp-for="Number" class="form-control" />
                 <span asp-validation-for="Number" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+             <div class="d-flex justify-content-around mt-3">
+               <div class="form-group">
+                        <input type="submit" value="Create" class="btn addButtonCreate" />
             </div>
+                <div>
+                    <a asp-action="Index" class="btn addButtonBack">Torna Indietro</a>
+                </div>
+        </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
