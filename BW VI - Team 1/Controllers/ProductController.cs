@@ -38,7 +38,7 @@ namespace BW_VI___Team_1.Controllers
             ViewBag.Usages = await _context.Usages.ToListAsync();
             ViewBag.Suppliers = await _context.Suppliers.ToListAsync();
             ViewBag.Lockers = await _context.Lockers.ToListAsync();
-            ViewBag.Drawers = await _context.Drawers.ToListAsync();
+            ViewBag.Drawers = await _context.Drawers.Take(5).ToListAsync();
             return View();
         }
 
@@ -55,7 +55,7 @@ namespace BW_VI___Team_1.Controllers
             ViewBag.Suppliers = await _context.Suppliers.ToListAsync();
             ViewBag.Usages = await _context.Usages.ToListAsync();
             ViewBag.Lockers = await _context.Lockers.ToListAsync();
-            ViewBag.Drawers = await _context.Drawers.ToListAsync();
+            ViewBag.Drawers = await _context.Drawers.Take(5).ToListAsync();
 
             var model = new Product
             {
@@ -64,8 +64,8 @@ namespace BW_VI___Team_1.Controllers
                 Suppliers = product.Suppliers,
                 Type = product.Type,
                 Usages = product.Usages,
-                Locker = product.Locker,
-                Drawer = product.Drawer
+                LockerId = product.Locker?.Id, 
+                DrawerId = product.Drawer?.Id
             };
 
             return View(model);
@@ -128,10 +128,9 @@ namespace BW_VI___Team_1.Controllers
                 return View(model);
             }
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProduct([Bind("Id,Name,Type,Locker,DrawerId")] Product model, [Bind("Usages")] int[] Usages, [Bind("Suppliers")] int[] Suppliers)
+        public async Task<IActionResult> UpdateProduct([Bind("Id,Name,Type,LockerId,DrawerId")] Product model, [Bind("Usages")] int[] Usages, [Bind("Suppliers")] int[] Suppliers)
         {
             if (!ModelState.IsValid)
             {
@@ -146,25 +145,28 @@ namespace BW_VI___Team_1.Controllers
 
                 if (model.Type == Models.Type.Medicine)
                 {
-                    if (model.Locker != null)
+                    if (model.LockerId.HasValue)
                     {
                         var drawer = await _context.Drawers.FindAsync(model.DrawerId);
                         if (drawer != null)
                         {
-                            model.Drawer = drawer;
+                            model.Drawer = drawer; 
                         }
                     }
                 }
                 else
                 {
-                    model.Drawer = null;
+                    model.LockerId = null;
+                    model.DrawerId = null; 
                 }
+
                 await _productSvc.UpdateProductAsync(model);
                 TempData["Success"] = "Prodotto modificato con successo";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
+                ModelState.AddModelError("", ex.Message);
                 TempData["Error"] = $"Errore nella modifica del prodotto: {ex.Message}";
                 if (ex.InnerException != null)
                 {

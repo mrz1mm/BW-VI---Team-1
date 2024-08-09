@@ -54,20 +54,13 @@
                     <span asp-validation-for="Type" class="text-danger"></span>
                 </div>
 
-                <div class="form-group">
+              <div class="form-group" id="lockerFields">
                     <label for="LockerId">Locker</label>
                     <select id="LockerId" name="LockerId" class="form-control">
-                        <option value="">Select Locker</option>
-                        @if (ViewBag.Lockers != null)
+                        <option value="">Seleziona Locker</option>
+                        @foreach (var locker in ViewBag.Lockers as List<Locker>)
                         {
-                            foreach (var locker in ViewBag.Lockers)
-                            {
-                                        <option value="@locker.Id">@locker.Number</option>
-                            }
-                        }
-                        else
-                        {
-                                <option>No lockers available</option>
+                            <option value="@locker.Id">@locker.Number</option>
                         }
                     </select>
                 </div>
