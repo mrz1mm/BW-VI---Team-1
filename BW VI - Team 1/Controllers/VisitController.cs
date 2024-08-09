@@ -38,7 +38,7 @@ namespace BW_VI___Team_1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddVisit(VisitDTO model)
+        public async Task<IActionResult> AddVisit([Bind("Date,Exam,Diagnosis,AnimalId")] VisitDTO model) 
         {
             if (!ModelState.IsValid)
             {
@@ -66,8 +66,6 @@ namespace BW_VI___Team_1.Controllers
             }
         }
 
-
-
         [HttpGet]
         public async Task<IActionResult> UpdateVisit(int id)
         {
@@ -81,7 +79,7 @@ namespace BW_VI___Team_1.Controllers
                 Date = visit.Date,
                 Exam = visit.Exam,
                 Diagnosis = visit.Diagnosis,
-                AnimalId = visit.Animal.Id 
+                AnimalId = visit.Animal.Id
             };
             ViewBag.VisitId = id;
             ViewBag.Animals = await _context.Animals.ToListAsync();
@@ -89,11 +87,9 @@ namespace BW_VI___Team_1.Controllers
             return View(model);
         }
 
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateVisit(VisitDTO model, int id)
+        public async Task<IActionResult> UpdateVisit([Bind("Date,Exam,Diagnosis,AnimalId")] VisitDTO model, int id) 
         {
             if (!ModelState.IsValid)
             {
@@ -135,7 +131,6 @@ namespace BW_VI___Team_1.Controllers
             }
         }
 
-
         [HttpPost]
         public async Task<IActionResult> DeleteVisit(int id)
         {
@@ -149,7 +144,6 @@ namespace BW_VI___Team_1.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
-
-
     }
 }
+

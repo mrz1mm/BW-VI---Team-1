@@ -46,8 +46,6 @@ namespace BW_VI___Team_1.Controllers
             return View(model);
         }
 
-
-
         [HttpGet]
         public async Task<IActionResult> UpdateOrder(int id)
         {
@@ -66,7 +64,6 @@ namespace BW_VI___Team_1.Controllers
 
             return View(order);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> DeleteOrder(int id)
@@ -88,13 +85,10 @@ namespace BW_VI___Team_1.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
-
-
         // METODI
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrder(OrderDTO model, int[] selectedProductIds)
+        public async Task<IActionResult> AddOrder([Bind("MedicalPrescription,Date,Owner,SelectedProductIds")] OrderDTO model, [Bind("selectedProductIds")] int[] selectedProductIds)
         {
             try
             {
@@ -125,7 +119,7 @@ namespace BW_VI___Team_1.Controllers
                     MedicalPrescription = model.MedicalPrescription,
                     Date = model.Date,
                     Owner = selectedOwner,
-                    Products = selectedProducts 
+                    Products = selectedProducts
                 };
 
                 _context.Orders.Add(newOrder);
@@ -142,10 +136,9 @@ namespace BW_VI___Team_1.Controllers
             }
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateOrder(int id, Order model, int[] selectedProductIds)
+        public async Task<IActionResult> UpdateOrder(int id, [Bind("MedicalPrescription,Date,Owner,SelectedProductIds")] Order model, [Bind("selectedProductIds")] int[] selectedProductIds)
         {
             try
             {
@@ -185,6 +178,5 @@ namespace BW_VI___Team_1.Controllers
                 return View(model);
             }
         }
-
     }
 }

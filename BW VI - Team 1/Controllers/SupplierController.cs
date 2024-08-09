@@ -58,7 +58,7 @@ namespace BW_VI___Team_1.Controllers
         // METODI
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddSupplier(SupplierDTO model) // aggiungere il Binding
+        public async Task<IActionResult> AddSupplier( SupplierDTO model) 
         {
             if (!ModelState.IsValid)
             {
@@ -69,21 +69,21 @@ namespace BW_VI___Team_1.Controllers
             try
             {
                 await _supplierSvc.AddSupplierAsync(model);
-                TempData["Success"] = "Suppliere aggiunto con successo";
+                TempData["Success"] = "Fornitore aggiunto con successo";
                 return RedirectToAction(nameof(Index));
 
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                TempData["Error"] = "Errore nell'aggiunta dell'suppliere";
+                TempData["Error"] = "Errore nell'aggiunta del fornitore";
                 return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateSupplier(Supplier model) // aggiungere il Binding
+        public async Task<IActionResult> UpdateSupplier(Supplier model) 
         {
             if (!ModelState.IsValid)
             {
@@ -94,15 +94,16 @@ namespace BW_VI___Team_1.Controllers
             try
             {
                 await _supplierSvc.UpdateSupplierAsync(model);
-                TempData["Success"] = "Suppliere modificato con successo";
+                TempData["Success"] = "Fornitore modificato con successo";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                TempData["Error"] = "Errore nella modifica dell'suppliere";
+                TempData["Error"] = "Errore nella modifica del fornitore";
                 return View(model);
             }
         }
     }
 }
+

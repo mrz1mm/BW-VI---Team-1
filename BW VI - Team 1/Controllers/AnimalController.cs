@@ -33,18 +33,17 @@ namespace BW_VI___Team_1.Controllers
             var owners = await _context.Owners.ToListAsync();
             var ownerSelectList = owners.Select(o => new SelectListItem
             {
-                Value = o.Id.ToString(),  
-                Text = $"{o.FirstName} {o.LastName}" 
+                Value = o.Id.ToString(),
+                Text = $"{o.FirstName} {o.LastName}"
             }).ToList();
             ViewBag.OwnerSelectList = ownerSelectList;
 
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddAnimal(AnimalDTO model)
+        public async Task<IActionResult> AddAnimal([Bind("Name,Species,Breed,Color,BirthDate,RegisterDate,Microchip,MicrochipNumber,OwnerId,ImageFile")] AnimalDTO model)
         {
             try
             {
@@ -83,7 +82,6 @@ namespace BW_VI___Team_1.Controllers
             }
         }
 
-
         [HttpGet]
         public async Task<IActionResult> UpdateAnimal(int id)
         {
@@ -97,7 +95,7 @@ namespace BW_VI___Team_1.Controllers
             {
                 Value = o.Id.ToString(),
                 Text = $"{o.FirstName} {o.LastName}",
-                Selected = o.Id == animal.OwnerId 
+                Selected = o.Id == animal.OwnerId
             }).ToList();
             ViewBag.OwnerSelectList = ownerSelectList;
 
@@ -111,7 +109,7 @@ namespace BW_VI___Team_1.Controllers
                 RegisterDate = animal.RegisterDate,
                 Microchip = animal.Microchip,
                 MicrochipNumber = animal.MicrochipNumber,
-                OwnerId = animal.OwnerId 
+                OwnerId = animal.OwnerId
             };
 
             ViewBag.AnimalId = id;
@@ -120,7 +118,7 @@ namespace BW_VI___Team_1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateAnimal(int id, AnimalDTO model)
+        public async Task<IActionResult> UpdateAnimal(int id, [Bind("Name,Species,Breed,Color,BirthDate,RegisterDate,Microchip,MicrochipNumber,OwnerId,ImageFile")] AnimalDTO model)
         {
             try
             {
@@ -168,6 +166,7 @@ namespace BW_VI___Team_1.Controllers
 
             return View(model);
         }
+
         public IActionResult SearchBy()
         {
             return View();
