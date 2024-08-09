@@ -2,6 +2,7 @@
 using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace BW_VI___Team_1.Services
 {
@@ -120,6 +121,25 @@ namespace BW_VI___Team_1.Services
         public async Task<List<Visit>> GetVisitsByAnimalIdAsync(int animalId)
         {
             return await _context.Visits.Where(v => v.Animal.Id == animalId).OrderByDescending(v => v.Date).ToListAsync();
+        }
+
+        public async Task<List<Animal>> GetAnimalsByOwnerIdsAsync(List<int?> ownerIds)
+        {
+            if (ownerIds == null || !ownerIds.Any())
+            {
+                return new List<Animal>();
+            }
+
+            // Filtro gli ID validi e non nulli
+            var validOwnerIds = ownerIds
+                .Where(id => id.HasValue)  // Filtra solo ID non nulli
+                .Select(id => id.Value)    // Ottieni i valori non nulli come int
+                .ToList();
+
+            // Usa validOwnerIds per la query
+            return await _context.Animals
+                .Where(a => validOwnerIds.Contains(a.OwnerId ?? -1)) // Gestione per null con ?? -1
+                .ToListAsync();
         }
     }
 }

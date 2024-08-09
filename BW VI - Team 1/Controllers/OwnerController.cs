@@ -2,6 +2,7 @@
 using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BW_VI___Team_1.Controllers
 {
@@ -27,6 +28,28 @@ namespace BW_VI___Team_1.Controllers
         public IActionResult AddOwner()
         {
             return View();
+        }
+
+        public IActionResult SearchBy()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Search(string fiscalCode)
+        {
+            if (string.IsNullOrEmpty(fiscalCode))
+            {
+                return PartialView("_SearchResults", null);
+            }
+
+            var owners = await _context.Owners
+                .Include(o => o.Orders) 
+                .ThenInclude(o => o.Products) 
+                .Where(o => o.FiscalCode.Contains(fiscalCode))
+                .ToListAsync();
+
+            return PartialView("_SearchResults", owners);
         }
 
         [HttpGet]

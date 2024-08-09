@@ -1,0 +1,54 @@
+﻿@model IEnumerable<BW_VI___Team_1.Models.Owner>
+
+@if (Model != null && Model.Any())
+{
+    foreach (var owner in Model)
+    {
+        <div>
+            <h3>Proprietario</h3>
+            <p><strong>Nome:</strong> @owner.FirstName</p>
+            <p><strong>Cognome:</strong> @owner.LastName</p>
+
+            @if (owner.Orders != null && owner.Orders.Any())
+            {
+                <h4>Ordini</h4>
+                <ul>
+                    @foreach (var order in owner.Orders)
+                    {
+                        <li class="mt-2">
+                            <strong>Data Ordine:</strong> @order.Date.ToString("dd/MM/yyyy")<br />
+                            <strong>Prescrizione Medica:</strong> @order.MedicalPrescription<br />
+
+                            @if (order.Products != null && order.Products.Any())
+                            {
+                                <h5>Prodotti</h5>
+                                <ul>
+                                    @foreach (var product in order.Products)
+                                    {
+                                        <li class="mt-1">
+                                            <strong>Nome Prodotto:</strong> @product.Name<br />
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <p>Nessun prodotto trovato per questo ordine.</p>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>Nessun ordine trovato per questo proprietario.</p>
+            }
+        </div>
+    }
+}
+else
+{
+    <div>
+        <p>Nessun proprietario trovato con il codice fiscale fornito.</p>
+    </div>
+}

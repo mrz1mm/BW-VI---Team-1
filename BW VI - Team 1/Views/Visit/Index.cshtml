@@ -7,70 +7,102 @@
 <div class="table">
     <section class="table_header"><h1 class="text-center">Registro Visite</h1></section>
     <section class="table_body d-flex align-item-center justify-content-center">
-<table>
-    <thead>
+        <table>
+            <thead>
                 <tr class="text-center">
-            <th>
-                Data
-            </th>
-            <th>
-                Esame
-            </th>
-            <th>
-               Diagnosi
-            </th>
-            <th>
-                Animale
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+                    <th>
+                        Data
+                    </th>
+                    <th>
+                        Esame
+                    </th>
+                    <th>
+                        Diagnosi
+                    </th>
+                    <th>
+                        Animale
+                    </th>
+                    <th>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <input id="searchInput" class="form-control me-2 w-50" type="search" placeholder="Search" aria-label="Search">
+                            <i class="fa-solid fa-magnifying-glass fs-5"></i>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
                     <tr class="text-center">
-                <td>
-                    @Html.DisplayFor(modelItem => item.Date)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Exam)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Diagnosis)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Animal.Name)
-                </td>
                         <td>
-                            <div class="btn-group" role="group">
-                                <a asp-action="UpdateVisit" asp-route-id="@item.Id"> <button class="btn btn-primary btn-sm">Edit</button></a>
-                                <form asp-action="DeleteVisit" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="confirmDelete(event, this);">
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                </form>
+                            @Html.DisplayFor(modelItem => item.Date)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Exam)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Diagnosis)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Animal.Name)
+                        </td>
+                        <td>
+                            <div class="btn-group gap-1" role="group">
+                                <a asp-action="UpdateProduct" asp-route-id="@item.Id" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                                <a asp-action="DeleteProduct" asp-route-id="@item.Id" class="btn btn-danger btn-sm" onclick="confirmDelete(event, this);"><i class="fas fa-trash"></i></a>
                             </div>
                         </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-@section Scripts {
-    <script type="text/javascript">
-        function confirmDelete(event, form) {
-            event.preventDefault();
-            Swal.fire({
-                title: 'Sei sicuro?',
-                text: "Non potrai annullare questa operazione!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sì, elimina!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
+                    </tr>
                 }
-            });
+            </tbody>
+        </table>
+
+        @section Scripts {
+            <script type="text/javascript">
+                document.getElementById('searchInput').addEventListener('input', function () {
+                    var input = document.getElementById('searchInput');
+                    var filter = input.value.toLowerCase();
+                    var table = document.getElementsByTagName('table')[0];
+                    var rows = table.getElementsByTagName('tr');
+
+                    Array.from(rows).forEach(function (row) {
+                        var td = row.getElementsByTagName('td')[0];
+                        if (td) {
+                            var txtValue = td.textContent || td.innerText;
+                            if (txtValue.toLowerCase().includes(filter)) {
+                                row.style.display = "";
+                            } else {
+                                row.style.display = "none";
+                            }
+                        }
+                    });
+                });
+
+                function confirmDelete(event, element) {
+                    event.preventDefault();
+                    Swal.fire({
+                        title: 'Sei sicuro?',
+                        text: "Non potrai annullare questa operazione!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sì, elimina!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: element.href,
+                                type: 'POST',
+                                success: function (result) {
+                                    $(element).closest('tr').remove();
+                                    Swal.fire('Eliminato!', 'Il prodotto è stato eliminato.', 'success');
+                                },
+                                error: function (xhr, status, error) {
+                                    Swal.fire('Errore', 'Non è stato possibile eliminare il prodotto.', 'error');
+                                }
+                            });
+                        }
+                    });
+                }
+            </script>
         }
-    </script>
-}

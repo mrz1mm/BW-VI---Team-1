@@ -74,13 +74,21 @@ namespace BW_VI___Team_1.Controllers
             try
             {
                 await _orderSvc.DeleteOrderAsync(id);
+                TempData["Success"] = "Order deleted successfully.";
             }
             catch (KeyNotFoundException)
             {
+                TempData["Error"] = "Order not found.";
                 return NotFound();
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Error deleting order: {ex.Message}";
             }
             return RedirectToAction(nameof(Index));
         }
+
+
 
 
         // METODI
@@ -99,19 +107,30 @@ namespace BW_VI___Team_1.Controllers
                 var selectedOwner = await _context.Owners.FindAsync(model.Owner.Id);
                 if (selectedOwner == null)
                 {
+                    ModelState.AddModelError("", "Selected owner not found.");
                     return View(model);
                 }
-
-                model.Owner = selectedOwner;
 
                 if (selectedProductIds == null || !selectedProductIds.Any())
                 {
+                    ModelState.AddModelError("", "At least one product must be selected.");
                     return View(model);
                 }
 
-                model.SelectedProductIds = selectedProductIds;
+                var selectedProducts = await _context.Products
+                    .Where(p => selectedProductIds.Contains(p.Id))
+                    .ToListAsync();
+                var newOrder = new Order
+                {
+                    MedicalPrescription = model.MedicalPrescription,
+                    Date = model.Date,
+                    Owner = selectedOwner,
+                    Products = selectedProducts 
+                };
 
-                await _orderSvc.AddOrderAsync(model);
+                _context.Orders.Add(newOrder);
+                await _context.SaveChangesAsync();
+
                 TempData["Success"] = "Order added successfully.";
                 return RedirectToAction(nameof(Index));
             }

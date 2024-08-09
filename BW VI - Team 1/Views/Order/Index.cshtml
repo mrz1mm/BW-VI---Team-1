@@ -14,9 +14,14 @@
                 <tr class="text-center">
                     <th>Prescrizione Medica</th>
                     <th>Data Ordine</th>
-                    <th>Owner</th>
+                    <th>Proprietario</th>
                     <th>Prodotti</th>
-                    <th></th>
+                    <th>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <input id="searchInput" class="form-control me-2 w-50" type="search" placeholder="Search" aria-label="Search">
+                            <i class="fa-solid fa-magnifying-glass fs-5"></i>
+                        </div>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -51,11 +56,9 @@
                             }
                         </td>
                         <td>
-                            <div class="btn-group" role="group">
-                                <a asp-action="UpdateOrder" asp-route-id="@item.Id"> <button class="btn btn-primary btn-sm">Edit</button></a>
-                                <form asp-action="DeleteOrder" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="confirmDelete(event, this);">
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                </form>
+                            <div class="btn-group gap-1" role="group">
+                                <a asp-action="UpdateProduct" asp-route-id="@item.Id" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                                <a asp-action="DeleteProduct" asp-route-id="@item.Id" class="btn btn-danger btn-sm" onclick="confirmDelete(event, this);"><i class="fas fa-trash"></i></a>
                             </div>
                         </td>
                     </tr>
@@ -65,13 +68,28 @@
     </section>
 </div>
 
-<p>
-    <a asp-action="AddOrder">Create New Order</a>
-</p>
-
 @section Scripts {
     <script type="text/javascript">
-        function confirmDelete(event, form) {
+        document.getElementById('searchInput').addEventListener('input', function () {
+            var input = document.getElementById('searchInput');
+            var filter = input.value.toLowerCase();
+            var table = document.getElementsByTagName('table')[0];
+            var rows = table.getElementsByTagName('tr');
+
+            Array.from(rows).forEach(function (row) {
+                var td = row.getElementsByTagName('td')[0];
+                if (td) {
+                    var txtValue = td.textContent || td.innerText;
+                    if (txtValue.toLowerCase().includes(filter)) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                }
+            });
+        });
+
+        function confirmDelete(event, element) {
             event.preventDefault();
             Swal.fire({
                 title: 'Sei sicuro?',
@@ -83,7 +101,17 @@
                 confirmButtonText: 'Sì, elimina!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    form.submit();
+                    $.ajax({
+                        url: element.href,
+                        type: 'POST',
+                        success: function (result) {
+                            $(element).closest('tr').remove();
+                            Swal.fire('Eliminato!', 'Il prodotto è stato eliminato.', 'success');
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire('Errore', 'Non è stato possibile eliminare il prodotto.', 'error');
+                        }
+                    });
                 }
             });
         }

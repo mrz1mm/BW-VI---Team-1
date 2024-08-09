@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Search Owners";
+}
+
+<div id="customerSearchSection" class="mb-4">
+    <input type="text" class="form-control" id="fiscalCode" name="fiscalCode" placeholder="Inserisci codice fiscale" />
+    <div id="searchResults" class="mt-4"></div>
+</div>
+
+@section Scripts {
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#fiscalCode').on('input', function () {
+                var fiscalCode = $(this).val();
+                if (fiscalCode.length >= 1) { 
+                    $.ajax({
+                        url: '@Url.Action("Search", "Owner")',
+                        type: 'GET',
+                        data: { fiscalCode: fiscalCode },
+                        success: function (data) {
+                            $('#searchResults').html(data);
+                        }
+                    });
+                } else {
+                    $('#searchResults').empty();
+                }
+            });
+        });
+    </script>
+}

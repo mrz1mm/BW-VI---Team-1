@@ -14,5 +14,6 @@ namespace BW_VI___Team_1.Models
         public string FiscalCode { get; set; }
         [Required]
         public List<Animal> Animals { get; set; } = [];
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
     }
 }

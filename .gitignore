@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 /BW VI - Team 1/Migrations/20240806130551_start.cs
 *.cs
+FodyWeavers.xsd
+/BW VI - Team 1/Migrations/20240808121114_name.cs
+/BW VI - Team 1/Migrations/20240808121114_name.Designer.cs
