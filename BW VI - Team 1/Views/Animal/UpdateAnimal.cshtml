@@ -3,70 +3,151 @@
 @{
     ViewData["Title"] = "Modifica Animale";
     var animalId = ViewBag.AnimalId;
+    var today = DateTime.Now.ToString("yyyy-MM-dd");
 }
 
-<h1>Modifica Animale</h1>
+<div class="addPage">
+    <h1>Modifica Animale</h1>
 
-<form asp-action="UpdateAnimal" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="id" value="@animalId" />
-    <div class="form-group">
-        <label asp-for="Name" class="control-label"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Species" class="control-label"></label>
-        <input asp-for="Species" class="form-control" />
-        <span asp-validation-for="Species" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Breed" class="control-label"></label>
-        <input asp-for="Breed" class="form-control" />
-        <span asp-validation-for="Breed" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Color" class="control-label"></label>
-        <input asp-for="Color" class="form-control" />
-        <span asp-validation-for="Color" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="BirthDate" class="control-label"></label>
-        <input asp-for="BirthDate" class="form-control" />
-        <span asp-validation-for="BirthDate" class="text-danger"></span>
-    </div>
-    <div class="form-group form-check">
-        <label class="form-check-label">
-            <input class="form-check-input" asp-for="Microchip" /> @Html.DisplayNameFor(model => model.Microchip)
-        </label>
-    </div>
-    <div class="form-group">
-        <label asp-for="MicrochipNumber" class="control-label"></label>
-        <input asp-for="MicrochipNumber" class="form-control" />
-        <span asp-validation-for="MicrochipNumber" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Owner.FirstName" class="control-label"></label>
-        <input asp-for="Owner.FirstName" class="form-control" />
-        <span asp-validation-for="Owner.FirstName" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Owner.LastName" class="control-label"></label>
-        <input asp-for="Owner.LastName" class="form-control" />
-        <span asp-validation-for="Owner.LastName" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Owner.FiscalCode" class="control-label"></label>
-        <input asp-for="Owner.FiscalCode" class="form-control" />
-        <span asp-validation-for="Owner.FiscalCode" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ImageFile" class="control-label"></label>
-        <input asp-for="ImageFile" type="file" class="form-control" />
-        <span asp-validation-for="ImageFile" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Salva</button>
-</form>
+    <p>Modifica le informazioni riguardanti l'animale e il suo proprietario. </p>
+    <hr />
 
-<div>
-    <a asp-action="Index">Torna alla lista</a>
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div class="step-labels">
+            <span class="step active" id="step1">Dati dell'animale</span>
+            <span class="step" id="step2">Caratteristiche</span>
+            <span class="step" id="step3">Immagine</span>
+            <span class="step" id="step4">Proprietario</span>
+            <span class="step" id="step5">Fine</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <form asp-action="UpdateAnimal" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="@animalId" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label">Nome dell'Animale</label>
+                    <input asp-for="Name" class="form-control" id="animalName" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Species" class="control-label">Specie</label>
+                    <input asp-for="Species" class="form-control" id="animalSpecies" />
+                    <span asp-validation-for="Species" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Breed" class="control-label">Razza</label>
+                    <input asp-for="Breed" class="form-control" id="animalBreed" />
+                    <span asp-validation-for="Breed" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Color" class="control-label">Colore</label>
+                    <input asp-for="Color" class="form-control" id="animalColor" />
+                    <span asp-validation-for="Color" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BirthDate" class="control-label">Data di nascita</label>
+                    <input type="date" asp-for="BirthDate" class="form-control" id="animalBirthDate" />
+                    <span asp-validation-for="BirthDate" class="text-danger"></span>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="Microchip" id="animalMicrochip" /> @Html.DisplayNameFor(model => model.Microchip)
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MicrochipNumber" class="control-label">Numero di Microchip</label>
+                    <input asp-for="MicrochipNumber" class="form-control" id="animalMicrochipNumber" />
+                    <span asp-validation-for="MicrochipNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ImageFile" class="control-label">Immagine dell'animale</label>
+                    <input asp-for="ImageFile" type="file" class="form-control" id="animalImageFile" />
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="OwnerId" class="control-label">Proprietario</label>
+                    <select asp-for="OwnerId" class="form-control" asp-items="ViewBag.OwnerSelectList" id="OwnerId"></select>
+                    <span asp-validation-for="OwnerId" class="text-danger"></span>
+                </div>
+                <div class="d-flex justify-content-around mt-3">
+                    <div class="form-group">
+                        <input type="submit" value="Salva" class="btn addButtonCreate" />
+                    </div>
+                    <div>
+                        <a asp-action="Index"> <Button class="btn addButtonBack">Torna alla lista</Button> </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const formElements = [
+                document.getElementById("animalName"),
+                document.getElementById("animalSpecies"),
+                document.getElementById("animalBreed"),
+                document.getElementById("animalColor"),
+                document.getElementById("animalBirthDate"),
+                document.getElementById("animalMicrochip"),
+                document.getElementById("animalMicrochipNumber"),
+                document.getElementById("animalImageFile"),
+                document.getElementById("OwnerId")
+            ];
+
+            let completedElements = new Set();
+
+            formElements.forEach(element => {
+                element.addEventListener("focus", function () {
+                    element.addEventListener("input", handleInput);
+                });
+            });
+
+            function handleInput(event) {
+                const element = event.target;
+                if (element.value.trim() !== "") {
+                    completedElements.add(element.id);
+                } else {
+                    completedElements.delete(element.id);
+                }
+                updateProgressBar();
+            }
+
+            function updateProgressBar() {
+                const filledElements = completedElements.size;
+                const totalElements = formElements.length;
+                const progressPercentage = (filledElements / totalElements) * 100;
+
+                const progress = document.getElementById("progress");
+                progress.style.width = `${progressPercentage}%`;
+
+                const progressSteps = document.querySelectorAll(".step");
+                const step = Math.ceil((filledElements / totalElements) * progressSteps.length);
+                progressSteps.forEach((progressStep, idx) => {
+                    if (idx < step) {
+                        progressStep.classList.add("active");
+                    } else {
+                        progressStep.classList.remove("active");
+                    }
+                });
+            }
+
+            updateProgressBar();
+        });
+    </script>
+}
+
