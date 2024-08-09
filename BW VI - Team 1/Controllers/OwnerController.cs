@@ -44,8 +44,8 @@ namespace BW_VI___Team_1.Controllers
             }
 
             var owners = await _context.Owners
-                .Include(o => o.Orders) 
-                .ThenInclude(o => o.Products) 
+                .Include(o => o.Orders)
+                .ThenInclude(o => o.Products)
                 .Where(o => o.FiscalCode.Contains(fiscalCode))
                 .ToListAsync();
 
@@ -90,7 +90,7 @@ namespace BW_VI___Team_1.Controllers
         // METODI
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOwner(OwnerDTO model) // aggiungere il Binding
+        public async Task<IActionResult> AddOwner([Bind("FirstName,LastName,FiscalCode")] OwnerDTO model)
         {
             if (!ModelState.IsValid)
             {
@@ -101,21 +101,21 @@ namespace BW_VI___Team_1.Controllers
             try
             {
                 await _ownerSvc.AddOwnerAsync(model);
-                TempData["Success"] = "Ownere aggiunto con successo";
+                TempData["Success"] = "Proprietario aggiunto con successo";
                 return RedirectToAction(nameof(Index));
 
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                TempData["Error"] = "Errore nell'aggiunta dell'ownere";
+                TempData["Error"] = "Errore nell'aggiunta del proprietario";
                 return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateOwner(Owner model) // aggiungere il Binding
+        public async Task<IActionResult> UpdateOwner([Bind("Id,FirstName,LastName,FiscalCode")] Owner model) 
         {
             if (!ModelState.IsValid)
             {
@@ -126,13 +126,13 @@ namespace BW_VI___Team_1.Controllers
             try
             {
                 await _ownerSvc.UpdateOwnerAsync(model);
-                TempData["Success"] = "Ownere modificato con successo";
+                TempData["Success"] = "Proprietario modificato con successo";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                TempData["Error"] = "Errore nella modifica dell'ownere";
+                TempData["Error"] = "Errore nella modifica del proprietario";
                 return View(model);
             }
         }

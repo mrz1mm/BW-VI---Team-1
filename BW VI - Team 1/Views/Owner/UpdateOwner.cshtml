@@ -3,39 +3,42 @@
 @{
     ViewData["Title"] = "UpdateOwner";
 }
-
-<h1>UpdateOwner</h1>
-
-<h4>Owner</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="UpdateOwner" method="post">
-            <div class="form-group">
-                <label asp-for="FirstName"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastName"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FiscalCode"></label>
-                <input asp-for="FiscalCode" class="form-control" />
-                <span asp-validation-for="FiscalCode" class="text-danger"></span>
-            </div>
-            <input type="hidden" asp-for="Id" />
-            <button type="submit" class="btn btn-primary">Salva</button>
-        </form>
+<div class="addPage">
+    <h1>Modifica Proprietario</h1>
+    <hr />
+    <div class="row">
+        <div class="col-12">
+            <form asp-action="UpdateOwner" method="post">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <label asp-for="FirstName">Nome</label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName">Cognome</label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FiscalCode">Codice Fiscale</label>
+                    <input asp-for="FiscalCode" class="form-control" />
+                    <span asp-validation-for="FiscalCode" class="text-danger"></span>
+                </div>
+                <input type="hidden" asp-for="Id" />
+                <div class="d-flex justify-content-around mt-3">
+                    <button type="submit" class="btn addButtonCreate">Salva</button>
+                    <div>
+                        <a asp-action="Index" class="btn addButtonBack">Torna Indietro</a>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

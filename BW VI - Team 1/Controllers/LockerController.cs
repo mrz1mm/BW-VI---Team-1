@@ -66,7 +66,7 @@ namespace BW_VI___Team_1.Controllers
         // METODI
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddLocker(LockerDTO model) // aggiungere il Binding
+        public async Task<IActionResult> AddLocker([Bind("Number")] LockerDTO model) 
         {
             if (!ModelState.IsValid)
             {
@@ -77,21 +77,21 @@ namespace BW_VI___Team_1.Controllers
             try
             {
                 await _lockerSvc.AddLockerAsync(model);
-                TempData["Success"] = "Lockere aggiunto con successo";
+                TempData["Success"] = "Locker aggiunto con successo";
                 return RedirectToAction(nameof(Index));
 
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                TempData["Error"] = "Errore nell'aggiunta dell'lockere";
+                TempData["Error"] = "Errore nell'aggiunta del locker";
                 return View(model);
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateLocker(Locker model)
+        public async Task<IActionResult> UpdateLocker([Bind("Id,Number")] Locker model) 
         {
             if (!ModelState.IsValid)
             {
@@ -114,3 +114,4 @@ namespace BW_VI___Team_1.Controllers
         }
     }
 }
+

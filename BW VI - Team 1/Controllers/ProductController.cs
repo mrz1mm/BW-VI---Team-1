@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProductType = BW_VI___Team_1.Models.Type;
 
-
 namespace BW_VI___Team_1.Controllers
 {
     public class ProductController : Controller
@@ -31,6 +30,7 @@ namespace BW_VI___Team_1.Controllers
 
             return View(products);
         }
+
         [HttpGet]
         public async Task<IActionResult> AddProduct()
         {
@@ -41,7 +41,6 @@ namespace BW_VI___Team_1.Controllers
             ViewBag.Drawers = await _context.Drawers.ToListAsync();
             return View();
         }
-
 
         [HttpGet]
         public async Task<IActionResult> UpdateProduct(int id)
@@ -72,8 +71,6 @@ namespace BW_VI___Team_1.Controllers
             return View(model);
         }
 
-
-
         [HttpPost]
         public async Task<IActionResult> DeleteProduct(int id)
         {
@@ -88,11 +85,10 @@ namespace BW_VI___Team_1.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
         // METODI
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddProduct(ProductDTO model, int[] Usages, int[] Suppliers)
+        public async Task<IActionResult> AddProduct([Bind("Name,Type,Locker,DrawerId")] ProductDTO model, [Bind("Usages")] int[] Usages, [Bind("Suppliers")] int[] Suppliers)
         {
             if (!ModelState.IsValid)
             {
@@ -133,14 +129,9 @@ namespace BW_VI___Team_1.Controllers
             }
         }
 
-
-
-
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProduct(Product model, int[] Usages, int[] Suppliers)
+        public async Task<IActionResult> UpdateProduct([Bind("Id,Name,Type,Locker,DrawerId")] Product model, [Bind("Usages")] int[] Usages, [Bind("Suppliers")] int[] Suppliers)
         {
             if (!ModelState.IsValid)
             {
@@ -167,7 +158,7 @@ namespace BW_VI___Team_1.Controllers
                 else
                 {
                     model.Drawer = null;
-                }              
+                }
                 await _productSvc.UpdateProductAsync(model);
                 TempData["Success"] = "Prodotto modificato con successo";
                 return RedirectToAction(nameof(Index));
@@ -182,7 +173,6 @@ namespace BW_VI___Team_1.Controllers
                 return View(model);
             }
         }
-
-
     }
 }
+

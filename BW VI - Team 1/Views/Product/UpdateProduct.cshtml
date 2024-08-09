@@ -3,119 +3,136 @@
 @{
     ViewData["Title"] = "UpdateProduct";
 }
+<div class="addPage">
+    <h1>Modifica Prodotto</h1>
+    <hr />
 
-<h1>UpdateProduct</h1>
-
-<h4>Product</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="UpdateProduct">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Type" class="control-label"></label>
-                <select asp-for="Type" class="form-control" id="productType">
-                    @if (ViewBag.ProductTypes != null)
-                    {
-                        foreach (var type in ViewBag.ProductTypes)
-                        {
-                            <option value="@type">@type</option>
-                        }
-                    }
-                    else
-                    {
-                        <option>No types available</option>
-                    }
-                </select>
-                <span asp-validation-for="Type" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label for="Suppliers">Suppliers</label>
-                <select id="Suppliers" name="Suppliers" class="form-control" multiple>
-                    @if (ViewBag.Suppliers != null)
-                    {
-                        foreach (var supplier in ViewBag.Suppliers)
-                        {
-                            <option value="@supplier.Id">@supplier.Name</option>
-                        }
-                    }
-                    else
-                    {
-                        <option>No suppliers available</option>
-                    }
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="Usages">Usages</label>
-                <select id="Usages" name="Usages" class="form-control" multiple>
-                    @if (ViewBag.Usages != null)
-                    {
-                        foreach (var usage in ViewBag.Usages)
-                        {
-                            <option value="@usage.Id">@usage.Description</option>
-                        }
-                    }
-                    else
-                    {
-                        <option>No usages available</option>
-                    }
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="LockerId">Locker</label>
-                <select id="LockerId" name="LockerId" class="form-control">
-                    <option value="">Select Locker</option>
-                    @if (ViewBag.Lockers != null)
-                    {
-                        foreach (var locker in ViewBag.Lockers)
-                        {
-                            <option value="@locker.Id">@locker.Number</option>
-                        }
-                    }
-                    else
-                    {
-                        <option>No lockers available</option>
-                    }
-                </select>
-            </div>
-            <div class="form-group">
-    <label for="DrawerId">Drawer</label>
-    <select id="DrawerId" name="DrawerId" class="form-control">
-        <option value="">Select Drawer</option>
-        @if (ViewBag.Drawers != null)
-        {
-            foreach (var drawer in ViewBag.Drawers)
-            {
-                <option value="@drawer.Id">@drawer.Number</option>
-            }
-        }
-        else
-        {
-            <option>No drawers available</option>
-        }
-    </select>
-</div>
-
-            <div class="form-group">
-                <input type="submit" value="Update" class="btn btn-primary" />
-            </div>
-        </form>
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div class="step-labels" id="step-labels">
+            <span class="step active" id="step1">Nome</span>
+            <span class="step" id="step2">Tipo</span>
+            <span class="step" id="step3">Locker</span>
+            <span class="step" id="step4">Cassetto</span>
+            <span class="step" id="step5">Uso</span>
+            <span class="step" id="step6">Fornitore</span>
+            <span class="step" id="step7">Fine</span>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="row">
+        <div class="col-12">
+            <form id="productForm" asp-action="UpdateProduct">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label">Nome</label>
+                    <input asp-for="Name" class="form-control" id="productName" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Type" class="control-label">Tipo</label>
+                    <select asp-for="Type" class="form-control" id="productType">
+                        @if (ViewBag.ProductTypes != null)
+                        {
+                            foreach (var type in ViewBag.ProductTypes)
+                            {
+                                        <option value="@type">@type</option>
+                            }
+                        }
+                        else
+                        {
+                                <option>No types available</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Type" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="LockerId">Locker</label>
+                    <select id="LockerId" name="LockerId" class="form-control">
+                        <option value="">Select Locker</option>
+                        @if (ViewBag.Lockers != null)
+                        {
+                            foreach (var locker in ViewBag.Lockers)
+                            {
+                                        <option value="@locker.Id">@locker.Number</option>
+                            }
+                        }
+                        else
+                        {
+                                <option>No lockers available</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="DrawerId">Drawer</label>
+                    <select id="DrawerId" name="DrawerId" class="form-control">
+                        <option value="">Select Drawer</option>
+                        @if (ViewBag.Drawers != null)
+                        {
+                            foreach (var drawer in ViewBag.Drawers)
+                            {
+                                        <option value="@drawer.Id">@drawer.Number</option>
+                            }
+                        }
+                        else
+                        {
+                                <option>No drawers available</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="Usages">Uso</label>
+                    <select id="Usages" name="Usages" class="form-control" multiple>
+                        @if (ViewBag.Usages != null)
+                        {
+                            foreach (var usage in ViewBag.Usages)
+                            {
+                                        <option value="@usage.Id">@usage.Description</option>
+                            }
+                        }
+                        else
+                        {
+                                <option>No usages available</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="Suppliers">Fornitore</label>
+                    <select id="Suppliers" name="Suppliers" class="form-control" multiple>
+                        @if (ViewBag.Suppliers != null)
+                        {
+                            foreach (var supplier in ViewBag.Suppliers)
+                            {
+                                        <option value="@supplier.Id">@supplier.Name</option>
+                            }
+                        }
+                        else
+                        {
+                                <option>No suppliers available</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="d-flex justify-content-around mt-3">
+                    <button type="submit" class="btn addButtonCreate">Aggiorna Prodotto</button>
+                    <div>
+                        <a asp-action="Index" class="btn addButtonBack">Torna Indietro</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
@@ -123,14 +140,89 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    <script type="text/javascript">
-        document.getElementById('productType').addEventListener('change', function () {
-            var lockerFields = document.getElementById('lockerFields');
-            if (this.value === 'Medicine') {
-                lockerFields.style.display = 'block';
-            } else {
-                lockerFields.style.display = 'none';
-            }
-        });
-    </script>
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function () {
+                var productTypeSelect = document.getElementById('productType');
+                var lockerFields = document.getElementById('lockerFields');
+                var formElements = [
+                    document.getElementById('productName'),
+                    document.getElementById('productType'),
+                    document.getElementById('LockerId'),
+                    document.getElementById('DrawerId'),
+                    document.getElementById('Usages'),
+                    document.getElementById('Suppliers')
+                ];
+                var completedElements = new Set();
+
+                function toggleLockerFields() {
+                    if (productTypeSelect.value === 'Medicine') {
+                        lockerFields.style.display = 'block';
+                    } else {
+                        lockerFields.style.display = 'none';
+                    }
+                    updateStepLabels();
+                }
+
+                function updateStepLabels() {
+                    const stepLabels = document.getElementById("step-labels");
+                    if (productTypeSelect.value === 'Medicine') {
+                        stepLabels.innerHTML = `
+                                    <span class="step active" id="step1">Nome</span>
+                                    <span class="step" id="step2">Tipo</span>
+                                    <span class="step" id="step3">Locker</span>
+                                    <span class="step" id="step4">Cassetto</span>
+                                    <span class="step" id="step5">Uso</span>
+                                    <span class="step" id="step6">Fornitore</span>
+                                    <span class="step" id="step7">Fine</span>`;
+                    } else {
+                        stepLabels.innerHTML = `
+                                    <span class="step active" id="step1">Nome</span>
+                                    <span class="step" id="step2">Tipo</span>
+                                    <span class="step" id="step3">Uso</span>
+                                    <span class="step" id="step4">Fornitore</span>
+                                    <span class="step" id="step5">Fine</span>`;
+                    }
+                    updateProgressBar();
+                }
+
+                formElements.forEach(element => {
+                    element.addEventListener("focus", function () {
+                        element.addEventListener("input", handleInput);
+                    });
+                });
+
+                function handleInput(event) {
+                    const element = event.target;
+                    if (element.value.trim() !== "") {
+                        completedElements.add(element.id);
+                    } else {
+                        completedElements.delete(element.id);
+                    }
+                    updateProgressBar();
+                }
+
+                function updateProgressBar() {
+                    const filledElements = completedElements.size;
+                    const totalElements = formElements.filter(el => el && (el.style.display !== 'none')).length;
+                    const progressPercentage = (filledElements / totalElements) * 100;
+
+                    const progress = document.getElementById("progress");
+                    progress.style.width = `${progressPercentage}%`;
+
+                    const progressSteps = document.querySelectorAll(".step");
+                    const step = Math.ceil((filledElements / totalElements) * progressSteps.length);
+                    progressSteps.forEach((progressStep, idx) => {
+                        if (idx < step) {
+                            progressStep.classList.add("active");
+                        } else {
+                            progressStep.classList.remove("active");
+                        }
+                    });
+                }
+
+                toggleLockerFields();
+                productTypeSelect.addEventListener('change', toggleLockerFields);
+                updateProgressBar(); // Initial call to set the progress bar to zero
+            });
+        </script>
 }
