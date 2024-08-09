@@ -137,5 +137,13 @@ namespace BW_VI___Team_1.Services
                 .Where(a => validOwnerIds.Contains(a.OwnerId ?? -1))
                 .ToListAsync();
         }
+
+        public async Task<List<Animal>> GetAnimalsByPartialMicrochipNumberAsync(string partialMicrochipNumber)
+        {
+            return await _context.Animals
+                .Where(a => EF.Functions.Like(a.MicrochipNumber, $"%{partialMicrochipNumber}%"))
+                .Include(a => a.Owner)
+                .ToListAsync();
+        }
     }
 }

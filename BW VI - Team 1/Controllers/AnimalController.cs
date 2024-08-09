@@ -166,5 +166,32 @@ namespace BW_VI___Team_1.Controllers
 
             return View(model);
         }
+        public IActionResult SearchBy()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Search(string microchipNumber)
+        {
+            if (string.IsNullOrEmpty(microchipNumber))
+            {
+                return PartialView("_SearchResults", null);
+            }
+
+            var animals = await _context.Animals
+                .Include(a => a.Owner)
+                .Where(a => a.MicrochipNumber.Contains(microchipNumber))
+                .Select(a => new BW_VI___Team_1.Models.DTO.AnimalSearchResultDTO
+                {
+                    Name = a.Name,
+                    MicrochipNumber = a.MicrochipNumber,
+                    ImageUrl = a.ImageUrl,
+                    IsInRecovery = _context.Recoverys.Any(r => r.AnimalId == a.Id)
+                })
+                .ToListAsync();
+
+            return PartialView("_SearchResults", animals);
+        }
     }
 }
