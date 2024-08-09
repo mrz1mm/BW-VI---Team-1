@@ -74,16 +74,52 @@ namespace BW_VI___Team_1.Services
 
             if (product == null)
             {
-                return null;
+                throw new KeyNotFoundException("Product not found.");
             }
 
             product.Name = model.Name;
             product.Type = model.Type;
-            product.LockerId = model.LockerId;
-            product.Locker = await _context.Lockers.FindAsync(model.LockerId);
-            product.DrawerId = model.DrawerId;
-            product.Drawer = await _context.Drawers.FindAsync(model.DrawerId);
 
+            if (model.Type == Models.Type.Medicine)
+            {
+                if (model.LockerId.HasValue)
+                {
+                    var locker = await _context.Lockers.FindAsync(model.LockerId.Value);
+                    if (locker != null)
+                    {
+                        product.Locker = locker;
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Locker not found.");
+                    }
+                }
+                else
+                {
+                    product.Locker = null;
+                }
+            }
+            else
+            {
+                product.Locker = null;
+            }
+
+            if (model.DrawerId.HasValue)
+            {
+                var drawer = await _context.Drawers.FindAsync(model.DrawerId.Value);
+                if (drawer != null)
+                {
+                    product.Drawer = drawer;
+                }
+                else
+                {
+                    throw new ArgumentException("Drawer not found.");
+                }
+            }
+            else
+            {
+                product.Drawer = null;
+            }
             product.Suppliers.Clear();
             if (model.Suppliers != null)
             {
@@ -108,10 +144,13 @@ namespace BW_VI___Team_1.Services
                     }
                 }
             }
+
             _context.Products.Update(product);
             await _context.SaveChangesAsync();
+
             return product;
         }
+
 
 
 

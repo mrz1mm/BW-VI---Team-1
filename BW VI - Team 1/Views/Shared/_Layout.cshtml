@@ -26,28 +26,9 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between ">
                     <ul class="navbar-nav flex-grow-1">
-
-                        <div class="dropdown">
-                            <button class="btn btn-white dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Animali
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="Index">Animali</a></li>
-                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="AddAnimal">Aggiungi animale</a></li>
-                                <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="SearchBy">Cerca per MicroChip</a></li>
-                            </ul>
-                        </div>
-
-                        <div class="dropdown">
-                            <button class="btn btn-white dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Ordini
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link text-dark" asp-controller="Order" asp-action="Index">Ordini</a></li>
-                                <li><a class="nav-link text-dark" asp-controller="Order" asp-action="AddOrder">Aggiungi ordine</a></li>
-                            </ul>
-                        </div>
-
+                        <li><a class="nav-link text-light" asp-controller="Animal" asp-action="SearchBy">Cerca per MicroChip</a></li>  
+                        @if (User.IsInRole("Veterinarian"))
+                        {
                         <div class="dropdown">
                             <button class="btn btn-white dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Proprietari
@@ -58,7 +39,38 @@
                                 <li><a class="nav-link text-dark" asp-controller="Owner" asp-action="SearchBy">Cerca per CF</a></li>
                             </ul>
                         </div>
+                            <div class="dropdown">
+                                <button class="btn btn-white dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Animali
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="Index">Animali</a></li>
+                                    <li><a class="nav-link text-dark" asp-controller="Animal" asp-action="AddAnimal">Aggiungi animale</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-white dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Ricoveri
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link text-dark" asp-controller="Recovery" asp-action="Index">Ricoveri</a></li>
+                                    <li><a class="nav-link text-dark" asp-controller="Recovery" asp-action="AddRecovery">Aggiungi ricovero</a></li>
+                                </ul>
+                            </div>
 
+
+                            <div class="dropdown">
+                                <button class="btn btn-white dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Visite
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link text-dark" asp-controller="Visit" asp-action="Index">Visite</a></li>
+                                    <li><a class="nav-link text-dark" asp-controller="Visit" asp-action="AddVisit">Aggiungi visita</a></li>
+                                </ul>
+                            </div>
+                        }
+                        @if(User.IsInRole("Pharmacist"))
+                        {
                         <div class="dropdown">
                             <button class="btn btn-white dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Prodotti
@@ -68,56 +80,43 @@
                                 <li><a class="nav-link text-dark" asp-controller="Product" asp-action="AddProduct">Aggiungi prodotto</a></li>
                             </ul>
                         </div>
-
-                        <div class="dropdown">
-                            <button class="btn btn-white dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Ricoveri
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link text-dark" asp-controller="Recovery" asp-action="Index">Ricoveri</a></li>
-                                <li><a class="nav-link text-dark" asp-controller="Recovery" asp-action="AddRecovery">Aggiungi ricovero</a></li>
-                            </ul>
-                        </div>
-
-                        <div class="dropdown">
-                            <button class="btn btn-white dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Fornitori
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link text-dark" asp-controller="Supplier" asp-action="Index">Fornitori</a></li>
-                                <li><a class="nav-link text-dark" asp-controller="Supplier" asp-action="AddSupplier">Aggiungi fornitore</a></li>
-                            </ul>
-                        </div>
-
-                        <div class="dropdown">
-                            <button class="btn btn-white dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Usi
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link text-dark" asp-controller="Usage" asp-action="Index">Usi</a></li>
-                                <li><a class="nav-link text-dark" asp-controller="Usage" asp-action="AddUsage">Aggiungi uso</a></li>
-                            </ul>
-                        </div>
-
-                        <div class="dropdown">
-                            <button class="btn btn-white dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Visite
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link text-dark" asp-controller="Visit" asp-action="Index">Visite</a></li>
-                                <li><a class="nav-link text-dark" asp-controller="Visit" asp-action="AddVisit">Aggiungi visita</a></li>
-                            </ul>
-                        </div>
-                        <div class="dropdown">
-                            <button class="btn btn-white dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Locker
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link text-dark" asp-controller="Locker" asp-action="Index">Locker</a></li>
-                                <li><a class="nav-link text-dark" asp-controller="Locker" asp-action="AddLocker">Aggiungi locker</a></li>
-                            </ul>
-                            
-                        </div>
+                            <div class="dropdown">
+                                <button class="btn btn-white dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Locker
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link text-dark" asp-controller="Locker" asp-action="Index">Armadietti</a></li>
+                                    <li><a class="nav-link text-dark" asp-controller="Locker" asp-action="AddLocker">Aggiungi Armadietto</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-white dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Fornitori
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link text-dark" asp-controller="Supplier" asp-action="Index">Fornitori</a></li>
+                                    <li><a class="nav-link text-dark" asp-controller="Supplier" asp-action="AddSupplier">Aggiungi fornitore</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-white dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Ordini
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link text-dark" asp-controller="Order" asp-action="Index">Ordini</a></li>
+                                    <li><a class="nav-link text-dark" asp-controller="Order" asp-action="AddOrder">Aggiungi ordine</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-white dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Usi
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="nav-link text-dark" asp-controller="Usage" asp-action="Index">Usi</a></li>
+                                    <li><a class="nav-link text-dark" asp-controller="Usage" asp-action="AddUsage">Aggiungi uso</a></li>
+                                </ul>
+                            </div>
+                        }                             
 
                     </ul>
                     <div class="d-lg-flex flex-lg-fill justify-content-end align-items-center">
@@ -129,7 +128,7 @@
                         else
                         {
                             <form asp-controller="Auth" asp-action="Logout" method="post" style="display: inline;">
-                                <button type="submit" class="btn btn-link text-dark">Logout</button>
+                                <button type="submit" class="btn btn-link text-light" style="text-decoration:none">Logout</button>
                             </form>
                         }
                     </div>

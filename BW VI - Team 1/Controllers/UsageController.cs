@@ -2,10 +2,12 @@
 using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
 using BW_VI___Team_1.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BW_VI___Team_1.Controllers
 {
+    [Authorize(Policy = Policies.Pharmacist)]
     public class UsageController : Controller
     {
         private readonly LifePetDBContext _context;

@@ -1,12 +1,14 @@
 ﻿using BW_VI___Team_1.Interfaces;
 using BW_VI___Team_1.Models;
 using BW_VI___Team_1.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace BW_VI___Team_1.Controllers
 {
+    [Authorize(Policy = Policies.Pharmacist)]
     public class OrderController : Controller
     {
         private readonly LifePetDBContext _context;

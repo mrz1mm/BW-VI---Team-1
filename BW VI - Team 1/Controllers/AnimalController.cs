@@ -4,9 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BW_VI___Team_1.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BW_VI___Team_1.Controllers
 {
+
+    
     public class AnimalController : Controller
     {
         private readonly LifePetDBContext _context;
@@ -19,14 +22,14 @@ namespace BW_VI___Team_1.Controllers
             _imageSvc = imageSvc;
             _context = context;
         }
-
+        [Authorize(Policy = Policies.Veterinarian)]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
             var animals = await _animalSvc.GetAllAnimalsAsync();
             return View(animals);
         }
-
+        [Authorize(Policy = Policies.Veterinarian)]
         [HttpGet]
         public async Task<IActionResult> AddAnimal()
         {
@@ -40,7 +43,7 @@ namespace BW_VI___Team_1.Controllers
 
             return View();
         }
-
+        [Authorize(Policy = Policies.Veterinarian)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddAnimal([Bind("Name,Species,Breed,Color,BirthDate,RegisterDate,Microchip,MicrochipNumber,OwnerId,ImageFile")] AnimalDTO model)
@@ -81,7 +84,7 @@ namespace BW_VI___Team_1.Controllers
                 return View(model);
             }
         }
-
+        [Authorize(Policy = Policies.Veterinarian)]
         [HttpGet]
         public async Task<IActionResult> UpdateAnimal(int id)
         {
@@ -115,7 +118,7 @@ namespace BW_VI___Team_1.Controllers
             ViewBag.AnimalId = id;
             return View(model);
         }
-
+        [Authorize(Policy = Policies.Veterinarian)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateAnimal(int id, [Bind("Name,Species,Breed,Color,BirthDate,RegisterDate,Microchip,MicrochipNumber,OwnerId,ImageFile")] AnimalDTO model)
@@ -133,7 +136,7 @@ namespace BW_VI___Team_1.Controllers
                 return View(model);
             }
         }
-
+        [Authorize(Policy = Policies.Veterinarian)]
         [HttpPost]
         public async Task<IActionResult> DeleteAnimal(int id)
         {
@@ -147,7 +150,7 @@ namespace BW_VI___Team_1.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
-
+        [Authorize(Policy = Policies.Veterinarian)]
         [HttpGet]
         public async Task<IActionResult> AnimalDetails(int id)
         {
