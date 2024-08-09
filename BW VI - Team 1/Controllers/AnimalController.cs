@@ -92,6 +92,15 @@ namespace BW_VI___Team_1.Controllers
             {
                 return NotFound();
             }
+            var owners = await _context.Owners.ToListAsync();
+            var ownerSelectList = owners.Select(o => new SelectListItem
+            {
+                Value = o.Id.ToString(),
+                Text = $"{o.FirstName} {o.LastName}",
+                Selected = o.Id == animal.OwnerId 
+            }).ToList();
+            ViewBag.OwnerSelectList = ownerSelectList;
+
             var model = new AnimalDTO
             {
                 Name = animal.Name,
@@ -102,10 +111,10 @@ namespace BW_VI___Team_1.Controllers
                 RegisterDate = animal.RegisterDate,
                 Microchip = animal.Microchip,
                 MicrochipNumber = animal.MicrochipNumber,
-                Owner = animal.Owner
+                OwnerId = animal.OwnerId 
             };
 
-            ViewBag.AnimalId = id; 
+            ViewBag.AnimalId = id;
             return View(model);
         }
 
@@ -113,12 +122,6 @@ namespace BW_VI___Team_1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateAnimal(int id, AnimalDTO model)
         {
-            if (!ModelState.IsValid)
-            {
-                TempData["Error"] = "Errore nella compilazione dei campi";
-                return View(model);
-            }
-
             try
             {
                 await _animalSvc.UpdateAnimalAsync(id, model);
