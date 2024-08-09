@@ -4,7 +4,21 @@
     ViewData["Title"] = "Index";
 }
 
-
+<div id="loadingSpinner" class="absCenter">
+    <div class="loaderPill">
+        <div class="loaderPill-anim">
+            <div class="loaderPill-anim-bounce">
+                <div class="loaderPill-anim-flop">
+                    <div class="loaderPill-pill"></div>
+                </div>
+            </div>
+        </div>
+        <div class="loaderPill-floor">
+            <div class="loaderPill-floor-shadow"></div>
+        </div>
+        <div class="loaderPill-text">Caricamento LifePet</div>
+    </div>
+</div>
 
 <div class="table">
     <section class="table_header"><h1 class="text-center">Registro Prodotti</h1></section>
@@ -62,7 +76,7 @@
                             }
                             else
                             {
-                                <span>No Suppliers</span>
+                                <span>N/D</span>
                             }
                         </td>
                         <td>
@@ -72,7 +86,7 @@
                             }
                             else
                             {
-                                <span>No Usages</span>
+                                <span>N/D</span>
                             }
                         </td>
                         <td>
@@ -82,7 +96,7 @@
                             }
                             else
                             {
-                                <span>No Locker</span>
+                                <span>N/D</span>
                             }
                         </td>
                         <td>
@@ -92,7 +106,7 @@
                             }
                             else
                             {
-                                <span>No Drawers</span>
+                                <span>N/D</span>
                             }
                         </td>
                         <td>
@@ -108,6 +122,10 @@
 
         @section Scripts {
             <script>
+                window.onload = function () {
+                    document.getElementById('loadingSpinner').style.display = 'none';
+                    document.getElementById('tableContent').style.display = 'block';
+                };
                 document.getElementById('searchInput').addEventListener('input', function () {
                     var input = document.getElementById('searchInput');
                     var filter = input.value.toLowerCase();
