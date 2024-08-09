@@ -3,7 +3,21 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+<div id="loadingSpinner" class="absCenter">
+    <div class="loaderPill">
+        <div class="loaderPill-anim">
+            <div class="loaderPill-anim-bounce">
+                <div class="loaderPill-anim-flop">
+                    <div class="loaderPill-pill"></div>
+                </div>
+            </div>
+        </div>
+        <div class="loaderPill-floor">
+            <div class="loaderPill-floor-shadow"></div>
+        </div>
+        <div class="loaderPill-text">Caricamento LifePet</div>
+    </div>
+</div>
 <div class="table ">
     <section class="table_header"><h1 class="text-center">Registro Proprietari</h1></section>
     <section class="table_body d-flex align-item-center justify-content-center">
@@ -42,8 +56,8 @@
                         </td>
                         <td>
                             <div class="btn-group gap-1" role="group">
-                                <a asp-action="UpdateProduct" asp-route-id="@item.Id" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                                <a asp-action="DeleteProduct" asp-route-id="@item.Id" class="btn btn-danger btn-sm" onclick="confirmDelete(event, this);"><i class="fas fa-trash"></i></a>
+                                <a asp-action="UpdateOwner" asp-route-id="@item.Id" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                                <a asp-action="DeleteOwner" asp-route-id="@item.Id" class="btn btn-danger btn-sm" onclick="confirmDelete(event, this);"><i class="fas fa-trash"></i></a>
                             </div>
                         </td>
                     </tr>
@@ -53,6 +67,10 @@
 
         @section Scripts {
             <script type="text/javascript">
+                window.onload = function () {
+                    document.getElementById('loadingSpinner').style.display = 'none';
+                    document.getElementById('tableContent').style.display = 'block';
+                };
                 document.getElementById('searchInput').addEventListener('input', function () {
                     var input = document.getElementById('searchInput');
                     var filter = input.value.toLowerCase();

@@ -4,51 +4,59 @@
 {
     foreach (var owner in Model)
     {
-        <div>
-            <h3>Proprietario</h3>
-            <p><strong>Nome:</strong> @owner.FirstName</p>
-            <p><strong>Cognome:</strong> @owner.LastName</p>
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title">Proprietario</h3>
+                <p class="card-text"><strong>Nome:</strong> @owner.FirstName</p>
+                <p class="card-text"><strong>Cognome:</strong> @owner.LastName</p>
 
-            @if (owner.Orders != null && owner.Orders.Any())
-            {
-                <h4>Ordini</h4>
-                <ul>
+                @if (owner.Orders != null && owner.Orders.Any())
+                {
+                    <h4 class="mt-4">Ordini e Prodotti</h4>
                     @foreach (var order in owner.Orders)
                     {
-                        <li class="mt-2">
-                            <strong>Data Ordine:</strong> @order.Date.ToString("dd/MM/yyyy")<br />
-                            <strong>Prescrizione Medica:</strong> @order.MedicalPrescription<br />
-
-                            @if (order.Products != null && order.Products.Any())
-                            {
-                                <h5>Prodotti</h5>
-                                <ul>
-                                    @foreach (var product in order.Products)
-                                    {
-                                        <li class="mt-1">
-                                            <strong>Nome Prodotto:</strong> @product.Name<br />
-                                        </li>
-                                    }
-                                </ul>
-                            }
-                            else
-                            {
-                                <p>Nessun prodotto trovato per questo ordine.</p>
-                            }
-                        </li>
+                        <div class="order-product-container">
+                            <div class="row order-container">
+                                <div class="col-md-6 order-info">
+                                    <h5>Ordini</h5>
+                                    <strong>Data Ordine:</strong> @order.Date.ToString("dd/MM/yyyy")<br />
+                                    <strong class="mt-2">Prescrizione Medica:</strong> @order.MedicalPrescription
+                                </div>
+                                <div class="col-md-6 product-info">
+                                    <h5>Prodotti</h5>
+                                    <ul class="list-group list-group-flush">
+                                        @if (order.Products != null && order.Products.Any())
+                                        {
+                                            @foreach (var product in order.Products)
+                                            {
+                                                <li class="list-group-item">
+                                                    <strong>Nome Prodotto:</strong> @product.Name
+                                                </li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <li class="list-group-item">
+                                                Nessun prodotto trovato per questo ordine.
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     }
-                </ul>
-            }
-            else
-            {
-                <p>Nessun ordine trovato per questo proprietario.</p>
-            }
+                }
+                else
+                {
+                    <p class="mt-3">Nessun ordine trovato per questo proprietario.</p>
+                }
+            </div>
         </div>
     }
 }
 else
 {
-    <div>
-        <p>Nessun proprietario trovato con il codice fiscale fornito.</p>
+    <div class="alert alert-warning" role="alert">
+        Nessun proprietario trovato con il codice fiscale fornito.
     </div>
 }

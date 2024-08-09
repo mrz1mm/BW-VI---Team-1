@@ -1,15 +1,13 @@
-﻿@{
-    ViewData["Title"] = "Search Owners";
-}
+﻿
 
 <div class="table">
     <section class="table_header">
-        <h1 class="text-center">Cerca Proprietari</h1>
+        <h1 class="text-center">Ricerca per Microchip</h1>
     </section>
     <section class="table_body d-flex align-items-center justify-content-center">
         <div class="w-100">
             <div class="d-flex align-items-center justify-content-center mb-4">
-                <input type="text" class="form-control me-2 w-25" id="fiscalCode" name="fiscalCode" placeholder="Inserisci codice fiscale" />
+                <input type="text" class="form-control me-2 w-25" id="microchipNumber" name="microchipNumber" placeholder="Inserisci numero microchip" />
                 <i class="fa-solid fa-magnifying-glass fs-5"></i>
             </div>
             <div id="searchResults" class="mt-4"></div>
@@ -20,13 +18,13 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $('#fiscalCode').on('input', function () {
-                var fiscalCode = $(this).val();
-                if (fiscalCode.length >= 1) { 
+            $('#microchipNumber').on('input', function () {
+                var microchipNumber = $(this).val();
+                if (microchipNumber.length >= 1) {
                     $.ajax({
-                        url: '@Url.Action("Search", "Owner")',
+                        url: '@Url.Action("Search", "Animal")',
                         type: 'GET',
-                        data: { fiscalCode: fiscalCode },
+                        data: { microchipNumber: microchipNumber },
                         success: function (data) {
                             $('#searchResults').html(data);
                         }

@@ -92,6 +92,14 @@ namespace BW_VI___Team_1.Controllers
             {
                 return NotFound();
             }
+            var owners = await _context.Owners.ToListAsync();
+            var ownerSelectList = owners.Select(o => new SelectListItem
+            {
+                Value = o.Id.ToString(),
+                Text = $"{o.FirstName} {o.LastName}",
+                Selected = o.Id == animal.OwnerId 
+            }).ToList();
+            ViewBag.OwnerSelectList = ownerSelectList;
 
             var model = new AnimalDTO
             {
@@ -103,10 +111,10 @@ namespace BW_VI___Team_1.Controllers
                 RegisterDate = animal.RegisterDate,
                 Microchip = animal.Microchip,
                 MicrochipNumber = animal.MicrochipNumber,
-                Owner = animal.Owner
+                OwnerId = animal.OwnerId 
             };
 
-            ViewBag.AnimalId = id; // Pass the animal ID to the view using ViewBag
+            ViewBag.AnimalId = id;
             return View(model);
         }
 
@@ -114,12 +122,6 @@ namespace BW_VI___Team_1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateAnimal(int id, AnimalDTO model)
         {
-            if (!ModelState.IsValid)
-            {
-                TempData["Error"] = "Errore nella compilazione dei campi";
-                return View(model);
-            }
-
             try
             {
                 await _animalSvc.UpdateAnimalAsync(id, model);
@@ -148,23 +150,6 @@ namespace BW_VI___Team_1.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmDeleteAnimal(int id)
-        {
-            try
-            {
-                await _animalSvc.DeleteAnimalAsync(id);
-                TempData["Success"] = "Animale eliminato con successo";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "Errore nell'eliminazione dell'animale";
-                return RedirectToAction(nameof(Index));
-            }
-        }
-
         [HttpGet]
         public async Task<IActionResult> AnimalDetails(int id)
         {
@@ -182,6 +167,33 @@ namespace BW_VI___Team_1.Controllers
             };
 
             return View(model);
+        }
+        public IActionResult SearchBy()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Search(string microchipNumber)
+        {
+            if (string.IsNullOrEmpty(microchipNumber))
+            {
+                return PartialView("_SearchResults", null);
+            }
+
+            var animals = await _context.Animals
+                .Include(a => a.Owner)
+                .Where(a => a.MicrochipNumber.Contains(microchipNumber))
+                .Select(a => new BW_VI___Team_1.Models.DTO.AnimalSearchResultDTO
+                {
+                    Name = a.Name,
+                    MicrochipNumber = a.MicrochipNumber,
+                    ImageUrl = a.ImageUrl,
+                    IsInRecovery = _context.Recoverys.Any(r => r.AnimalId == a.Id)
+                })
+                .ToListAsync();
+
+            return PartialView("_SearchResults", animals);
         }
     }
 }

@@ -76,7 +76,6 @@ namespace BW_VI___Team_1.Services
             {
                 return null;
             }
-
             animal.Name = model.Name;
             animal.Species = model.Species;
             animal.Breed = model.Breed;
@@ -85,22 +84,21 @@ namespace BW_VI___Team_1.Services
             animal.RegisterDate = model.RegisterDate;
             animal.Microchip = model.Microchip;
             animal.MicrochipNumber = model.MicrochipNumber;
-            animal.Owner.FirstName = model.Owner.FirstName;
-            animal.Owner.LastName = model.Owner.LastName;
-            animal.Owner.FiscalCode = model.Owner.FiscalCode;
 
+            var owner = await _context.Owners.FindAsync(model.OwnerId);
+            if (owner == null)
+            {
+                throw new InvalidOperationException("Il proprietario specificato non esiste.");
+            }
+            animal.Owner = owner;
             if (model.ImageFile != null)
             {
-                // Delete the old image
                 if (!string.IsNullOrEmpty(animal.ImageUrl))
                 {
                     await _imageSvc.DeleteImageAsync(animal.ImageUrl);
                 }
-
-                // Save the new image
                 animal.ImageUrl = await _imageSvc.SaveImageAsync(model.ImageFile);
             }
-
             _context.Animals.Update(animal);
             await _context.SaveChangesAsync();
             return animal;
@@ -129,16 +127,20 @@ namespace BW_VI___Team_1.Services
             {
                 return new List<Animal>();
             }
-
-            // Filtro gli ID validi e non nulli
             var validOwnerIds = ownerIds
-                .Where(id => id.HasValue)  // Filtra solo ID non nulli
-                .Select(id => id.Value)    // Ottieni i valori non nulli come int
+                .Where(id => id.HasValue)
+                .Select(id => id.Value)
                 .ToList();
-
-            // Usa validOwnerIds per la query
             return await _context.Animals
-                .Where(a => validOwnerIds.Contains(a.OwnerId ?? -1)) // Gestione per null con ?? -1
+                .Where(a => validOwnerIds.Contains(a.OwnerId ?? -1))
+                .ToListAsync();
+        }
+
+        public async Task<List<Animal>> GetAnimalsByPartialMicrochipNumberAsync(string partialMicrochipNumber)
+        {
+            return await _context.Animals
+                .Where(a => EF.Functions.Like(a.MicrochipNumber, $"%{partialMicrochipNumber}%"))
+                .Include(a => a.Owner)
                 .ToListAsync();
         }
     }
