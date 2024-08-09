@@ -51,6 +51,17 @@ footer {
             color: darkviolet; 
         }
 
+        .footer-link {
+            color: rgba(255, 255, 255, 0.7); 
+            text-decoration: none;
+            transition: color 0.3s ease; 
+        }
+
+        .footer-link:hover {
+            color: rgba(255, 255, 255, 1); 
+        }
+
+
 /* _Notification */
 .toast-top-right-custom {
     top: 90px;
@@ -361,3 +372,4 @@ tbody tr:hover {
     background: #BF1A2F;
     color: white;
 }
+

@@ -142,12 +142,33 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted  mt-auto ColorNavbar">
-        <div class="container text-light">
-            <p class="text-light">
-            &copy; 2024 - BW_VI___Team_1 - <a asp-area="" asp-controller="Home" asp-action="Index">Homepage</a>
-        </p></div>
+    <footer class="border-top footer text-muted mt-auto ColorNavbar d-flex justify-content-between">
+        <div class="text-white flex-fill text-center align-self-center">
+            <address>
+                LifePet.com <br />
+                <a href="mailto:info@yiw.org" class="footer-link">Email</a> <br />
+                Indirizzo: Via dei Tali, 586 Bologna <br />
+                Telefono : 123 456
+            </address>
+        </div>
+        <div class="flex-fill text-center align-self-center">
+            <figure>
+                <img id="logo" src="~/images/logoLifePet.png" alt="logo" />
+                <figcaption><a href="https://localhost:7054/importedProject/EmployeesOfTheMonth/index.html" class="footer-link">Ecco i nostri dipendeti del mese:</a></figcaption>
+            </figure>
+        </div>
+        <div class="flex-fill text-center align-self-center">
+            <p class="text-white">Realizzato da: </p>
+            <ul class="text-decoration-none" style="list-style-type: none;">
+                <li> <a href="https://github.com/mrz1mm" class="footer-link">Simone Atanasio </a></li>
+                <li> <a href="https://github.com/SasyB1" class="footer-link">Salvatore Buonaiuto </a></li>
+                <li> <a href="https://github.com/Eddy7642" class="footer-link">Luca Chisari </a></li>
+                <li> <a href="https://github.com/nicherri" class="footer-link">Nicola Schirripa </a></li>
+            </ul>
+        </div>
     </footer>
+
+
     <script src="~/lib/sweetalert2/sweetalert2.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
