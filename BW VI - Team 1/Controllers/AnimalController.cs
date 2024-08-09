@@ -106,7 +106,7 @@ namespace BW_VI___Team_1.Controllers
                 Owner = animal.Owner
             };
 
-            ViewBag.AnimalId = id; // Pass the animal ID to the view using ViewBag
+            ViewBag.AnimalId = id; 
             return View(model);
         }
 
@@ -146,23 +146,6 @@ namespace BW_VI___Team_1.Controllers
                 return NotFound();
             }
             return RedirectToAction(nameof(Index));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmDeleteAnimal(int id)
-        {
-            try
-            {
-                await _animalSvc.DeleteAnimalAsync(id);
-                TempData["Success"] = "Animale eliminato con successo";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "Errore nell'eliminazione dell'animale";
-                return RedirectToAction(nameof(Index));
-            }
         }
 
         [HttpGet]
