@@ -3,85 +3,101 @@
 @{
     ViewData["Title"] = "AddProduct";
 }
+<div class="addPage">
+    <h1>Aggiungi un prodotto</h1>
+    <hr />
 
-<h1>Aggiungi un prodotto</h1>
-
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="AddProduct">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            <div class="form-group">
-                <label asp-for="Name" class="control-label">Nome</label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Type" class="control-label">Tipo</label>
-                <select asp-for="Type" class="form-control" id="productType">
-                    @foreach (var type in ViewBag.ProductTypes as List<string>)
-                    {
-                        <option value="@type">@type</option>
-                    }
-                </select>
-                <span asp-validation-for="Type" class="text-danger"></span>
-            </div>
-
-            <div id="lockerFields" style="display:none;">
-                <div class="form-group">
-                    <label asp-for="Locker.Number" class="control-label">Armadietto</label>
-                    <select asp-for="Locker.Number" class="form-control">
-                        @foreach (var locker in ViewBag.Lockers as List<BW_VI___Team_1.Models.Locker>)
-                        {
-                            <option value="@locker.Number">@locker.Number</option>
-                        }
-                    </select>
-                    <span asp-validation-for="Locker.Number" class="text-danger"></span>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="DrawerId" class="control-label">Cassetto</label>
-                    <select asp-for="DrawerId" class="form-control">
-                        @foreach (var drawer in ViewBag.Drawers as List<BW_VI___Team_1.Models.Drawer>)
-                        {
-                            <option value="@drawer.Id">@drawer.Number</option>
-                        }
-                    </select>
-                    <span asp-validation-for="DrawerId" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="Usages">Uso</label>
-                <select id="Usages" name="Usages" class="form-control" multiple>
-                    @foreach (var usage in ViewBag.Usages as List<Usage>)
-                    {
-                        <option value="@usage.Id">@usage.Description</option>
-                    }
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="Suppliers">Fornitore</label>
-                <select id="Suppliers" name="Suppliers" class="form-control" multiple>
-                    @foreach (var supplier in ViewBag.Suppliers as List<Supplier>)
-                    {
-                        <option value="@supplier.Id">@supplier.Name</option>
-                    }
-                </select>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <div class="step-labels" id="step-labels">
+            <span class="step active" id="step1">Nome</span>
+            <span class="step" id="step2">Tipo</span>
+            <span class="step" id="step3">Locker</span>
+            <span class="step" id="step4">Cassetto</span>
+            <span class="step" id="step5">Uso</span>
+            <span class="step" id="step6">Fornitore</span>
+            <span class="step" id="step7">Fine</span>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Indietro</a>
+    <div class="row">
+        <div class="col-12">
+            <form id="productForm" asp-action="AddProduct">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label">Nome</label>
+                    <input asp-for="Name" class="form-control" id="productName" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Type" class="control-label">Tipo</label>
+                    <select asp-for="Type" class="form-control" id="productType">
+                        @foreach (var type in ViewBag.ProductTypes as List<string>)
+                        {
+                            <option value="@type">@type</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Type" class="text-danger"></span>
+                </div>
+
+                <div id="lockerFields" style="display:none;">
+                    <div class="form-group">
+                        <label asp-for="Locker.Number" class="control-label">Armadietto</label>
+                        <select asp-for="Locker.Number" class="form-control" id="lockerNumber">
+                            @foreach (var locker in ViewBag.Lockers as List<BW_VI___Team_1.Models.Locker>)
+                            {
+                                <option value="@locker.Number">@locker.Number</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Locker.Number" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="DrawerId" class="control-label">Cassetto</label>
+                        <select asp-for="DrawerId" class="form-control" id="drawerId">
+                            @foreach (var drawer in ViewBag.Drawers as List<BW_VI___Team_1.Models.Drawer>)
+                            {
+                                <option value="@drawer.Id">@drawer.Number</option>
+                            }
+                        </select>
+                        <span asp-validation-for="DrawerId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Usages">Uso</label>
+                    <select id="Usages" name="Usages" class="form-control" multiple>
+                        @foreach (var usage in ViewBag.Usages as List<Usage>)
+                        {
+                            <option value="@usage.Id">@usage.Description</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="Suppliers">Fornitore</label>
+                    <select id="Suppliers" name="Suppliers" class="form-control" multiple>
+                        @foreach (var supplier in ViewBag.Suppliers as List<Supplier>)
+                        {
+                            <option value="@supplier.Id">@supplier.Name</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="d-flex justify-content-around mt-3">
+                    <button type="submit" class="btn addButtonCreate">Aggiungi Prodotto</button>
+                    <div>
+                        <a asp-action="Index" class="btn addButtonBack">Torna Indietro</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
@@ -93,6 +109,15 @@
         document.addEventListener('DOMContentLoaded', function () {
             var productTypeSelect = document.getElementById('productType');
             var lockerFields = document.getElementById('lockerFields');
+            var formElements = [
+                document.getElementById('productName'),
+                document.getElementById('productType'),
+                document.getElementById('lockerNumber'),
+                document.getElementById('drawerId'),
+                document.getElementById('Usages'),
+                document.getElementById('Suppliers')
+            ];
+            var completedElements = new Set();
 
             function toggleLockerFields() {
                 if (productTypeSelect.value === 'Medicine') {
@@ -100,10 +125,69 @@
                 } else {
                     lockerFields.style.display = 'none';
                 }
+                updateStepLabels();
+            }
+
+            function updateStepLabels() {
+                const stepLabels = document.getElementById("step-labels");
+                if (productTypeSelect.value === 'Medicine') {
+                    stepLabels.innerHTML = `
+                                <span class="step active" id="step1">Nome</span>
+                                <span class="step" id="step2">Tipo</span>
+                                <span class="step" id="step3">Locker</span>
+                                <span class="step" id="step4">Cassetto</span>
+                                <span class="step" id="step5">Uso</span>
+                                <span class="step" id="step6">Fornitore</span>
+                                <span class="step" id="step7">Fine</span>`;
+                } else {
+                    stepLabels.innerHTML = `
+                                <span class="step active" id="step1">Nome</span>
+                                <span class="step" id="step2">Tipo</span>
+                                <span class="step" id="step3">Uso</span>
+                                <span class="step" id="step4">Fornitore</span>
+                                <span class="step" id="step5">Fine</span>`;
+                }
+                updateProgressBar();
+            }
+
+            formElements.forEach(element => {
+                element.addEventListener("focus", function () {
+                    element.addEventListener("input", handleInput);
+                });
+            });
+
+            function handleInput(event) {
+                const element = event.target;
+                if (element.value.trim() !== "") {
+                    completedElements.add(element.id);
+                } else {
+                    completedElements.delete(element.id);
+                }
+                updateProgressBar();
+            }
+
+            function updateProgressBar() {
+                const filledElements = completedElements.size;
+                const totalElements = formElements.filter(el => el && (el.style.display !== 'none')).length;
+                const progressPercentage = (filledElements / totalElements) * 100;
+
+                const progress = document.getElementById("progress");
+                progress.style.width = `${progressPercentage}%`;
+
+                const progressSteps = document.querySelectorAll(".step");
+                const step = Math.ceil((filledElements / totalElements) * progressSteps.length);
+                progressSteps.forEach((progressStep, idx) => {
+                    if (idx < step) {
+                        progressStep.classList.add("active");
+                    } else {
+                        progressStep.classList.remove("active");
+                    }
+                });
             }
 
             toggleLockerFields();
             productTypeSelect.addEventListener('change', toggleLockerFields);
+            updateProgressBar(); // Initial call to set the progress bar to zero
         });
     </script>
 }
