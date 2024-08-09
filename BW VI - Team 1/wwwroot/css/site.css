@@ -363,9 +363,8 @@ tbody tr:hover {
 }
 
 .addPage {
-    background: #2C1C32;
+    background: #065A82;
     color: white;
-
 }
 
 @use postcss-cssnext;
@@ -511,4 +510,24 @@ body {
     100% {
         transform: translateY(-15px) scale(1, 1);
     }
+}
+
+.order-product-container {
+    border-bottom: 2px solid #000; 
+    margin-bottom: 20px; 
+}
+
+.order-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+
+.order-info {
+    padding-right: 20px; 
+}
+
+.product-info {
+    padding-left: 20px; 
 }

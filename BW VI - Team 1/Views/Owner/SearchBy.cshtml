@@ -2,9 +2,19 @@
     ViewData["Title"] = "Search Owners";
 }
 
-<div id="customerSearchSection" class="mb-4">
-    <input type="text" class="form-control" id="fiscalCode" name="fiscalCode" placeholder="Inserisci codice fiscale" />
-    <div id="searchResults" class="mt-4"></div>
+<div class="table">
+    <section class="table_header">
+        <h1 class="text-center">Cerca Proprietari</h1>
+    </section>
+    <section class="table_body d-flex align-items-center justify-content-center">
+        <div class="w-100">
+            <div class="d-flex align-items-center justify-content-center mb-4">
+                <input type="text" class="form-control me-2 w-25" id="fiscalCode" name="fiscalCode" placeholder="Inserisci codice fiscale" />
+                <i class="fa-solid fa-magnifying-glass fs-5"></i>
+            </div>
+            <div id="searchResults" class="mt-4"></div>
+        </div>
+    </section>
 </div>
 
 @section Scripts {
