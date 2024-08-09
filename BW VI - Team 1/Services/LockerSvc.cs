@@ -63,9 +63,11 @@ namespace BW_VI___Team_1.Services
         }
 
 
-        public async Task DeleteLockerAsync(int id) 
-        { 
-            var locker = await _context.Lockers.FindAsync(id);
+        public async Task DeleteLockerAsync(int id)
+        {
+            var locker = await _context.Lockers
+                                       .Include(l => l.Drawers) 
+                                       .FirstOrDefaultAsync(l => l.Id == id);
 
             if (locker == null)
             {
@@ -74,8 +76,7 @@ namespace BW_VI___Team_1.Services
 
             _context.Lockers.Remove(locker);
             await _context.SaveChangesAsync();
-
-           
         }
+
     }
 }

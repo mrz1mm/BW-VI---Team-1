@@ -21,6 +21,7 @@ namespace BW_VI___Team_1.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Order>()
                 .HasMany(o => o.Products)
                 .WithMany(p => p.Orders)
@@ -37,7 +38,8 @@ namespace BW_VI___Team_1.Models
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Restrict)
                 );
-           modelBuilder.Entity<Product>()
+
+            modelBuilder.Entity<Product>()
                 .HasOne(p => p.Locker)
                 .WithMany(l => l.Products)
                 .HasForeignKey(p => p.LockerId)
@@ -46,7 +48,8 @@ namespace BW_VI___Team_1.Models
             modelBuilder.Entity<Locker>()
                 .HasMany(l => l.Drawers)
                 .WithOne(d => d.Locker)
-                .HasForeignKey(d => d.LockerId);
+                .HasForeignKey(d => d.LockerId)
+                .OnDelete(DeleteBehavior.Cascade); 
 
             modelBuilder.Entity<Owner>()
                 .HasMany(o => o.Animals)
@@ -57,8 +60,8 @@ namespace BW_VI___Team_1.Models
                .HasMany(o => o.Orders)
                .WithOne(order => order.Owner)
                .HasForeignKey(order => order.OwnerId);
-
         }
+
 
 
 
